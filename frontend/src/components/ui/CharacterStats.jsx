@@ -1,4 +1,4 @@
-﻿import React from 'react';
+import React from 'react';
 
 export default function CharacterStats({ stats = {} }) {
   const attrs = [
@@ -12,30 +12,30 @@ export default function CharacterStats({ stats = {} }) {
   const maxVal = Math.max(25, ...attrs.map((a) => Number(stats[a.key] || 0)));
 
   return (
-    <div className="space-y-4">
-      {attrs.map(({ key, label, icon, barColor, glow, textColor, code }) => {
+    <div className="space-y-3">
+      {attrs.map(({ key, label, icon, barColor, textColor, code }) => {
         const val = Number(stats[key] || 0);
         const pct = Math.min(100, Math.max(6, (val / maxVal) * 100));
 
         return (
-          <div key={key} className="city-glass border border-cyber-border/40 rounded-xl p-4 space-y-2.5 hover:border-cyber-cyan/50 transition-all duration-200">
+          <div key={key} className="city-glass border border-slate-200/80 rounded-xl p-3.5 space-y-2 hover:border-sky-300 transition-all duration-200 shadow-xs">
             <div className="flex justify-between items-center">
               <div className="flex items-center gap-2.5">
-                <span className="text-xl">{icon}</span>
+                <span className="text-lg">{icon}</span>
                 <div>
-                  <span className="font-orbitron font-bold text-xs text-cyber-text tracking-wide">{label}</span>
-                  <span className="block font-mono text-[9px] text-cyber-textMuted">{code}</span>
+                  <span className="font-orbitron font-bold text-xs text-slate-800 tracking-wide">{label}</span>
+                  <span className="block font-mono text-[9px] text-slate-500">{code}</span>
                 </div>
               </div>
-              <span className={`font-orbitron font-bold text-sm ${textColor} city-glass px-3 py-0.5 rounded-lg border border-cyber-border/40 shadow-sm`}>
-                {val} <span className="text-[10px] text-cyber-textMuted font-normal">PTS</span>
+              <span className={`font-orbitron font-bold text-sm ${textColor} bg-slate-50 px-2.5 py-0.5 rounded-lg border border-slate-200 shadow-2xs`}>
+                {val} <span className="text-[10px] text-slate-500 font-normal">PTS</span>
               </span>
             </div>
 
             {/* Gauge */}
-            <div className="h-3 w-full bg-cyber-navy border border-cyber-border/40 rounded-full overflow-hidden p-0.5 relative">
+            <div className="h-2.5 w-full bg-slate-100 border border-slate-200 rounded-full overflow-hidden p-0.5 relative shadow-inner">
               <div
-                className={`h-full ${barColor} rounded-full transition-all duration-700 ${glow}`}
+                className={`h-full ${barColor} rounded-full transition-all duration-700 shadow-2xs`}
                 style={{ width: `${pct}%` }}
               />
             </div>

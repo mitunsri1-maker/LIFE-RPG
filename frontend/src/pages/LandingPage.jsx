@@ -1,4 +1,4 @@
-﻿import React from 'react';
+import React from 'react';
 import { Link } from 'react-router-dom';
 import { Zap, Swords, TrendingUp, ShoppingBag, ShieldCheck, Flame, ArrowRight, Activity, Globe, Sparkles } from 'lucide-react';
 import CyberEnvironment from '../components/3d/CyberEnvironment';
@@ -22,14 +22,14 @@ export default function LandingPage() {
       <CyberEnvironment level={12} enabled={true} />
 
       {/* Navigation */}
-      <nav className="relative z-20 border-b border-cyber-border/40 city-glass sticky top-0">
+      <nav className="relative z-20 border-b border-white/80 city-glass sticky top-0 shadow-xs">
         <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-lg bg-cyber-cyan/20 border-2 border-cyber-cyan flex items-center justify-center shadow-holo-cyan">
-              <Zap className="w-5 h-5 text-cyber-cyan fill-cyber-cyan" />
+            <div className="w-10 h-10 rounded-xl bg-sky-500 text-white flex items-center justify-center shadow-xs">
+              <Zap className="w-5 h-5 text-white fill-white" />
             </div>
-            <span className="font-orbitron font-black text-2xl tracking-wider text-cyber-cyan text-glow-cyan">
-              LIFE<span className="text-cyber-magenta">//</span>OS
+            <span className="font-orbitron font-black text-2xl tracking-wider text-slate-800">
+              LIFE<span className="text-sky-500">//</span>OS
             </span>
           </div>
 
@@ -37,7 +37,7 @@ export default function LandingPage() {
             <SoundToggle />
             <Link
               to="/login"
-              className="font-orbitron font-bold text-xs uppercase tracking-wider text-cyber-text hover:text-cyber-cyan px-4 py-2 transition-colors"
+              className="font-orbitron font-bold text-xs uppercase tracking-wider text-slate-700 hover:text-sky-600 px-4 py-2 transition-colors"
             >
               AUTHENTICATE
             </Link>
@@ -52,27 +52,27 @@ export default function LandingPage() {
 
       {/* Hero Section — Futuristic City Command Deck */}
       <section className="relative z-10 max-w-6xl mx-auto px-6 pt-20 pb-16 text-center space-y-8">
-        <div className="inline-flex items-center gap-2 city-glass border border-cyber-cyan/50 text-cyber-cyan font-mono text-xs px-4 py-1.5 rounded-full uppercase tracking-widest font-bold shadow-cyber-sm">
-          <span className="w-2 h-2 rounded-full bg-cyber-green animate-ping" />
+        <div className="inline-flex items-center gap-2 bg-white/90 border border-sky-200 text-sky-700 font-mono text-xs px-4 py-1.5 rounded-full uppercase tracking-widest font-bold shadow-xs">
+          <span className="w-2 h-2 rounded-full bg-emerald-500 animate-ping" />
           NEURAL LIFE OPERATING SYSTEM // V4.2
         </div>
 
         <div className="relative max-w-4xl mx-auto">
-          <h1 className="font-orbitron font-black text-5xl sm:text-7xl lg:text-8xl text-cyber-text tracking-tight uppercase leading-none drop-shadow-[0_10px_30px_rgba(0,0,0,0.8)]">
+          <h1 className="font-orbitron font-black text-5xl sm:text-7xl lg:text-8xl text-slate-900 tracking-tight uppercase leading-none drop-shadow-sm">
             YOUR LIFE IS AN{' '}
-            <span className="text-cyber-cyan text-glow-cyan underline decoration-cyber-magenta decoration-4 underline-offset-8">
+            <span className="text-sky-500 underline decoration-sky-300 decoration-4 underline-offset-8">
               RPG
             </span>
           </h1>
         </div>
 
-        <p className="font-body text-base sm:text-xl text-cyber-textMuted max-w-2xl mx-auto leading-relaxed drop-shadow-md">
-          Transform daily habits into mission directives. Power a 3D Energy Core, harvest credits, level up core attributes, and evolve the cyberpunk city.
+        <p className="font-body text-base sm:text-xl text-slate-600 max-w-2xl mx-auto leading-relaxed">
+          Transform daily habits into mission directives. Power a 3D Energy Core, harvest credits, level up core attributes, and evolve the futuristic city.
         </p>
 
         <div className="flex flex-col sm:flex-row items-center justify-center gap-5 pt-4">
           <Link to="/signup">
-            <HoloButton variant="cyan" size="lg" icon={ArrowRight} className="shadow-[0_0_30px_rgba(0,240,255,0.4)]">
+            <HoloButton variant="cyan" size="lg" icon={ArrowRight} className="shadow-md">
               INITIALIZE OPERATIVE DOSSIER
             </HoloButton>
           </Link>

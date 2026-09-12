@@ -1,4 +1,4 @@
-﻿import React, { useRef } from 'react';
+import React, { useRef } from 'react';
 import { Canvas, useFrame } from '@react-three/fiber';
 import * as THREE from 'three';
 
@@ -45,16 +45,16 @@ function HologramChamber({ level = 1, username = "HERO", stats = {} }) {
 
   return (
     <group position={[0, 0, 0]}>
-      {/* Base Hexagonal Projection Pedestal */}
+      {/* Base Hexagonal Projection Pedestal (White/Silver Daylight Finish) */}
       <mesh position={[0, -1.85, 0]}>
         <cylinderGeometry args={[2.3, 2.6, 0.35, 6]} />
-        <meshStandardMaterial color="#0B132B" metalness={0.9} roughness={0.2} />
+        <meshStandardMaterial color="#E2E8F0" metalness={0.7} roughness={0.2} />
       </mesh>
 
       {/* Glowing Energy Ring on Pedestal */}
       <mesh position={[0, -1.65, 0]} rotation={[-Math.PI / 2, 0, 0]}>
         <ringGeometry args={[1.7, 2.2, 32]} />
-        <meshBasicMaterial color="#00F0FF" side={THREE.DoubleSide} transparent opacity={0.8} />
+        <meshBasicMaterial color="#00B4D8" side={THREE.DoubleSide} transparent opacity={0.8} />
       </mesh>
 
       {/* Central Futuristic Holographic Operative Figure */}
@@ -63,9 +63,9 @@ function HologramChamber({ level = 1, username = "HERO", stats = {} }) {
         <mesh position={[0, 1.05, 0]}>
           <octahedronGeometry args={[0.38, 1]} />
           <meshStandardMaterial
-            color="#00F0FF"
-            emissive="#00F0FF"
-            emissiveIntensity={1.4}
+            color="#0284C7"
+            emissive="#00B4D8"
+            emissiveIntensity={1.2}
             wireframe
             transparent
             opacity={0.9}
@@ -74,33 +74,33 @@ function HologramChamber({ level = 1, username = "HERO", stats = {} }) {
         {/* Glowing Visor Light */}
         <mesh position={[0, 1.05, 0.28]}>
           <boxGeometry args={[0.32, 0.08, 0.1]} />
-          <meshBasicMaterial color="#FF007F" />
+          <meshBasicMaterial color="#E11D48" />
         </mesh>
 
         {/* Shoulders & Torso / Faceted Cyber Armor */}
         <mesh position={[0, 0.35, 0]}>
           <dodecahedronGeometry args={[0.6, 0]} />
           <meshStandardMaterial
-            color="#141C38"
-            emissive="#8B5CF6"
-            emissiveIntensity={0.6}
-            metalness={0.85}
-            roughness={0.2}
+            color="#FFFFFF"
+            emissive="#0284C7"
+            emissiveIntensity={0.5}
+            metalness={0.8}
+            roughness={0.15}
           />
         </mesh>
 
         {/* Inner Spark Energy Core */}
         <mesh position={[0, 0.35, 0]}>
           <sphereGeometry args={[0.24, 16, 16]} />
-          <meshBasicMaterial color="#00FF9D" />
+          <meshBasicMaterial color="#10B981" />
         </mesh>
 
         {/* Lower Chassis / Floating Energy Conduit */}
         <mesh position={[0, -0.45, 0]}>
           <coneGeometry args={[0.35, 0.7, 5]} />
           <meshStandardMaterial
-            color="#00F0FF"
-            emissive="#00F0FF"
+            color="#00B4D8"
+            emissive="#00B4D8"
             emissiveIntensity={0.8}
             wireframe
           />
@@ -109,22 +109,22 @@ function HologramChamber({ level = 1, username = "HERO", stats = {} }) {
 
       {/* Gyro Holographic Containment Rings */}
       <mesh ref={ringsRef1}>
-        <torusGeometry args={[2.4, 0.02, 16, 64]} />
-        <meshBasicMaterial color="#00F0FF" transparent opacity={0.65} />
+        <torusGeometry args={[2.4, 0.015, 16, 64]} />
+        <meshBasicMaterial color="#00B4D8" transparent opacity={0.65} />
       </mesh>
       <mesh ref={ringsRef2}>
-        <torusGeometry args={[2.7, 0.02, 16, 64]} />
-        <meshBasicMaterial color="#8B5CF6" transparent opacity={0.5} />
+        <torusGeometry args={[2.7, 0.015, 16, 64]} />
+        <meshBasicMaterial color="#9333EA" transparent opacity={0.5} />
       </mesh>
       <mesh ref={ringsRef3}>
-        <torusGeometry args={[3.0, 0.015, 16, 64]} />
-        <meshBasicMaterial color="#00FF9D" transparent opacity={0.4} />
+        <torusGeometry args={[3.0, 0.012, 16, 64]} />
+        <meshBasicMaterial color="#10B981" transparent opacity={0.4} />
       </mesh>
 
       {/* Scanning Laser Disc */}
       <mesh ref={scanLaserRef} rotation={[-Math.PI / 2, 0, 0]}>
         <ringGeometry args={[0.2, 2.7, 32]} />
-        <meshBasicMaterial color="#00F0FF" transparent opacity={0.16} side={THREE.DoubleSide} />
+        <meshBasicMaterial color="#00B4D8" transparent opacity={0.14} side={THREE.DoubleSide} />
       </mesh>
 
       {/* Orbiting 5 Attribute Crystals */}
@@ -135,16 +135,16 @@ function HologramChamber({ level = 1, username = "HERO", stats = {} }) {
             <meshStandardMaterial
               color={attr.color}
               emissive={attr.color}
-              emissiveIntensity={2.5}
+              emissiveIntensity={1.8}
             />
           </mesh>
         ))}
       </group>
 
       {/* Lighting */}
-      <ambientLight intensity={0.45} />
-      <pointLight position={[0, 2.5, 2.5]} intensity={3.5} color="#00F0FF" distance={8} />
-      <pointLight position={[0, -1, -2.5]} intensity={2.5} color="#8B5CF6" distance={8} />
+      <ambientLight intensity={1.1} />
+      <pointLight position={[0, 2.5, 2.5]} intensity={2.5} color="#00B4D8" distance={8} />
+      <pointLight position={[0, -1, -2.5]} intensity={1.8} color="#9333EA" distance={8} />
     </group>
   );
 }

@@ -1,4 +1,4 @@
-﻿import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useAuthStore } from '../store/authStore';
 import { useQuestStore } from '../store/questStore';
 import { characterApi, progressApi } from '../api';
@@ -68,76 +68,75 @@ export default function DashboardPage() {
 
   return (
     <div className="p-4 md:p-8 max-w-6xl mx-auto space-y-8">
-      {/* Central Command Header with 3D Hologram Player Chamber */}
-      <div className="relative city-glass-elevated border border-cyber-cyan/40 rounded-2xl p-6 md:p-8 shadow-glass-depth overflow-hidden cyber-corner-tl">
+      {/* Central Welcome Operative Header matching reference design card */}
+      <div className="relative city-glass-elevated border border-white/90 rounded-2xl p-6 md:p-8 shadow-day-card overflow-hidden">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-center">
           {/* Left Telemetry info */}
           <div className="lg:col-span-7 space-y-3">
-            <div className="inline-flex items-center gap-2 city-glass border border-cyber-cyan/50 text-cyber-cyan font-mono text-[11px] px-3 py-1 rounded-full font-bold tracking-widest uppercase">
-              <span className="w-2 h-2 rounded-full bg-cyber-cyan animate-ping" />
-              COMMAND NEXUS // PLAYER STATUS: ACTIVE
+            <div className="inline-flex items-center gap-2 bg-sky-50 border border-sky-200 text-sky-700 font-mono text-[11px] px-3 py-1 rounded-full font-bold tracking-widest uppercase">
+              <span className="w-2 h-2 rounded-full bg-sky-500 animate-ping" />
+              WELCOME BACK, OPERATIVE
             </div>
 
-            <h1 className="font-orbitron font-black text-3xl md:text-5xl text-cyber-text tracking-tight uppercase">
-              OPERATIVE <span className="text-cyber-cyan text-glow-cyan">{user?.username}</span>
+            <h1 className="font-orbitron font-black text-3xl md:text-5xl text-slate-900 tracking-tight uppercase">
+              LEVEL <span className="text-sky-500">{user?.level || 1}</span>
             </h1>
 
-            <p className="font-body text-sm text-cyber-textMuted max-w-lg leading-relaxed">
-              Your real-life tasks power the central energy reactor. Clear objectives to advance your world evolution tier and expand the skyline.
+            <p className="font-mono text-sm text-slate-500 tracking-wide font-medium">
+              {user?.xp || 0} / {calculateLevelProgress(user?.xp || 0, user?.level || 1).neededForNext} XP
             </p>
 
-            {/* Quick Metrics */}
+            {/* Quick Metrics from reference design */}
             <div className="flex flex-wrap items-center gap-3 pt-2">
-              <div className="inline-flex items-center gap-2 city-glass border border-cyber-cyan/40 px-3 py-1.5 rounded-lg font-mono text-xs text-cyber-cyan">
-                <Zap className="w-4 h-4 fill-cyber-cyan" />
-                <span>TIER {user?.level || 1} OVERRIDE</span>
+              <div className="inline-flex items-center gap-2 city-glass border border-slate-200 px-3.5 py-1.5 rounded-xl font-mono text-xs text-slate-700 shadow-2xs">
+                <Coins className="w-4 h-4 text-sky-500 fill-sky-500/20" />
+                <span className="font-bold">{Number(user?.gold || 0).toLocaleString()}</span>
+                <span className="text-[10px] text-slate-400 font-normal">CREDITS</span>
               </div>
-              <div className="inline-flex items-center gap-2 city-glass border border-cyber-amber/40 px-3 py-1.5 rounded-lg font-mono text-xs text-cyber-amber">
-                <Coins className="w-4 h-4 fill-cyber-amber" />
-                <span>{Number(user?.gold || 0).toLocaleString()} CREDITS</span>
+              <div className="inline-flex items-center gap-2 city-glass border border-slate-200 px-3.5 py-1.5 rounded-xl font-mono text-xs text-slate-700 shadow-2xs">
+                <Flame className="w-4 h-4 text-rose-500 fill-rose-500/20" />
+                <span className="font-bold">{streak.current_streak || 0}</span>
+                <span className="text-[10px] text-slate-400 font-normal">DAY STREAK</span>
               </div>
-              <div className="inline-flex items-center gap-2 city-glass border border-cyber-coral/40 px-3 py-1.5 rounded-lg font-mono text-xs text-cyber-coral">
-                <Flame className="w-4 h-4 fill-cyber-coral" />
-                <span>{streak.current_streak || 0}D CORE CHARGE</span>
+              <div className="inline-flex items-center gap-2 city-glass border border-slate-200 px-3.5 py-1.5 rounded-xl font-mono text-xs text-slate-700 shadow-2xs">
+                <Zap className="w-4 h-4 text-amber-500 fill-amber-500/20" />
+                <span className="font-bold">{xpPercent}%</span>
+                <span className="text-[10px] text-slate-400 font-normal">CORE ENERGY</span>
               </div>
             </div>
           </div>
 
-          {/* Right 3D Player Pod Projection */}
-          <div className="lg:col-span-5 city-glass border border-cyber-cyan/35 rounded-xl p-2 relative shadow-inner flex flex-col items-center justify-center">
-            <PlayerPod3D level={user?.level || 1} username={user?.username} stats={charData?.stats} height="240px" />
+          {/* Right 3D Diamond Crystal Hologram Projection */}
+          <div className="lg:col-span-5 city-glass border border-sky-100 rounded-2xl p-3 relative shadow-inner flex flex-col items-center justify-center">
+            <XPCore xpPercent={xpPercent} justGainedXP={justGainedXP} accent="#00B4D8" height="210px" />
           </div>
         </div>
       </div>
 
-      {/* 3D XP Core Energy Reactor + Telemetry Modules */}
+      {/* 3D Operative Pod + Telemetry & Progress Grid */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
-        {/* 3D Energy Core Reactor */}
-        <div className="lg:col-span-5 city-glass border border-cyber-cyan/40 rounded-2xl p-5 shadow-glass-depth flex flex-col justify-between overflow-hidden cyber-corner-tl">
-          <div className="flex items-center justify-between border-b border-cyber-border/30 pb-3">
+        {/* Operative Chamber */}
+        <div className="lg:col-span-5 city-glass border border-slate-200/80 rounded-2xl p-5 shadow-sm flex flex-col justify-between overflow-hidden">
+          <div className="flex items-center justify-between border-b border-slate-200/80 pb-3">
             <div className="flex items-center gap-2">
-              <Activity className="w-4 h-4 text-cyber-cyan animate-pulse" />
-              <span className="font-orbitron font-bold text-sm text-cyber-text tracking-wide">
-                XP REACTOR CORE
+              <Activity className="w-4 h-4 text-sky-500 animate-pulse" />
+              <span className="font-orbitron font-bold text-sm text-slate-800 tracking-wide">
+                OPERATIVE STATUS
               </span>
             </div>
-            <span className={`font-mono text-xs px-2.5 py-0.5 rounded border font-bold uppercase ${
-              justGainedXP
-                ? 'bg-cyber-green/20 text-cyber-green border-cyber-green animate-pulse'
-                : 'city-glass text-cyber-cyan border-cyber-cyan/40'
-            }`}>
-              {justGainedXP ? '⚡ ENERGY INGESTION' : `${xpPercent}% CAPACITY`}
+            <span className="font-mono text-xs text-emerald-700 bg-emerald-50 px-2.5 py-0.5 rounded-full border border-emerald-200 font-bold uppercase">
+              RESONANCE 100%
             </span>
           </div>
 
           {/* 3D Visualizer Canvas */}
           <div className="my-2 relative flex items-center justify-center">
-            <XPCore xpPercent={xpPercent} justGainedXP={justGainedXP} accent="#00F0FF" height="220px" />
+            <PlayerPod3D level={user?.level || 1} username={user?.username} stats={charData?.stats} height="230px" />
           </div>
 
-          <div className="font-mono text-xs text-center text-cyber-textMuted city-glass p-2.5 rounded-lg border border-cyber-border/30 flex items-center justify-center gap-2">
-            <span className="w-2 h-2 rounded-full bg-cyber-cyan animate-ping" />
-            <span>ORBIT RESONANCE SCALES WITH LEVEL CAPACITY</span>
+          <div className="font-mono text-xs text-center text-slate-500 bg-slate-50 p-2.5 rounded-lg border border-slate-200 flex items-center justify-center gap-2">
+            <span className="w-2 h-2 rounded-full bg-sky-500 animate-ping" />
+            <span>SOLAR HARVESTING GRID: OPTIMAL</span>
           </div>
         </div>
 
@@ -145,30 +144,30 @@ export default function DashboardPage() {
         <div className="lg:col-span-7 flex flex-col justify-between space-y-6">
           <XPBar xp={user?.xp || 0} level={user?.level || 1} />
 
-          {/* 4 Cyber Telemetry Modules */}
+          {/* 4 Daylight Telemetry Modules */}
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-            <div className="city-glass border border-cyber-cyan/35 rounded-xl p-4 shadow-[0_0_20px_rgba(0,240,255,0.12)]">
+            <div className="city-glass border border-slate-200/80 rounded-xl p-4 shadow-xs hover:border-sky-300 transition-all">
               <div className="text-xl mb-1">⚡</div>
-              <div className="font-orbitron font-black text-2xl text-cyber-cyan text-glow-cyan">LVL {user?.level || 1}</div>
-              <div className="font-mono text-[10px] uppercase text-cyber-textMuted tracking-wider">Access Tier</div>
+              <div className="font-orbitron font-black text-2xl text-sky-600">LVL {user?.level || 1}</div>
+              <div className="font-mono text-[10px] uppercase text-slate-400 tracking-wider">Access Tier</div>
             </div>
 
-            <div className="city-glass border border-cyber-amber/35 rounded-xl p-4 shadow-[0_0_20px_rgba(255,184,0,0.12)]">
+            <div className="city-glass border border-slate-200/80 rounded-xl p-4 shadow-xs hover:border-amber-300 transition-all">
               <div className="text-xl mb-1">🪙</div>
-              <div className="font-orbitron font-black text-2xl text-cyber-amber text-glow-gold">{Number(user?.gold || 0).toLocaleString()}</div>
-              <div className="font-mono text-[10px] uppercase text-cyber-textMuted tracking-wider">Credits</div>
+              <div className="font-orbitron font-black text-2xl text-amber-600">{Number(user?.gold || 0).toLocaleString()}</div>
+              <div className="font-mono text-[10px] uppercase text-slate-400 tracking-wider">Credits</div>
             </div>
 
-            <div className="city-glass border border-cyber-coral/35 rounded-xl p-4 shadow-[0_0_20px_rgba(255,51,102,0.12)]">
+            <div className="city-glass border border-slate-200/80 rounded-xl p-4 shadow-xs hover:border-rose-300 transition-all">
               <div className="text-xl mb-1">🔥</div>
-              <div className="font-orbitron font-black text-2xl text-cyber-coral text-glow-magenta">{streak.current_streak || 0}D</div>
-              <div className="font-mono text-[10px] uppercase text-cyber-textMuted tracking-wider">Core Charge</div>
+              <div className="font-orbitron font-black text-2xl text-rose-600">{streak.current_streak || 0}D</div>
+              <div className="font-mono text-[10px] uppercase text-slate-400 tracking-wider">Day Streak</div>
             </div>
 
-            <div className="city-glass border border-cyber-green/35 rounded-xl p-4 shadow-[0_0_20px_rgba(0,255,157,0.12)]">
+            <div className="city-glass border border-slate-200/80 rounded-xl p-4 shadow-xs hover:border-emerald-300 transition-all">
               <div className="text-xl mb-1">🏆</div>
-              <div className="font-orbitron font-black text-2xl text-cyber-green text-glow-green">{streak.best_streak || 0}D</div>
-              <div className="font-mono text-[10px] uppercase text-cyber-textMuted tracking-wider">Best Record</div>
+              <div className="font-orbitron font-black text-2xl text-emerald-600">{streak.best_streak || 0}D</div>
+              <div className="font-mono text-[10px] uppercase text-slate-400 tracking-wider">Best Record</div>
             </div>
           </div>
         </div>
@@ -178,34 +177,34 @@ export default function DashboardPage() {
       <div className="space-y-4">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div className="flex items-center gap-3">
-            <div className="w-9 h-9 rounded-lg bg-cyber-cyan/20 border-2 border-cyber-cyan flex items-center justify-center font-bold shadow-holo-cyan">
-              <Swords className="w-5 h-5 text-cyber-cyan" />
+            <div className="w-9 h-9 rounded-xl bg-sky-50 border border-sky-200 flex items-center justify-center font-bold shadow-xs">
+              <Swords className="w-5 h-5 text-sky-600" />
             </div>
             <div>
-              <h2 className="font-orbitron font-bold text-2xl text-cyber-text tracking-wide text-glow-cyan">
-                ACTIVE MISSION DIRECTIVES
+              <h2 className="font-orbitron font-bold text-2xl text-slate-800 tracking-wide">
+                ACTIVE QUESTS <span className="text-sky-600 text-lg font-mono">({activeQuests.length})</span>
               </h2>
-              <p className="font-mono text-xs text-cyber-textMuted">
-                EXECUTE REAL-WORLD HABITS TO CHANNEL HARVESTED XP ENERGY
+              <p className="font-mono text-xs text-slate-500">
+                EXECUTE REAL-WORLD HABITS TO GENERATE CITY ENERGY
               </p>
             </div>
           </div>
 
           <div className="flex items-center gap-3">
             {/* View Mode Switcher */}
-            <div className="inline-flex city-glass border border-cyber-border/40 rounded-lg p-1">
+            <div className="inline-flex city-glass border border-slate-200 rounded-xl p-1 shadow-2xs">
               <button
                 onClick={() => setViewMode('grid')}
-                className={`flex items-center gap-1.5 px-3 py-1 rounded-md text-xs font-mono font-bold transition-all cursor-pointer ${
-                  viewMode === 'grid' ? 'bg-cyber-cyan text-cyber-bg shadow-holo-cyan' : 'text-cyber-textMuted hover:text-cyber-text'
+                className={`flex items-center gap-1.5 px-3 py-1 rounded-lg text-xs font-mono font-bold transition-all cursor-pointer ${
+                  viewMode === 'grid' ? 'bg-sky-500 text-white shadow-xs' : 'text-slate-500 hover:text-slate-800'
                 }`}
               >
                 <LayoutGrid className="w-3.5 h-3.5" /> GRID
               </button>
               <button
                 onClick={() => setViewMode('3d-map')}
-                className={`flex items-center gap-1.5 px-3 py-1 rounded-md text-xs font-mono font-bold transition-all cursor-pointer ${
-                  viewMode === '3d-map' ? 'bg-cyber-cyan text-cyber-bg shadow-holo-cyan' : 'text-cyber-textMuted hover:text-cyber-text'
+                className={`flex items-center gap-1.5 px-3 py-1 rounded-lg text-xs font-mono font-bold transition-all cursor-pointer ${
+                  viewMode === '3d-map' ? 'bg-sky-500 text-white shadow-xs' : 'text-slate-500 hover:text-slate-800'
                 }`}
               >
                 <Map className="w-3.5 h-3.5" /> 3D MAP

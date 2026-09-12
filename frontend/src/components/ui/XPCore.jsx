@@ -1,4 +1,4 @@
-﻿import { useRef, useMemo } from 'react';
+import { useRef, useMemo } from 'react';
 import { Canvas, useFrame } from '@react-three/fiber';
 import * as THREE from 'three';
 
@@ -61,29 +61,33 @@ function CoreMesh({ xpPercent = 0, justGainedXP = false, accent = '#00F0FF' }) {
 
   return (
     <group>
-      {/* Inner glowing faceted plasma crystal */}
+      {/* Inner glowing faceted diamond crystal hologram */}
       <mesh ref={coreRef}>
-        <octahedronGeometry args={[0.9, 2]} />
+        <octahedronGeometry args={[0.9, 0]} />
         <meshStandardMaterial
-          color={accent}
+          color="#38BDF8"
           emissive={accent}
-          emissiveIntensity={1.8}
-          roughness={0.15}
-          metalness={0.8}
+          emissiveIntensity={1.4}
+          roughness={0.05}
+          metalness={0.9}
         />
       </mesh>
 
       {/* Outer geodesic wireframe containment shell */}
-      <mesh ref={wireRef} scale={1.45}>
+      <mesh ref={wireRef} scale={1.42}>
         <icosahedronGeometry args={[1, 1]} />
-        <meshBasicMaterial color={accent} wireframe transparent opacity={0.45} />
+        <meshBasicMaterial color="#0284C7" wireframe transparent opacity={0.35} />
       </mesh>
 
-      {/* Holographic Gyro Containment Ring */}
+      {/* Holographic Gyro Rings (Cyan & Soft Magenta) */}
       <group ref={ringsRef}>
         <mesh>
-          <torusGeometry args={[1.75, 0.02, 16, 64]} />
-          <meshBasicMaterial color="#FF007F" transparent opacity={0.5} />
+          <torusGeometry args={[1.75, 0.015, 16, 64]} />
+          <meshBasicMaterial color="#00B4D8" transparent opacity={0.7} />
+        </mesh>
+        <mesh rotation={[Math.PI / 3, 0, 0]}>
+          <torusGeometry args={[1.9, 0.012, 16, 64]} />
+          <meshBasicMaterial color="#E11D48" transparent opacity={0.4} />
         </mesh>
       </group>
 
@@ -97,18 +101,18 @@ function CoreMesh({ xpPercent = 0, justGainedXP = false, accent = '#00F0FF' }) {
             itemSize={3}
           />
         </bufferGeometry>
-        <pointsMaterial color={accent} size={0.07} sizeAttenuation transparent opacity={0.9} />
+        <pointsMaterial color="#00B4D8" size={0.065} sizeAttenuation transparent opacity={0.85} />
       </points>
 
-      {/* Internal ambient & neon point lighting */}
-      <ambientLight intensity={0.3} />
-      <pointLight position={[0, 0, 3]} intensity={3.5} color={accent} distance={12} />
-      <pointLight position={[0, 0, -3]} intensity={2.5} color="#FF007F" distance={10} />
+      {/* Daylight illumination */}
+      <ambientLight intensity={1.2} />
+      <pointLight position={[0, 0, 3]} intensity={2.5} color="#00B4D8" distance={12} />
+      <pointLight position={[0, 2, -2]} intensity={1.5} color="#E11D48" distance={10} />
     </group>
   );
 }
 
-export default function XPCore({ xpPercent = 0, justGainedXP = false, accent = '#00F0FF', height = '240px', className = '' }) {
+export default function XPCore({ xpPercent = 0, justGainedXP = false, accent = '#00B4D8', height = '240px', className = '' }) {
   return (
     <div style={{ width: '100%', height }} className={`relative select-none ${className}`}>
       <Canvas camera={{ position: [0, 0, 4.3], fov: 44 }} gl={{ alpha: true, antialias: true }}>

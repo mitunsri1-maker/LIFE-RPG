@@ -1,4 +1,4 @@
-﻿import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { progressApi } from '../api';
 import HoloPanel from '../components/hud/HoloPanel';
 import { Flame, Zap, CheckCircle2, Target, Loader2, Calendar, Globe, Sparkles } from 'lucide-react';
@@ -51,23 +51,22 @@ export default function ProgressPage() {
     <div className="p-4 md:p-8 max-w-6xl mx-auto space-y-8">
       {/* Title */}
       <div>
-        <h1 className="font-orbitron font-black text-3xl md:text-4xl text-cyber-text tracking-tight flex items-center gap-3">
-          <span className="w-11 h-11 rounded-xl bg-cyber-green/20 border-2 border-cyber-green text-cyber-green flex items-center justify-center text-xl shadow-holo-green">
+        <h1 className="font-orbitron font-black text-3xl md:text-4xl text-slate-800 tracking-tight flex items-center gap-3">
+          <span className="w-11 h-11 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-600 flex items-center justify-center text-xl shadow-xs">
             📈
           </span>
-          WORLD EVOLUTION & ANALYTICS
+          METROPOLIS EVOLUTION & ANALYTICS
         </h1>
-        <p className="font-mono text-xs text-cyber-textMuted mt-1">
+        <p className="font-mono text-xs text-slate-500 mt-1">
           PROGRESSION TELEMETRY // 3D ENVIRONMENT ADAPTATION METRICS
         </p>
       </div>
 
       {/* World Evolution Tier Status */}
       <HoloPanel
-        title="WORLD EVOLUTION PHASE"
-        subtitle="THE 3D CITY ENVIRONMENT DYNAMICALLY EXPANDS AS YOUR OPERATIVE LEVEL INCREASES"
+        title="METROPOLIS EVOLUTION PHASE"
+        subtitle="THE 3D DAYTIME SKYLINE DYNAMICALLY EXPANDS AS YOUR OPERATIVE LEVEL INCREASES"
         accent="cyan"
-        glow
         tag="[SYS.EVOLUTION]"
       >
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 pt-2">
@@ -78,22 +77,22 @@ export default function ProgressPage() {
                 key={stg.lvl}
                 className={`p-4 rounded-xl border transition-all ${
                   unlocked
-                    ? 'city-glass-elevated border-cyber-cyan shadow-holo-cyan text-cyber-text'
-                    : 'city-glass border-cyber-border/30 opacity-40 text-cyber-muted'
+                    ? 'city-glass-elevated border-sky-300 shadow-sm text-slate-800'
+                    : 'city-glass border-slate-200/50 opacity-50 text-slate-400'
                 }`}
               >
                 <div className="flex items-center justify-between mb-2">
-                  <span className="font-mono text-xs font-bold text-cyber-cyan">LVL {stg.lvl}+</span>
+                  <span className="font-mono text-xs font-bold text-sky-600">LVL {stg.lvl}+</span>
                   {unlocked ? (
-                    <span className="font-mono text-[9px] bg-cyber-green/20 text-cyber-green border border-cyber-green px-2 py-0.5 rounded-full font-bold">
+                    <span className="font-mono text-[9px] bg-emerald-50 text-emerald-700 border border-emerald-300 px-2 py-0.5 rounded-full font-bold">
                       ACTIVE
                     </span>
                   ) : (
-                    <span className="font-mono text-[9px] text-cyber-muted">LOCKED</span>
+                    <span className="font-mono text-[9px] text-slate-400">LOCKED</span>
                   )}
                 </div>
-                <h4 className="font-orbitron font-bold text-sm tracking-wide mb-1 text-cyber-text">{stg.title}</h4>
-                <p className="font-body text-xs text-cyber-textMuted">{stg.desc}</p>
+                <h4 className="font-orbitron font-bold text-sm tracking-wide mb-1 text-slate-800">{stg.title}</h4>
+                <p className="font-body text-xs text-slate-500">{stg.desc}</p>
               </div>
             );
           })}
@@ -102,30 +101,30 @@ export default function ProgressPage() {
 
       {/* Stat Matrix */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-        <div className="city-glass border border-cyber-green/40 p-5 rounded-xl shadow-[0_0_20px_rgba(0,255,157,0.12)]">
-          <div className="font-mono text-xs text-cyber-textMuted uppercase">Missions Cleared</div>
-          <div className="font-orbitron font-black text-3xl text-cyber-green mt-1">
+        <div className="city-glass border border-emerald-200 p-5 rounded-xl shadow-xs">
+          <div className="font-mono text-xs text-slate-500 uppercase">Missions Cleared</div>
+          <div className="font-orbitron font-black text-3xl text-emerald-600 mt-1">
             {progress?.stats?.total_completed || 0}
           </div>
         </div>
 
-        <div className="city-glass border border-cyber-cyan/40 p-5 rounded-xl shadow-[0_0_20px_rgba(0,240,255,0.12)]">
-          <div className="font-mono text-xs text-cyber-textMuted uppercase">Active Directives</div>
-          <div className="font-orbitron font-black text-3xl text-cyber-cyan mt-1">
+        <div className="city-glass border border-sky-200 p-5 rounded-xl shadow-xs">
+          <div className="font-mono text-xs text-slate-500 uppercase">Active Directives</div>
+          <div className="font-orbitron font-black text-3xl text-sky-600 mt-1">
             {progress?.stats?.total_active || 0}
           </div>
         </div>
 
-        <div className="city-glass border border-cyber-coral/40 p-5 rounded-xl shadow-[0_0_20px_rgba(255,51,102,0.12)]">
-          <div className="font-mono text-xs text-cyber-textMuted uppercase">Current Charge</div>
-          <div className="font-orbitron font-black text-3xl text-cyber-coral mt-1">
+        <div className="city-glass border border-rose-200 p-5 rounded-xl shadow-xs">
+          <div className="font-mono text-xs text-slate-500 uppercase">Current Streak</div>
+          <div className="font-orbitron font-black text-3xl text-rose-600 mt-1">
             {progress?.streak?.current_streak || 0}D
           </div>
         </div>
 
-        <div className="city-glass border border-cyber-amber/40 p-5 rounded-xl shadow-[0_0_20px_rgba(255,184,0,0.12)]">
-          <div className="font-mono text-xs text-cyber-textMuted uppercase">Max Charge Record</div>
-          <div className="font-orbitron font-black text-3xl text-cyber-amber mt-1">
+        <div className="city-glass border border-amber-200 p-5 rounded-xl shadow-xs">
+          <div className="font-mono text-xs text-slate-500 uppercase">Max Streak Record</div>
+          <div className="font-orbitron font-black text-3xl text-amber-600 mt-1">
             {progress?.streak?.best_streak || 0}D
           </div>
         </div>

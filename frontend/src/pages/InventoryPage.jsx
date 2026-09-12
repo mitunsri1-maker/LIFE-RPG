@@ -1,4 +1,4 @@
-﻿import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { inventoryApi, characterApi } from '../api';
 import HoloItem3D from '../components/3d/HoloItem3D';
 import PlayerPod3D from '../components/3d/PlayerPod3D';
@@ -65,14 +65,14 @@ export default function InventoryPage() {
     <div className="p-4 md:p-8 max-w-6xl mx-auto space-y-8">
       {/* Header */}
       <div>
-        <h1 className="font-orbitron font-black text-3xl md:text-4xl text-cyber-text tracking-tight flex items-center gap-3">
-          <span className="w-11 h-11 rounded-xl bg-cyber-violet/20 border-2 border-cyber-violet text-cyber-violet flex items-center justify-center text-xl shadow-holo-purple">
+        <h1 className="font-orbitron font-black text-3xl md:text-4xl text-slate-800 tracking-tight flex items-center gap-3">
+          <span className="w-11 h-11 rounded-xl bg-purple-50 border border-purple-200 text-purple-600 flex items-center justify-center text-xl shadow-xs">
             🎒
           </span>
           TACTICAL LOADOUT & VAULT
         </h1>
-        <p className="font-mono text-xs text-cyber-textMuted mt-1">
-          EQUIP HOLOGRAPHIC GEAR // BIO-CYBERNETIC ARTIFACT MATRIX
+        <p className="font-mono text-xs text-slate-500 mt-1">
+          EQUIP GEAR // BIO-CYBERNETIC ARTIFACT MATRIX
         </p>
       </div>
 

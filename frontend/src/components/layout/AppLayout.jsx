@@ -1,4 +1,4 @@
-﻿import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Outlet, NavLink, useNavigate, useLocation } from 'react-router-dom';
 import { useAuthStore } from '../../store/authStore';
 import {
@@ -60,22 +60,22 @@ export default function AppLayout() {
 
       {/* Main App Container */}
       <div className="relative z-10 flex flex-col h-screen overflow-hidden">
-        {/* Top Global Hologram HUD Bar */}
-        <header className="h-14 city-glass border-b border-cyber-border/30 px-4 md:px-6 flex items-center justify-between shrink-0 select-none shadow-sm">
+        {/* Top Global Daylight Header Bar */}
+        <header className="h-14 city-glass border-b border-white/80 px-4 md:px-6 flex items-center justify-between shrink-0 select-none shadow-xs">
           {/* Brand & System Status */}
           <div className="flex items-center gap-3 md:gap-5">
             <div className="flex items-center gap-2.5">
-              <div className="w-8 h-8 rounded-lg bg-cyber-cyan/20 border-2 border-cyber-cyan flex items-center justify-center shadow-holo-cyan">
-                <Zap className="w-4 h-4 text-cyber-cyan fill-cyber-cyan" />
+              <div className="w-8 h-8 rounded-lg bg-sky-500 text-white flex items-center justify-center shadow-xs">
+                <Zap className="w-4 h-4 text-white fill-white" />
               </div>
-              <span className="font-orbitron font-black text-lg md:text-xl tracking-wider text-cyber-cyan text-glow-cyan">
-                LIFE<span className="text-cyber-magenta">//</span>OS
+              <span className="font-orbitron font-black text-lg md:text-xl tracking-wider text-slate-800">
+                LIFE<span className="text-sky-500">//</span>OS
               </span>
             </div>
 
-            <div className="hidden lg:flex items-center gap-2 text-[10px] font-mono text-cyber-textMuted city-glass border border-cyber-border/30 px-2.5 py-1 rounded-full">
-              <span className="w-2 h-2 rounded-full bg-cyber-green animate-ping" />
-              SYS.ONLINE // NEURAL LINK STABLE
+            <div className="hidden lg:flex items-center gap-2 text-[10px] font-mono text-slate-500 bg-white/80 border border-slate-200 px-2.5 py-1 rounded-full shadow-2xs">
+              <span className="w-2 h-2 rounded-full bg-emerald-500 animate-ping" />
+              METROPOLIS GRID // ONLINE
             </div>
           </div>
 
@@ -89,7 +89,7 @@ export default function AppLayout() {
             )}
 
             {/* Live Telemetry Clock */}
-            <div className="hidden md:block font-mono text-xs text-cyber-cyan city-glass border border-cyber-cyan/35 px-2.5 py-1 rounded-md">
+            <div className="hidden md:block font-mono text-xs text-sky-700 bg-white/80 border border-sky-200 px-2.5 py-1 rounded-lg shadow-2xs">
               UTC {time}
             </div>
 
@@ -97,10 +97,10 @@ export default function AppLayout() {
             <button
               onClick={() => setEnable3D(!enable3D)}
               title={enable3D ? "Disable 3D Background" : "Enable 3D Background"}
-              className={`hidden sm:inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-xs font-mono border transition-all cursor-pointer ${
+              className={`hidden sm:inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-xs font-mono border transition-all cursor-pointer shadow-2xs ${
                 enable3D
-                  ? 'city-glass-elevated text-cyber-cyan border-cyber-cyan shadow-cyber-sm'
-                  : 'city-glass text-cyber-muted border-cyber-border/40'
+                  ? 'bg-sky-500 text-white border-sky-500 shadow-xs'
+                  : 'bg-white text-slate-600 border-slate-200 hover:border-slate-300'
               }`}
             >
               <Monitor className="w-3.5 h-3.5" />
@@ -114,24 +114,24 @@ export default function AppLayout() {
 
         {/* Core Layout: Sidebar + Main Content Area */}
         <div className="flex flex-1 overflow-hidden">
-          {/* Holographic Sidebar (Desktop) */}
-          <aside className="hidden md:flex flex-col w-64 city-glass border-r border-cyber-border/30 shrink-0">
-            {/* Player Quick Hologram Badge */}
+          {/* Daylight Sidebar (Desktop) */}
+          <aside className="hidden md:flex flex-col w-64 city-glass border-r border-white/80 shrink-0">
+            {/* Player Quick Badge */}
             {user && (
-              <div className="p-3.5 mx-3 my-3 city-glass-elevated border border-cyber-cyan/35 rounded-xl shadow-[0_0_20px_rgba(0,240,255,0.15)] space-y-2.5">
+              <div className="p-3.5 mx-3 my-3 city-glass-elevated border border-slate-200 rounded-xl shadow-sm space-y-2.5">
                 <div className="flex items-center gap-3">
                   <LevelBadge level={user.level || 1} />
                   <div className="min-w-0 flex-1">
-                    <p className="font-orbitron font-bold text-sm text-cyber-text truncate">
+                    <p className="font-orbitron font-bold text-sm text-slate-800 truncate">
                       {user.username}
                     </p>
-                    <p className="font-mono text-[10px] text-cyber-cyan uppercase tracking-wider">
+                    <p className="font-mono text-[10px] text-sky-600 uppercase tracking-wider font-semibold">
                       RANK // OPERATIVE
                     </p>
                   </div>
                 </div>
 
-                <div className="sm:hidden flex flex-wrap gap-2 pt-1 border-t border-cyber-border/25">
+                <div className="sm:hidden flex flex-wrap gap-2 pt-1 border-t border-slate-100">
                   <GoldCounter gold={user.gold} />
                   <StreakCounter />
                 </div>
@@ -147,27 +147,27 @@ export default function AppLayout() {
                     key={to}
                     to={to}
                     onClick={handleNavClick}
-                    className={`group flex items-center justify-between px-3.5 py-2.5 rounded-lg font-orbitron text-xs font-bold tracking-wider transition-all duration-200 border select-none ${
+                    className={`group flex items-center justify-between px-3.5 py-2.5 rounded-xl font-orbitron text-xs font-bold tracking-wider transition-all duration-200 border select-none ${
                       active
-                        ? 'bg-cyber-cyan/20 text-cyber-cyan border-cyber-cyan shadow-holo-cyan translate-x-1'
-                        : 'text-cyber-textMuted border-transparent hover:border-cyber-cyan/35 hover:text-cyber-text hover:bg-cyber-panel2/60'
+                        ? 'bg-sky-500 text-white border-sky-500 shadow-xs translate-x-1'
+                        : 'text-slate-600 border-transparent hover:border-slate-200 hover:text-slate-900 hover:bg-white/60'
                     }`}
                   >
                     <div className="flex items-center gap-3">
-                      <Icon className={`w-4 h-4 shrink-0 transition-transform ${active ? 'scale-110 text-cyber-cyan' : 'group-hover:text-cyber-cyan'}`} />
+                      <Icon className={`w-4 h-4 shrink-0 transition-transform ${active ? 'scale-110 text-white' : 'group-hover:text-sky-600'}`} />
                       <span>{label}</span>
                     </div>
-                    <span className="font-mono text-[10px] opacity-60">[{code}]</span>
+                    <span className={`font-mono text-[10px] ${active ? 'opacity-90' : 'opacity-40'}`}>[{code}]</span>
                   </NavLink>
                 );
               })}
             </nav>
 
-            {/* Logout Terminal Button */}
-            <div className="p-3 border-t border-cyber-border/25">
+            {/* Logout Button */}
+            <div className="p-3 border-t border-slate-200/80">
               <button
                 onClick={handleLogout}
-                className="w-full flex items-center justify-center gap-2 px-3 py-2.5 rounded-lg font-orbitron font-bold text-xs uppercase tracking-wider text-cyber-coral bg-cyber-coral/10 border border-cyber-coral hover:bg-cyber-coral hover:text-cyber-bg shadow-holo-red transition-all cursor-pointer"
+                className="w-full flex items-center justify-center gap-2 px-3 py-2.5 rounded-xl font-orbitron font-bold text-xs uppercase tracking-wider text-rose-600 bg-rose-50 border border-rose-200 hover:bg-rose-600 hover:text-white transition-all cursor-pointer shadow-2xs"
               >
                 <LogOut className="w-3.5 h-3.5 stroke-[2.5]" /> DISCONNECT
               </button>

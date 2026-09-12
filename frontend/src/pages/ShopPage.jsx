@@ -1,4 +1,4 @@
-﻿import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { shopApi } from '../api';
 import { useAuthStore } from '../store/authStore';
 import ShopItem from '../components/ui/ShopItem';
@@ -47,13 +47,13 @@ export default function ShopPage() {
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h1 className="font-orbitron font-black text-3xl md:text-4xl text-cyber-text tracking-tight flex items-center gap-3">
-            <span className="w-11 h-11 rounded-xl bg-cyber-amber/20 border-2 border-cyber-amber text-cyber-amber flex items-center justify-center text-xl shadow-holo-gold">
+          <h1 className="font-orbitron font-black text-3xl md:text-4xl text-slate-800 tracking-tight flex items-center gap-3">
+            <span className="w-11 h-11 rounded-xl bg-amber-50 border border-amber-200 text-amber-600 flex items-center justify-center text-xl shadow-xs">
               🛒
             </span>
             THE CYBER BAZAAR
           </h1>
-          <p className="font-mono text-xs text-cyber-textMuted mt-1">
+          <p className="font-mono text-xs text-slate-500 mt-1">
             EXCHANGE HARVESTED CREDITS FOR 3D HOLOGRAPHIC EQUIPMENT & SKINS
           </p>
         </div>

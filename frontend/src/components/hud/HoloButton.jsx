@@ -1,4 +1,4 @@
-﻿import React from 'react';
+import React from 'react';
 import { clsx } from 'clsx';
 import { soundFX } from '../../utils/soundFX';
 
@@ -13,13 +13,13 @@ export function HoloButton({
   type = 'button',
 }) {
   const styles = {
-    cyan: 'bg-cyber-cyan/15 text-cyber-cyan border-cyber-cyan hover:bg-cyber-cyan hover:text-cyber-bg shadow-holo-cyan hover:shadow-[0_0_30px_rgba(0,240,255,0.6)]',
-    magenta: 'bg-cyber-magenta/15 text-cyber-magenta border-cyber-magenta hover:bg-cyber-magenta hover:text-cyber-bg shadow-holo-purple hover:shadow-[0_0_30px_rgba(255,0,127,0.6)]',
-    green: 'bg-cyber-green/15 text-cyber-green border-cyber-green hover:bg-cyber-green hover:text-cyber-bg shadow-holo-green hover:shadow-[0_0_30px_rgba(0,255,157,0.6)]',
-    gold: 'bg-cyber-amber/15 text-cyber-amber border-cyber-amber hover:bg-cyber-amber hover:text-cyber-bg shadow-holo-gold hover:shadow-[0_0_30px_rgba(255,184,0,0.6)]',
-    red: 'bg-cyber-coral/15 text-cyber-coral border-cyber-coral hover:bg-cyber-coral hover:text-cyber-bg shadow-holo-red hover:shadow-[0_0_30px_rgba(255,51,102,0.6)]',
-    ghost: 'city-glass text-cyber-text border-cyber-border hover:border-cyber-cyan hover:text-cyber-cyan hover:shadow-holo-cyan',
-    elevated: 'city-glass-elevated text-cyber-cyan border-cyber-cyan hover:bg-cyber-cyan hover:text-cyber-bg shadow-[0_0_25px_rgba(0,240,255,0.4)]',
+    cyan: 'bg-cyber-cyan text-white border-cyber-cyan hover:bg-cyber-blue shadow-holo-cyan',
+    magenta: 'bg-cyber-magenta text-white border-cyber-magenta hover:opacity-90 shadow-holo-purple',
+    green: 'bg-cyber-green text-white border-cyber-green hover:opacity-90 shadow-holo-green',
+    gold: 'bg-cyber-amber text-white border-cyber-amber hover:opacity-90 shadow-holo-gold',
+    red: 'bg-cyber-red text-white border-cyber-red hover:opacity-90 shadow-holo-red',
+    ghost: 'city-glass text-cyber-text border-slate-200 hover:border-cyber-cyan hover:text-cyber-cyan shadow-sm',
+    elevated: 'bg-white text-cyber-cyan border-cyber-cyan/50 hover:bg-cyber-cyan hover:text-white shadow-md',
   }[variant] || styles.cyan;
 
   const sizes = {
