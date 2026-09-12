@@ -61,7 +61,7 @@ export default function AppLayout() {
       {/* Main App Container */}
       <div className="relative z-10 flex flex-col h-screen overflow-hidden">
         {/* Top Global Holographic Header Bar */}
-        <header className="h-14 city-glass border-b border-cyber-cyan/25 px-4 md:px-6 flex items-center justify-between shrink-0 select-none shadow-[0_4px_20px_rgba(0,0,0,0.5)]">
+        <header className="h-14 dark-navbar px-4 md:px-6 flex items-center justify-between shrink-0 select-none shadow-[0_4px_20px_rgba(0,0,0,0.5)]">
           {/* Brand & System Status */}
           <div className="flex items-center gap-3 md:gap-5">
             <div className="flex items-center gap-2.5">

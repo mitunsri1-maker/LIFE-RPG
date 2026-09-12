@@ -177,12 +177,12 @@ function DarkNeonCity({ level = 1 }) {
   return (
     <group>
       {/* Deep Cyberpunk Atmospheric Night Sky & Fog */}
-      <fog attach="fog" args={['#050810', 25, 110]} />
+      <fog attach="fog" args={['#050814', 22, 115]} />
 
-      {/* Atmospheric Night Sky Dome */}
+      {/* Atmospheric Deep Blue Night Sky Dome */}
       <mesh position={[0, 20, -50]}>
         <sphereGeometry args={[110, 32, 16]} />
-        <meshBasicMaterial color="#050810" side={THREE.BackSide} />
+        <meshBasicMaterial color="#080F26" side={THREE.BackSide} />
       </mesh>
 
       {/* Instanced Dark Monolith Skyscraper Volumes */}
@@ -196,15 +196,15 @@ function DarkNeonCity({ level = 1 }) {
       >
         <boxGeometry args={[1, 1, 1]} />
         <meshStandardMaterial
-          color="#0B1220"
-          roughness={0.4}
-          metalness={0.7}
+          color="#0B1222"
+          roughness={0.35}
+          metalness={0.75}
         />
       </instancedMesh>
 
-      {/* Neon Windows on Skyscraper Facades */}
+      {/* Vivid Neon Windows on Skyscraper Facades (Cyan, Amber, Magenta, Violet) */}
       <group ref={windowsRef}>
-        {windowData.slice(0, 80).map((w, i) => (
+        {windowData.slice(0, 160).map((w, i) => (
           <mesh
             key={`win-${i}`}
             onUpdate={(self) => {
@@ -230,7 +230,7 @@ function DarkNeonCity({ level = 1 }) {
             <meshBasicMaterial
               color={b.color}
               transparent
-              opacity={0.82}
+              opacity={0.88}
               side={THREE.DoubleSide}
             />
           </mesh>
@@ -247,7 +247,7 @@ function DarkNeonCity({ level = 1 }) {
         <meshStandardMaterial color="#0A0F1D" roughness={0.7} metalness={0.5} />
       </mesh>
 
-      {/* Highway Neon Guardrails */}
+      {/* Highway Neon Guardrails & Road Divider Lane Markings */}
       <mesh position={[0, -2.8, -16]}>
         <boxGeometry args={[130, 0.15, 0.15]} />
         <meshBasicMaterial color="#00E5FF" />
@@ -255,6 +255,18 @@ function DarkNeonCity({ level = 1 }) {
       <mesh position={[0, -2.8, -20]}>
         <boxGeometry args={[130, 0.15, 0.15]} />
         <meshBasicMaterial color="#FF2DA6" />
+      </mesh>
+      <mesh position={[0, -2.95, -18]}>
+        <boxGeometry args={[130, 0.05, 0.2]} />
+        <meshBasicMaterial color="#FFB84D" />
+      </mesh>
+      <mesh position={[0, 1.6, -26]}>
+        <boxGeometry args={[140, 0.15, 0.15]} />
+        <meshBasicMaterial color="#00E5FF" />
+      </mesh>
+      <mesh position={[0, 1.6, -30]}>
+        <boxGeometry args={[140, 0.15, 0.15]} />
+        <meshBasicMaterial color="#8B5CF6" />
       </mesh>
 
       {/* High-Speed Highway Traffic Light Streaks */}
@@ -286,9 +298,9 @@ function DarkNeonCity({ level = 1 }) {
       <mesh position={[0, -14, -20]} rotation={[-Math.PI / 2, 0, 0]}>
         <planeGeometry args={[180, 180]} />
         <meshStandardMaterial
-          color="#060913"
-          roughness={0.15}
-          metalness={0.9}
+          color="#060914"
+          roughness={0.12}
+          metalness={0.92}
         />
       </mesh>
 
@@ -306,21 +318,21 @@ function DarkNeonCity({ level = 1 }) {
           size={0.15}
           color="#00E5FF"
           transparent
-          opacity={0.4}
+          opacity={0.45}
           sizeAttenuation
         />
       </points>
 
-      {/* Dark Ambient Lighting + Vivid Neon Point Lights */}
-      <ambientLight intensity={0.35} color="#0B1528" />
-      {/* Cyan Skyscraper Accent Light */}
-      <pointLight position={[-15, 20, -15]} intensity={3.0} color="#00E5FF" distance={65} />
-      {/* Magenta Billboard Accent Light */}
-      <pointLight position={[18, 16, -18]} intensity={3.2} color="#FF2DA6" distance={65} />
+      {/* Dark Ambient Lighting + Vivid Volumetric Neon Point Lights */}
+      <ambientLight intensity={0.4} color="#0B1730" />
+      {/* Cyan Skyscraper Volumetric Light */}
+      <pointLight position={[-15, 20, -15]} intensity={4.5} color="#00E5FF" distance={70} />
+      {/* Magenta Billboard Volumetric Light */}
+      <pointLight position={[18, 16, -18]} intensity={4.5} color="#FF2DA6" distance={70} />
       {/* Violet City Center Fill Light */}
-      <pointLight position={[0, 10, -12]} intensity={2.5} color="#8B5CF6" distance={50} />
+      <pointLight position={[0, 12, -12]} intensity={3.5} color="#8B5CF6" distance={55} />
       {/* Amber Street Rim Light */}
-      <pointLight position={[0, -2, -10]} intensity={2.2} color="#FFB84D" distance={40} />
+      <pointLight position={[0, -2, -10]} intensity={3.0} color="#FFB84D" distance={45} />
     </group>
   );
 }

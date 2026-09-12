@@ -160,25 +160,25 @@
 
   /* Dark Holographic Cards & Glass Surfaces */
   .card, .panel {
-    background: rgba(7, 13, 27, 0.84);
+    background: rgba(5, 10, 20, 0.78);
     backdrop-filter: blur(18px);
     -webkit-backdrop-filter: blur(18px);
-    border: 1px solid rgba(0, 229, 255, 0.25);
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.55), 0 0 20px rgba(0, 229, 255, 0.08);
+    border: 1px solid rgba(0, 229, 255, 0.28);
+    box-shadow: 0 0 30px rgba(0, 229, 255, 0.08);
   }
 
   .card:hover, .panel:hover {
-    background: rgba(11, 20, 38, 0.92);
-    border-color: rgba(0, 229, 255, 0.5);
-    box-shadow: 0 16px 36px rgba(0, 0, 0, 0.65), 0 0 25px rgba(0, 229, 255, 0.16);
+    background: rgba(12, 22, 40, 0.92);
+    border-color: rgba(0, 229, 255, 0.55);
+    box-shadow: 0 0 35px rgba(0, 229, 255, 0.18);
   }
 
   .city-glass {
-    background: rgba(7, 13, 27, 0.84);
+    background: rgba(5, 10, 20, 0.78);
     backdrop-filter: blur(18px);
     -webkit-backdrop-filter: blur(18px);
-    border: 1px solid rgba(0, 229, 255, 0.25);
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.55), 0 0 20px rgba(0, 229, 255, 0.08);
+    border: 1px solid rgba(0, 229, 255, 0.28);
+    box-shadow: 0 0 30px rgba(0, 229, 255, 0.08);
   }
 
   .city-glass-purple {
@@ -190,11 +190,18 @@
   }
 
   .city-glass-elevated {
-    background: rgba(10, 18, 36, 0.88);
+    background: rgba(8, 14, 28, 0.82);
     backdrop-filter: blur(22px);
     -webkit-backdrop-filter: blur(22px);
-    border: 1px solid rgba(0, 229, 255, 0.38);
+    border: 1px solid rgba(0, 229, 255, 0.35);
     box-shadow: 0 16px 40px rgba(0, 0, 0, 0.7), 0 0 25px rgba(0, 229, 255, 0.18);
+  }
+
+  .dark-navbar {
+    background: rgba(5, 9, 20, 0.88);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-bottom: 1px solid rgba(0, 229, 255, 0.2);
   }
 
   .holo-glass {
@@ -214,17 +221,27 @@
   }
 
   .quest-card {
-    background: linear-gradient(180deg, rgba(8, 14, 28, 0.94), rgba(11, 20, 38, 0.88));
+    background: linear-gradient(
+      145deg,
+      rgba(7, 14, 28, 0.94),
+      rgba(10, 17, 34, 0.88)
+    );
     border: 1px solid rgba(0, 229, 255, 0.25);
-    border-left: 3px solid #00E5FF;
+    box-shadow:
+      0 0 25px rgba(0, 229, 255, 0.06),
+      inset 0 0 30px rgba(0, 229, 255, 0.025);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
     border-radius: 12px;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
     transition: all 0.25s ease;
   }
+
   .quest-card:hover {
-    border-color: rgba(0, 229, 255, 0.55);
-    box-shadow: 0 14px 35px rgba(0, 0, 0, 0.65), 0 0 20px rgba(0, 229, 255, 0.15);
-    transform: translateY(-2px);
+    border-color: rgba(0, 229, 255, 0.7);
+    box-shadow:
+      0 0 30px rgba(0, 229, 255, 0.16),
+      inset 0 0 25px rgba(0, 229, 255, 0.04);
+    transform: translateY(-3px);
   }
 
   /* Corner targeting reticles */
