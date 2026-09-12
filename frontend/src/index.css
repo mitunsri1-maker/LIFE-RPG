@@ -1,0 +1,182 @@
+﻿@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --cyber-cyan: #00F0FF;
+    --cyber-blue: #0080FF;
+    --cyber-magenta: #FF007F;
+    --cyber-purple: #8B5CF6;
+    --cyber-green: #00FF9D;
+    --cyber-gold: #FFB800;
+    --cyber-red: #FF003C;
+    --cyber-bg: #05070E;
+    --cyber-panel: #0E1426;
+  }
+
+  * {
+    box-sizing: border-box;
+  }
+
+  body {
+    background-color: #05070E;
+    color: #E2F1FD;
+    font-family: 'Inter', system-ui, sans-serif;
+    min-height: 100vh;
+    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: 'Orbitron', 'Space Grotesk', system-ui, sans-serif;
+    letter-spacing: -0.02em;
+  }
+
+  /* Cyberpunk futuristic scrollbar */
+  ::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+  ::-webkit-scrollbar-track {
+    background: #090D1A;
+    border-left: 1px solid rgba(0, 240, 255, 0.15);
+  }
+  ::-webkit-scrollbar-thumb {
+    background: linear-gradient(180deg, #00F0FF 0%, #8B5CF6 100%);
+    border-radius: 2px;
+    box-shadow: 0 0 10px rgba(0, 240, 255, 0.5);
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: #00FF9D;
+  }
+
+  input[type="date"]::-webkit-calendar-picker-indicator {
+    filter: invert(1) hue-rotate(180deg);
+    cursor: pointer;
+  }
+}
+
+@layer utilities {
+  /* Futuristic Chamfered Corners */
+  .cyber-cut {
+    clip-path: polygon(
+      0 12px,
+      12px 0,
+      calc(100% - 12px) 0,
+      100% 12px,
+      100% calc(100% - 12px),
+      calc(100% - 12px) 100%,
+      12px 100%,
+      0 calc(100% - 12px)
+    );
+  }
+
+  .cyber-cut-tr {
+    clip-path: polygon(
+      0 0,
+      calc(100% - 16px) 0,
+      100% 16px,
+      100% 100%,
+      0 100%
+    );
+  }
+
+  .cyber-cut-bl {
+    clip-path: polygon(
+      0 0,
+      100% 0,
+      100% 100%,
+      16px 100%,
+      0 calc(100% - 16px)
+    );
+  }
+
+  /* Hologram text glow */
+  .text-glow-cyan {
+    text-shadow: 0 0 12px rgba(0, 240, 255, 0.75), 0 0 24px rgba(0, 240, 255, 0.35);
+  }
+  .text-glow-magenta {
+    text-shadow: 0 0 12px rgba(255, 0, 127, 0.75), 0 0 24px rgba(255, 0, 127, 0.35);
+  }
+  .text-glow-green {
+    text-shadow: 0 0 12px rgba(0, 255, 157, 0.75), 0 0 24px rgba(0, 255, 157, 0.35);
+  }
+  .text-glow-gold {
+    text-shadow: 0 0 12px rgba(255, 184, 0, 0.75), 0 0 24px rgba(255, 184, 0, 0.35);
+  }
+
+  /* Hologram scanline layer */
+  .scanline-overlay {
+    background: linear-gradient(
+      rgba(18, 16, 16, 0) 50%, 
+      rgba(0, 240, 255, 0.025) 50%
+    ), linear-gradient(
+      90deg,
+      rgba(255, 0, 0, 0.02),
+      rgba(0, 255, 0, 0.01),
+      rgba(0, 0, 255, 0.02)
+    );
+    background-size: 100% 3px, 6px 100%;
+    pointer-events: none;
+  }
+
+  /* Cyber grid background */
+  .cyber-grid {
+    background-size: 40px 40px;
+    background-image: 
+      linear-gradient(to right, rgba(0, 240, 255, 0.04) 1px, transparent 1px),
+      linear-gradient(to bottom, rgba(0, 240, 255, 0.04) 1px, transparent 1px);
+  }
+
+  /* Hologram panel base */
+  .holo-glass {
+    background: rgba(14, 20, 38, 0.75);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid rgba(0, 240, 255, 0.22);
+    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.6), inset 0 0 20px rgba(0, 240, 255, 0.04);
+  }
+
+  .holo-glass-purple {
+    background: rgba(20, 14, 38, 0.75);
+    backdrop-filter: blur(16px);
+    border: 1px solid rgba(139, 92, 246, 0.3);
+    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.6), inset 0 0 20px rgba(139, 92, 246, 0.05);
+  }
+
+  /* Corner targeting crosses */
+  .cyber-corner-tl {
+    position: relative;
+  }
+  .cyber-corner-tl::before {
+    content: '';
+    position: absolute;
+    top: -2px;
+    left: -2px;
+    width: 8px;
+    height: 8px;
+    border-top: 2px solid #00F0FF;
+    border-left: 2px solid #00F0FF;
+    pointer-events: none;
+  }
+  .cyber-corner-tl::after {
+    content: '';
+    position: absolute;
+    bottom: -2px;
+    right: -2px;
+    width: 8px;
+    height: 8px;
+    border-bottom: 2px solid #00F0FF;
+    border-right: 2px solid #00F0FF;
+    pointer-events: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, ::before, ::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
