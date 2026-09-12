@@ -2,9 +2,14 @@ import axios from 'axios';
 
 const getBaseURL = () => {
   const raw = import.meta.env.VITE_API_URL;
-  if (!raw || typeof raw !== 'string') return '/api';
-  const clean = raw.trim().replace(/\/+$/, '');
-  return clean.endsWith('/api') ? clean : `${clean}/api`;
+  if (raw && typeof raw === 'string' && raw.trim()) {
+    const clean = raw.trim().replace(/\/+$/, '');
+    return clean.endsWith('/api') ? clean : `${clean}/api`;
+  }
+  if (import.meta.env.DEV) {
+    return '/api';
+  }
+  return 'https://life-rpg-axdm.onrender.com/api';
 };
 
 const api = axios.create({
