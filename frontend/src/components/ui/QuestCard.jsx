@@ -5,19 +5,22 @@ import { soundFX } from '../../utils/soundFX';
 
 const DIFFICULTY_CONFIG = {
   easy: {
-    label: 'TIER I // LOW RISK',
+    label: 'TIER I',
+    stars: '★☆☆',
     border: 'border-cyber-green/30 hover:border-cyber-green/60 hover:shadow-[0_0_15px_rgba(57,255,136,0.2)]',
     badge: 'bg-cyber-green/10 text-cyber-green border-cyber-green/30',
     dot: 'bg-cyber-green',
   },
   medium: {
-    label: 'TIER II // STANDARD',
+    label: 'TIER II',
+    stars: '★★☆',
     border: 'border-cyber-cyan/30 hover:border-cyber-cyan/60 hover:shadow-[0_0_15px_rgba(0,229,255,0.2)]',
     badge: 'bg-cyber-cyan/10 text-cyber-cyan border-cyber-cyan/30',
     dot: 'bg-cyber-cyan',
   },
   hard: {
-    label: 'TIER III // HIGH PRIORITY',
+    label: 'TIER III',
+    stars: '★★★',
     border: 'border-cyber-magenta/30 hover:border-cyber-magenta/60 hover:shadow-[0_0_15px_rgba(255,45,166,0.2)]',
     badge: 'bg-cyber-magenta/10 text-cyber-magenta border-cyber-magenta/30',
     dot: 'bg-cyber-magenta',
@@ -76,6 +79,9 @@ export default function QuestCard({ quest, onComplete, onDelete, isCompleting })
         </div>
 
         <div className="flex items-center gap-2">
+          <span className="font-mono text-xs text-cyber-amber tracking-widest font-bold">
+            {diffConfig.stars}
+          </span>
           <span className={clsx('font-mono text-[9px] px-2 py-0.5 rounded border uppercase font-bold', diffConfig.badge)}>
             {diffConfig.label}
           </span>
@@ -144,8 +150,8 @@ export default function QuestCard({ quest, onComplete, onDelete, isCompleting })
             disabled={isCompleting}
             className="inline-flex items-center gap-1.5 bg-cyber-cyan hover:bg-cyber-cyan/85 text-cyber-bg font-orbitron font-bold text-xs uppercase px-4 py-2 rounded-lg shadow-[0_0_15px_rgba(0,229,255,0.4)] transition-all duration-200 active:scale-95 disabled:opacity-50 cursor-pointer"
           >
-            <span>EXECUTE</span>
-            <ArrowRight className="w-3.5 h-3.5 stroke-[2.5]" />
+            <span>{isCompleting ? 'EXECUTING...' : 'EXECUTE QUEST'}</span>
+            <ArrowRight className={clsx("w-3.5 h-3.5 stroke-[2.5]", isCompleting && "animate-spin")} />
           </button>
         ) : (
           <span className="inline-flex items-center gap-1.5 text-xs font-orbitron font-bold text-cyber-green bg-cyber-green/10 px-3 py-1.5 rounded-lg border border-cyber-green/30">

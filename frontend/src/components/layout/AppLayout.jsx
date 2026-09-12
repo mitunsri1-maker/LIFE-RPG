@@ -153,7 +153,12 @@ export default function AppLayout() {
                         : 'text-cyber-textMuted border-transparent hover:border-cyber-cyan/30 hover:text-cyber-text hover:bg-cyber-navy/50'
                     }`}
                   >
-                    <div className="flex items-center gap-3">
+                    <div className="flex items-center gap-2.5">
+                      {active ? (
+                        <span className="w-1.5 h-1.5 rounded-full bg-cyber-cyan animate-ping shrink-0" />
+                      ) : (
+                        <span className="w-1.5 h-1.5 rounded-full bg-transparent shrink-0" />
+                      )}
                       <Icon className={`w-4 h-4 shrink-0 transition-transform ${active ? 'scale-110 text-cyber-cyan' : 'group-hover:text-cyber-cyan'}`} />
                       <span>{label}</span>
                     </div>

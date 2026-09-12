@@ -9,12 +9,13 @@ import RewardPopup from '../components/ui/RewardPopup';
 import LevelUpAnimation from '../components/ui/LevelUpAnimation';
 import PlayerPod3D from '../components/3d/PlayerPod3D';
 import XPCore from '../components/ui/XPCore';
+import CharacterStats from '../components/ui/CharacterStats';
 import QuestNodeMap3D from '../components/3d/QuestNodeMap3D';
 import StreakReactor3D from '../components/3d/StreakReactor3D';
 import HoloPanel from '../components/hud/HoloPanel';
 import HoloButton from '../components/hud/HoloButton';
 import { soundFX } from '../utils/soundFX';
-import { Swords, Plus, Sparkles, Activity, Zap, Coins, Flame, Map, LayoutGrid } from 'lucide-react';
+import { Swords, Plus, Sparkles, Activity, Zap, Coins, Flame, Map, LayoutGrid, Award, ShieldAlert, Cpu } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 function calculateLevelProgress(xp = 0, level = 1) {
@@ -33,6 +34,7 @@ export default function DashboardPage() {
   const { quests, fetchQuests, completeQuest, deleteQuest, clearLastReward, lastReward } = useQuestStore();
   const [charData, setCharData] = useState(null);
   const [streak, setStreak] = useState({ current_streak: 0, best_streak: 0 });
+  const [completedCount, setCompletedCount] = useState(0);
   const [completingId, setCompletingId] = useState(null);
   const [levelUpLevel, setLevelUpLevel] = useState(null);
   const [justGainedXP, setJustGainedXP] = useState(false);
@@ -41,7 +43,14 @@ export default function DashboardPage() {
   useEffect(() => {
     fetchQuests({ status: 'active' });
     characterApi.get().then((r) => setCharData(r.data)).catch(() => {});
-    progressApi.getStreak().then((r) => setStreak(r.data.streak || {})).catch(() => {});
+    progressApi.get().then((r) => {
+      if (r.data?.streak) setStreak(r.data.streak);
+      if (r.data?.stats?.total_completed !== undefined) {
+        setCompletedCount(r.data.stats.total_completed);
+      }
+    }).catch(() => {
+      progressApi.getStreak().then((r) => setStreak(r.data.streak || {})).catch(() => {});
+    });
   }, []);
 
   const handleComplete = async (id) => {
@@ -49,11 +58,19 @@ export default function DashboardPage() {
     const result = await completeQuest(id);
     setCompletingId(null);
     if (result.success) {
+      setCompletedCount((prev) => prev + 1);
       // Trigger 3D Energy Core Reactor Pulse Burst
       setJustGainedXP(true);
       setTimeout(() => setJustGainedXP(false), 1600);
 
       refreshUser();
+      characterApi.get().then((r) => setCharData(r.data)).catch(() => {});
+      progressApi.get().then((r) => {
+        if (r.data?.streak) setStreak(r.data.streak);
+        if (r.data?.stats?.total_completed !== undefined) {
+          setCompletedCount(r.data.stats.total_completed);
+        }
+      }).catch(() => {});
       if (result.reward?.level_up) setLevelUpLevel(result.reward.new_level);
     }
   };
@@ -64,18 +81,18 @@ export default function DashboardPage() {
   };
 
   const activeQuests = quests.filter((q) => q.status === 'active').slice(0, 6);
-  const { percent: xpPercent } = calculateLevelProgress(user?.xp || 0, user?.level || 1);
+  const { currentInLevel, neededForNext, percent: xpPercent } = calculateLevelProgress(user?.xp || 0, user?.level || 1);
 
   return (
     <div className="p-4 md:p-8 max-w-6xl mx-auto space-y-8">
-      {/* Central Welcome Operative Header matching dark cyberpunk holographic HUD */}
+      {/* 1. Central Welcome Operative Header matching dark cyberpunk holographic HUD */}
       <div className="relative city-glass-elevated border border-cyber-cyan/35 rounded-2xl p-6 md:p-8 shadow-[0_10px_35px_rgba(0,0,0,0.6)] overflow-hidden">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-center">
           {/* Left Telemetry info */}
           <div className="lg:col-span-7 space-y-3">
             <div className="inline-flex items-center gap-2 bg-cyber-cyan/10 border border-cyber-cyan/30 text-cyber-cyan font-mono text-[11px] px-3 py-1 rounded-full font-bold tracking-widest uppercase shadow-[0_0_10px_rgba(0,229,255,0.15)]">
               <span className="w-2 h-2 rounded-full bg-cyber-cyan animate-ping" />
-              WELCOME BACK, OPERATIVE
+              WELCOME BACK, OPERATIVE // {user?.username}
             </div>
 
             <h1 className="font-orbitron font-black text-3xl md:text-5xl text-cyber-text tracking-tight uppercase text-glow-cyan">
@@ -83,7 +100,7 @@ export default function DashboardPage() {
             </h1>
 
             <p className="font-mono text-sm text-cyber-textMuted tracking-wide font-medium">
-              {user?.xp || 0} / {calculateLevelProgress(user?.xp || 0, user?.level || 1).neededForNext} XP
+              {currentInLevel} / {neededForNext} XP ({xpPercent}%)
             </p>
 
             {/* Quick Metrics */}
@@ -113,9 +130,9 @@ export default function DashboardPage() {
         </div>
       </div>
 
-      {/* 3D Operative Pod + Telemetry & Progress Grid */}
+      {/* 2. Main RPG Command Center Grid: 3D Operative Chamber + Progression & Attribute Matrix */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
-        {/* Operative Chamber */}
+        {/* Left Column: Operative Chamber */}
         <div className="lg:col-span-5 city-glass border border-cyber-cyan/25 rounded-2xl p-5 shadow-lg flex flex-col justify-between overflow-hidden">
           <div className="flex items-center justify-between border-b border-cyber-cyan/20 pb-3">
             <div className="flex items-center gap-2">
@@ -131,7 +148,14 @@ export default function DashboardPage() {
 
           {/* 3D Visualizer Canvas */}
           <div className="my-2 relative flex items-center justify-center">
-            <PlayerPod3D level={user?.level || 1} username={user?.username} stats={charData?.stats} height="230px" />
+            <PlayerPod3D
+              level={user?.level || 1}
+              username={user?.username}
+              stats={charData?.stats}
+              justGainedXP={justGainedXP}
+              xpPercent={xpPercent}
+              height="280px"
+            />
           </div>
 
           <div className="font-mono text-xs text-center text-cyber-textMuted bg-cyber-navy/70 p-2.5 rounded-lg border border-cyber-cyan/20 flex items-center justify-center gap-2">
@@ -140,36 +164,68 @@ export default function DashboardPage() {
           </div>
         </div>
 
-        {/* XP Energy Matrix + Telemetry Stat Grid */}
+        {/* Right Column: XP Energy Matrix + RPG Attribute Matrix */}
         <div className="lg:col-span-7 flex flex-col justify-between space-y-6">
           <XPBar xp={user?.xp || 0} level={user?.level || 1} />
 
-          {/* 4 Holographic Telemetry Modules */}
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-            <div className="city-glass border border-cyber-cyan/25 rounded-xl p-4 shadow-sm hover:border-cyber-cyan/60 hover:shadow-[0_0_15px_rgba(0,229,255,0.2)] transition-all">
-              <div className="text-xl mb-1">⚡</div>
-              <div className="font-orbitron font-black text-2xl text-cyber-cyan text-glow-cyan">LVL {user?.level || 1}</div>
-              <div className="font-mono text-[10px] uppercase text-cyber-dim tracking-wider">Access Tier</div>
+          {/* Attribute Matrix Panel */}
+          <div className="city-glass border border-cyber-cyan/25 rounded-2xl p-5 shadow-lg space-y-3.5">
+            <div className="flex items-center justify-between border-b border-cyber-cyan/20 pb-2.5">
+              <div className="flex items-center gap-2">
+                <Cpu className="w-4 h-4 text-cyber-cyan" />
+                <h3 className="font-orbitron font-bold text-sm text-cyber-text tracking-wider uppercase">
+                  ATTRIBUTE MATRIX // CORE TELEMETRY
+                </h3>
+              </div>
+              <Link
+                to="/character"
+                className="font-mono text-[10px] text-cyber-cyan hover:underline uppercase tracking-wider"
+              >
+                VIEW FULL BIO →
+              </Link>
             </div>
 
-            <div className="city-glass border border-cyber-amber/25 rounded-xl p-4 shadow-sm hover:border-cyber-amber/60 hover:shadow-[0_0_15px_rgba(255,184,77,0.2)] transition-all">
-              <div className="text-xl mb-1">🪙</div>
-              <div className="font-orbitron font-black text-2xl text-cyber-amber text-glow-gold">{Number(user?.gold || 0).toLocaleString()}</div>
-              <div className="font-mono text-[10px] uppercase text-cyber-dim tracking-wider">Credits</div>
-            </div>
-
-            <div className="city-glass border border-cyber-magenta/25 rounded-xl p-4 shadow-sm hover:border-cyber-magenta/60 hover:shadow-[0_0_15px_rgba(255,45,166,0.2)] transition-all">
-              <div className="text-xl mb-1">🔥</div>
-              <div className="font-orbitron font-black text-2xl text-cyber-magenta text-glow-magenta">{streak.current_streak || 0}D</div>
-              <div className="font-mono text-[10px] uppercase text-cyber-dim tracking-wider">Day Streak</div>
-            </div>
-
-            <div className="city-glass border border-cyber-green/25 rounded-xl p-4 shadow-sm hover:border-cyber-green/60 hover:shadow-[0_0_15px_rgba(57,255,136,0.2)] transition-all">
-              <div className="text-xl mb-1">🏆</div>
-              <div className="font-orbitron font-black text-2xl text-cyber-green text-glow-green">{streak.best_streak || 0}D</div>
-              <div className="font-mono text-[10px] uppercase text-cyber-dim tracking-wider">Best Record</div>
-            </div>
+            <CharacterStats stats={charData?.stats || {}} />
           </div>
+        </div>
+      </div>
+
+      {/* 3. Six Compact Holographic Stat Modules */}
+      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
+        <div className="city-glass border border-cyber-cyan/25 rounded-xl p-4 shadow-sm hover:border-cyber-cyan/60 hover:shadow-[0_0_15px_rgba(0,229,255,0.2)] transition-all">
+          <div className="text-xl mb-1">⚡</div>
+          <div className="font-orbitron font-black text-2xl text-cyber-cyan text-glow-cyan">LVL {user?.level || 1}</div>
+          <div className="font-mono text-[10px] uppercase text-cyber-dim tracking-wider">Access Tier</div>
+        </div>
+
+        <div className="city-glass border border-cyber-amber/25 rounded-xl p-4 shadow-sm hover:border-cyber-amber/60 hover:shadow-[0_0_15px_rgba(255,184,77,0.2)] transition-all">
+          <div className="text-xl mb-1">🪙</div>
+          <div className="font-orbitron font-black text-2xl text-cyber-amber text-glow-gold">{Number(user?.gold || 0).toLocaleString()}</div>
+          <div className="font-mono text-[10px] uppercase text-cyber-dim tracking-wider">Credits</div>
+        </div>
+
+        <div className="city-glass border border-cyber-magenta/25 rounded-xl p-4 shadow-sm hover:border-cyber-magenta/60 hover:shadow-[0_0_15px_rgba(255,45,166,0.2)] transition-all">
+          <div className="text-xl mb-1">🔥</div>
+          <div className="font-orbitron font-black text-2xl text-cyber-magenta text-glow-magenta">{streak.current_streak || 0}D</div>
+          <div className="font-mono text-[10px] uppercase text-cyber-dim tracking-wider">Day Streak</div>
+        </div>
+
+        <div className="city-glass border border-cyber-green/25 rounded-xl p-4 shadow-sm hover:border-cyber-green/60 hover:shadow-[0_0_15px_rgba(57,255,136,0.2)] transition-all">
+          <div className="text-xl mb-1">🏆</div>
+          <div className="font-orbitron font-black text-2xl text-cyber-green text-glow-green">{streak.best_streak || 0}D</div>
+          <div className="font-mono text-[10px] uppercase text-cyber-dim tracking-wider">Best Record</div>
+        </div>
+
+        <div className="city-glass border border-cyber-violet/25 rounded-xl p-4 shadow-sm hover:border-cyber-violet/60 hover:shadow-[0_0_15px_rgba(139,92,246,0.2)] transition-all">
+          <div className="text-xl mb-1">🎯</div>
+          <div className="font-orbitron font-black text-2xl text-cyber-violet text-glow-violet">{completedCount}</div>
+          <div className="font-mono text-[10px] uppercase text-cyber-dim tracking-wider">Quests Cleared</div>
+        </div>
+
+        <div className="city-glass border border-cyber-cyan/25 rounded-xl p-4 shadow-sm hover:border-cyber-cyan/60 hover:shadow-[0_0_15px_rgba(0,229,255,0.2)] transition-all">
+          <div className="text-xl mb-1">⚡</div>
+          <div className="font-orbitron font-black text-2xl text-cyber-cyan text-glow-cyan">{xpPercent}%</div>
+          <div className="font-mono text-[10px] uppercase text-cyber-dim tracking-wider">Core Resonance</div>
         </div>
       </div>
 
