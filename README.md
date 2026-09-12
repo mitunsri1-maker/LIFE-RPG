@@ -1,163 +1,89 @@
-﻿# Life RPG 🎮
+﻿# LIFE//OS — 3D Cyberpunk Life RPG ⚡
 
-> Turn your real-life tasks into epic quests. Earn XP, gold, and attribute points. Level up your character as you level up your life.
+> **Turn your real-life tasks into an epic cyberpunk RPG.** Power a real-time 3D Energy Core Reactor, advance your world evolution tier, harvest credits, level up 5 RPG attributes, and equip 3D holographic gear in the Cyber Bazaar.
 
-## Live Demo
-- **Frontend:** [Deploy to Vercel](#deployment)
-- **Backend:** [Deploy to Railway](#deployment)
+[![GitHub Repository](https://img.shields.io/badge/GitHub-LIFE--RPG-00F0FF?style=for-the-badge&logo=github)](https://github.com/mitunsri1-maker/LIFE-RPG.git)
 
-## Tech Stack
+---
+
+## 🌟 Key Features
+
+### 🏙️ 1. Real-Time 3D Cyberpunk City & World Evolution
+- **Procedural Instanced City**: High-performance dark skyscrapers with glowing neon windows, holographic advertisements, and atmospheric particles.
+- **World Evolution Engine**: The city skyline dynamically grows as your operative level advances:
+  - **Level 1**: Neon District
+  - **Level 5**: Data Archipelago
+  - **Level 10**: High-Rise Skyline
+  - **Level 20+**: Mega Metropolis
+- **Interactive Mouse Parallax**: Smooth camera tracking reacting to mouse movement.
+- **Graphic Mode Toggle**: Toggle 3D effects on/off anytime from the HUD for low-spec devices.
+
+### 🛸 2. 3D Holographic Player Command Pod
+- Elevated central holographic pedestal with rotating gyroscopic laser rings, vertical laser scanner, and orbiting attribute conduits.
+
+### ⚛️ 3. 3D XP Energy Core Reactor
+- Multi-layered plasma core with emissive resonance scaling dynamically with your current Level XP%.
+- **Interactive Quest Completion Shockwave**: Completing any quest triggers an energy ingestion particle burst in real time.
+
+### 🗺️ 4. 3D Interactive Mission Neural Map
+- Switch between **Holographic Quest Cards** and an interactive **3D Mission Web** connecting active directives with glowing laser conduits.
+
+### 🛒 5. 3D Cyber Bazaar & Equipment Vault
+- Interactive rotating 3D holographic models for all items (Swords, Neural Chips, Bio-Armor, Power Boots, Wisdom Tomes, Themes, Badges).
+
+### 🔊 6. Cyberpunk Web Audio Synthesizer
+- Built-in sound effects using the native browser **Web Audio API** (tactile clicks, hover blips, quest completion chords, level-up celebration fanfare).
+
+---
+
+## 🛠️ Tech Stack
+
 | Layer | Technology |
-|-------|-----------|
-| Frontend | React (Vite) + Tailwind CSS + Zustand + Recharts |
-| Backend | Node.js + Express |
-| Database | PostgreSQL |
-| Auth | JWT (bcryptjs) |
-| Deploy | Vercel (frontend) + Railway (backend + DB) |
+|---|---|
+| **Frontend** | React 19 + Vite + Tailwind CSS + Three.js + React Three Fiber + Drei + Framer Motion |
+| **Backend** | Node.js + Express + SQLite (`better-sqlite3`) / PostgreSQL compatible |
+| **Security** | JWT-based session auth + bcryptjs password hashing + server-side reward validation |
+| **State** | Zustand with localStorage persistence |
 
-## Project Structure
-```
-/
-├── frontend/          # React (Vite) app
-│   ├── src/
-│   │   ├── api/       # Axios client + resource functions
-│   │   ├── components/# UI components + Layout
-│   │   ├── pages/     # Route pages
-│   │   ├── router/    # React Router v6
-│   │   └── store/     # Zustand state
-│   └── .env.example
-├── backend/           # Node.js + Express API
-│   ├── src/
-│   │   ├── db/        # PostgreSQL pool + schema + seed
-│   │   ├── middleware/ # JWT auth + validation
-│   │   ├── routes/    # API endpoints
-│   │   └── services/  # Level, Streak, Achievement logic
-│   └── .env.example
-└── README.md
-```
+---
 
-## Quick Start (Local Development)
+## 🚀 Quick Start (Local Setup)
 
-### Prerequisites
-- Node.js 18+
-- PostgreSQL 14+
-
-### 1. Clone & install
+### 1. Clone & Install
 ```bash
-git clone <your-repo-url>
-cd life-rpg
+git clone https://github.com/mitunsri1-maker/LIFE-RPG.git
+cd LIFE-RPG
 
-# Backend
+# Install Backend Dependencies
 cd backend
 npm install
-cp .env.example .env
-# Edit .env with your database credentials and JWT secret
+node src/db/init.js     # Initializes database schema & seed items
 
-# Frontend
+# Install Frontend Dependencies
 cd ../frontend
-npm install
-cp .env.example .env
+npm install --legacy-peer-deps
 ```
 
-### 2. Database setup
+### 2. Launch Servers
 ```bash
-# Create the database
-createdb life_rpg
-
-# Apply schema + seed data
+# Terminal 1 — Backend API (Port 3001)
 cd backend
-node src/db/init.js
-```
+npm run dev
 
-### 3. Run locally
-```bash
-# Terminal 1 — Backend
-cd backend
-npm run dev          # Runs on http://localhost:3001
-
-# Terminal 2 — Frontend
+# Terminal 2 — Frontend App (Port 5173)
 cd frontend
-npm run dev          # Runs on http://localhost:5173
+npm run dev
 ```
 
-## Environment Variables
+Open **[http://localhost:5173](http://localhost:5173)** in your browser!
 
-### Backend (`backend/.env`)
-```
-DATABASE_URL=postgresql://user:password@localhost:5432/life_rpg
-JWT_SECRET=your-very-long-random-secret-key
-PORT=3001
-NODE_ENV=development
-FRONTEND_URL=http://localhost:5173
-```
+---
 
-### Frontend (`frontend/.env`)
-```
-VITE_API_URL=           # Empty = use Vite proxy in dev; set to backend URL in prod
-```
+## 🔒 Security & Server-Side RPG Engine
+- All XP, Gold, and Attribute calculations are performed **server-side only**.
+- Complete quest endpoint (`POST /api/quests/:id/complete`) executes database transactions to prevent double-claiming or manipulation.
 
-## API Endpoints
-| Method | Path | Auth | Description |
-|--------|------|------|-------------|
-| POST | /api/auth/signup | - | Register user |
-| POST | /api/auth/login | - | Login |
-| GET | /api/auth/me | ✓ | Current user |
-| GET | /api/quests | ✓ | List quests |
-| POST | /api/quests | ✓ | Create quest |
-| POST | /api/quests/:id/complete | ✓ | Complete quest (RPG engine) |
-| GET | /api/character | ✓ | Character + stats + achievements |
-| GET | /api/progress/streak | ✓ | Streak + activity calendar |
-| GET | /api/shop/items | ✓ | Shop catalog |
-| POST | /api/shop/items/:id/buy | ✓ | Purchase item |
-| GET | /api/inventory | ✓ | User inventory |
-| POST | /api/inventory/:id/equip | ✓ | Toggle equip item |
+---
 
-## Deployment
-
-### Backend (Railway)
-1. Create new Railway project → Add PostgreSQL service
-2. Deploy backend from `/backend` folder
-3. Set environment variables in Railway dashboard
-4. Run `node src/db/init.js` via Railway shell to initialize DB
-
-### Frontend (Vercel)
-1. Import repo to Vercel → set root directory to `frontend`
-2. Set `VITE_API_URL=https://your-railway-backend.up.railway.app/api`
-3. Deploy
-
-## Security
-- All XP/gold/reward calculations are **server-side only** — clients can never send reward values
-- Every request to protected routes is authenticated via JWT middleware
-- User can only access/modify their own data (enforced in all queries)
-- Passwords hashed with bcrypt (12 rounds)
-- Helmet.js security headers
-- Input validation via express-validator
-
-## RPG Systems
-
-### XP Curve
-`Level N requires floor(100 × 1.5^(N-1)) XP`
-- Level 1 → 2: 100 XP
-- Level 2 → 3: 150 XP
-- Level 3 → 4: 225 XP
-
-### Rewards by Difficulty
-| Difficulty | XP | Gold | Attr Gain |
-|------------|-----|------|-----------|
-| Easy | 50 | 10 | +1 |
-| Medium | 100 | 25 | +2 |
-| Hard | 200 | 50 | +3 |
-
-### Category → Attribute
-| Category | Attribute |
-|----------|-----------|
-| Coding/Study | Intellect |
-| Gym/Physical | Strength |
-| Running/Cardio | Vitality |
-| Reading | Wisdom |
-| Meditation/Habits | Discipline |
-
-### Streak Milestones
-- 3 days → +50 Gold bonus
-- 7 days → "Streak Warrior" achievement
-- 30 days → "Legendary" achievement
+## 📜 License
+MIT © 2026 [mitunsri1-maker](https://github.com/mitunsri1-maker/LIFE-RPG.git)
