@@ -13,11 +13,19 @@ import GoldCounter from '../ui/GoldCounter';
 import StreakCounter from '../ui/StreakCounter';
 import LevelBadge from '../ui/LevelBadge';
 
+function getCorePercent(xp = 0, level = 1) {
+  let accumulated = 0;
+  for (let i = 1; i < level; i++) accumulated += Math.floor(100 * Math.pow(1.5, i));
+  const needed = Math.floor(100 * Math.pow(1.5, level));
+  const cur = Math.max(0, xp - accumulated);
+  return Math.min(100, Math.max(0, Math.round((cur / (needed || 1)) * 100)));
+}
+
 const navItems = [
   { to: '/dashboard', icon: LayoutDashboard, label: 'COMMAND', code: '01' },
-  { to: '/quests', icon: Swords, label: 'QUEST LOG', code: '02' },
-  { to: '/character', icon: User, label: 'CHARACTER', code: '03' },
-  { to: '/progress', icon: TrendingUp, label: 'EVOLUTION', code: '04' },
+  { to: '/quests', icon: Swords, label: 'ACTIVE BOUNTIES', code: '02' },
+  { to: '/boss-raids', icon: Shield, label: 'BOSS RAIDS', code: '03' },
+  { to: '/character', icon: User, label: 'CHARACTER LOG', code: '04' },
   { to: '/shop', icon: ShoppingBag, label: 'BAZAAR', code: '05' },
   { to: '/inventory', icon: Backpack, label: 'INVENTORY', code: '06' },
   { to: '/settings', icon: Settings, label: 'SETTINGS', code: '07' },
@@ -49,6 +57,8 @@ export default function AppLayout() {
     soundFX.playClick();
   };
 
+  const corePercent = getCorePercent(user?.xp || 0, user?.level || 1);
+
   return (
     <div className="relative min-h-screen bg-transparent text-cyber-text font-body selection:bg-cyber-cyan selection:text-cyber-bg overflow-x-hidden">
       {/* 3D Cyberpunk City Simulation World */}
@@ -78,17 +88,40 @@ export default function AppLayout() {
             </div>
           </div>
 
-          {/* Quick HUD Metrics & Controls */}
-          <div className="flex items-center gap-3 md:gap-4">
+          {/* Quick HUD Metrics & Controls matching Wireframe */}
+          <div className="flex items-center gap-2 sm:gap-3">
             {user && (
-              <div className="hidden sm:flex items-center gap-3">
-                <GoldCounter gold={user.gold} />
-                <StreakCounter />
-              </div>
+              <>
+                {/* LVL XX OPERATIVE Badge */}
+                <div className="hidden sm:inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-cyber-navy/80 border border-cyber-cyan/30 text-xs font-orbitron font-bold text-cyber-cyan shadow-[0_0_10px_rgba(0,229,255,0.15)]">
+                  <span>LVL {String(user.level || 1).padStart(2, '0')} OPERATIVE</span>
+                </div>
+
+                {/* STREAK COUNTER */}
+                <div className="hidden md:flex items-center">
+                  <StreakCounter />
+                </div>
+
+                {/* CORE ENERGY: XX% with mini energy bar */}
+                <div className="hidden lg:flex items-center gap-2 px-3 py-1 rounded-lg bg-cyber-navy/80 border border-cyber-amber/30 text-xs font-mono">
+                  <Zap className="w-3.5 h-3.5 text-cyber-amber fill-cyber-amber/30" />
+                  <span className="text-cyber-amber font-bold">CORE: {corePercent}%</span>
+                  <div className="w-14 h-1.5 bg-cyber-navy border border-cyber-amber/30 rounded-full overflow-hidden p-0.5">
+                    <div
+                      className="h-full bg-gradient-to-r from-cyber-amber to-cyber-green rounded-full transition-all duration-500"
+                      style={{ width: `${corePercent}%` }}
+                    />
+                  </div>
+                </div>
+
+                <div className="hidden sm:flex items-center">
+                  <GoldCounter gold={user.gold} />
+                </div>
+              </>
             )}
 
             {/* Live Telemetry Clock */}
-            <div className="hidden md:block font-mono text-xs text-cyber-cyan bg-cyber-navy/80 border border-cyber-cyan/30 px-2.5 py-1 rounded-lg shadow-[0_0_10px_rgba(0,229,255,0.15)]">
+            <div className="hidden xl:block font-mono text-xs text-cyber-cyan bg-cyber-navy/80 border border-cyber-cyan/30 px-2.5 py-1 rounded-lg shadow-[0_0_10px_rgba(0,229,255,0.15)]">
               UTC {time}
             </div>
 

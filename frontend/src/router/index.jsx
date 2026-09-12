@@ -1,4 +1,4 @@
-﻿import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { useAuthStore } from '../store/authStore';
 import { Toaster } from 'react-hot-toast';
 import AppLayout from '../components/layout/AppLayout';
@@ -12,6 +12,7 @@ import ProgressPage from '../pages/ProgressPage';
 import ShopPage from '../pages/ShopPage';
 import InventoryPage from '../pages/InventoryPage';
 import SettingsPage from '../pages/SettingsPage';
+import BossRaidPage from '../pages/BossRaidPage';
 
 function ProtectedRoute({ children }) {
   const { user } = useAuthStore();
@@ -47,6 +48,7 @@ export default function AppRouter() {
         <Route path="/" element={<ProtectedRoute><AppLayout /></ProtectedRoute>}>
           <Route path="dashboard" element={<DashboardPage />} />
           <Route path="quests" element={<QuestsPage />} />
+          <Route path="boss-raids" element={<BossRaidPage />} />
           <Route path="character" element={<CharacterPage />} />
           <Route path="progress" element={<ProgressPage />} />
           <Route path="shop" element={<ShopPage />} />

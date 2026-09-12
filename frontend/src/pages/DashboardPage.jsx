@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useAuthStore } from '../store/authStore';
 import { useQuestStore } from '../store/questStore';
-import { characterApi, progressApi } from '../api';
+import { characterApi, progressApi, shopApi, inventoryApi } from '../api';
 import QuestCard from '../components/ui/QuestCard';
 import XPBar from '../components/ui/XPBar';
 import LevelBadge from '../components/ui/LevelBadge';
@@ -11,11 +11,12 @@ import PlayerPod3D from '../components/3d/PlayerPod3D';
 import XPCore from '../components/ui/XPCore';
 import CharacterStats from '../components/ui/CharacterStats';
 import QuestNodeMap3D from '../components/3d/QuestNodeMap3D';
-import StreakReactor3D from '../components/3d/StreakReactor3D';
-import HoloPanel from '../components/hud/HoloPanel';
 import HoloButton from '../components/hud/HoloButton';
 import { soundFX } from '../utils/soundFX';
-import { Swords, Plus, Sparkles, Activity, Zap, Coins, Flame, Map, LayoutGrid, Award, ShieldAlert, Cpu } from 'lucide-react';
+import {
+  Swords, Plus, Sparkles, Activity, Zap, Coins, Flame, Map, LayoutGrid,
+  Shield, Skull, Heart, CheckSquare, Square, ArrowRight, ShoppingBag, Backpack, Cpu
+} from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 function calculateLevelProgress(xp = 0, level = 1) {
@@ -34,15 +35,18 @@ export default function DashboardPage() {
   const { quests, fetchQuests, completeQuest, deleteQuest, clearLastReward, lastReward } = useQuestStore();
   const [charData, setCharData] = useState(null);
   const [streak, setStreak] = useState({ current_streak: 0, best_streak: 0 });
+  const [inventory, setInventory] = useState([]);
   const [completedCount, setCompletedCount] = useState(0);
   const [completingId, setCompletingId] = useState(null);
   const [levelUpLevel, setLevelUpLevel] = useState(null);
   const [justGainedXP, setJustGainedXP] = useState(false);
+  const [bossDamaged, setBossDamaged] = useState(false);
   const [viewMode, setViewMode] = useState('grid'); // 'grid' or '3d-map'
 
   useEffect(() => {
     fetchQuests({ status: 'active' });
     characterApi.get().then((r) => setCharData(r.data)).catch(() => {});
+    inventoryApi.get().then((r) => setInventory(r.data?.inventory || [])).catch(() => {});
     progressApi.get().then((r) => {
       if (r.data?.streak) setStreak(r.data.streak);
       if (r.data?.stats?.total_completed !== undefined) {
@@ -55,6 +59,9 @@ export default function DashboardPage() {
 
   const handleComplete = async (id) => {
     setCompletingId(id);
+    setBossDamaged(true);
+    setTimeout(() => setBossDamaged(false), 800);
+
     const result = await completeQuest(id);
     setCompletingId(null);
     if (result.success) {
@@ -80,234 +87,330 @@ export default function DashboardPage() {
     if (confirm('Abort this mission directive?')) await deleteQuest(id);
   };
 
-  const activeQuests = quests.filter((q) => q.status === 'active').slice(0, 6);
+  const activeQuests = quests.filter((q) => q.status === 'active');
   const { currentInLevel, neededForNext, percent: xpPercent } = calculateLevelProgress(user?.xp || 0, user?.level || 1);
 
+  // Boss HP Calculation: depletes as user clears tasks
+  const totalBounties = Math.max(4, activeQuests.length + completedCount);
+  const bossHpPercent = Math.max(0, Math.min(100, Math.round(100 - (completedCount / totalBounties) * 100)));
+
   return (
-    <div className="p-4 md:p-8 max-w-6xl mx-auto space-y-8">
-      {/* 1. Central Welcome Operative Header matching dark cyberpunk holographic HUD */}
-      <div className="relative city-glass-elevated border border-cyber-cyan/35 rounded-2xl p-6 md:p-8 shadow-[0_10px_35px_rgba(0,0,0,0.6)] overflow-hidden">
+    <div className="p-4 md:p-8 max-w-7xl mx-auto space-y-8">
+      {/* ============================================================ */}
+      {/* 1. HERO PANEL: City Sync & Level Progress (Wireframe Spec)    */}
+      {/* ============================================================ */}
+      <div className="relative hud-glass rounded-2xl p-6 md:p-8 shadow-2xl overflow-hidden">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-center">
           {/* Left Telemetry info */}
-          <div className="lg:col-span-7 space-y-3">
-            <div className="inline-flex items-center gap-2 bg-cyber-cyan/10 border border-cyber-cyan/30 text-cyber-cyan font-mono text-[11px] px-3 py-1 rounded-full font-bold tracking-widest uppercase shadow-[0_0_10px_rgba(0,229,255,0.15)]">
-              <span className="w-2 h-2 rounded-full bg-cyber-cyan animate-ping" />
-              WELCOME BACK, OPERATIVE // {user?.username}
+          <div className="lg:col-span-8 space-y-4">
+            <div className="flex items-center gap-2.5">
+              <span className="w-2.5 h-2.5 rounded-full bg-cyber-green animate-ping" />
+              <span className="font-mono text-xs font-bold uppercase tracking-widest text-cyber-green">
+                CITY GRID STATUS: ONLINE (POWER LEVEL {xpPercent}%)
+              </span>
             </div>
 
-            <h1 className="font-orbitron font-black text-3xl md:text-5xl text-cyber-text tracking-tight uppercase text-glow-cyan">
-              LEVEL <span className="text-cyber-cyan">{user?.level || 1}</span>
-            </h1>
+            <div className="space-y-1">
+              <h1 className="font-orbitron font-black text-3xl md:text-5xl text-cyber-text tracking-tight uppercase text-glow-cyan">
+                LEVEL {user?.level || 1}: <span className="text-cyber-cyan">OPERATIVE</span>
+              </h1>
+              <p className="font-mono text-xs text-cyber-textMuted tracking-wider font-semibold">
+                SECTOR ID // {user?.username?.toUpperCase()}・GRID RESONANCE: OPTIMAL
+              </p>
+            </div>
 
-            <p className="font-mono text-sm text-cyber-textMuted tracking-wide font-medium">
-              {currentInLevel} / {neededForNext} XP ({xpPercent}%)
-            </p>
+            {/* Tactical Energy Progress Bar */}
+            <div className="space-y-2 pt-1">
+              <div className="flex justify-between items-center font-mono text-xs">
+                <span className="text-cyber-cyan font-bold tracking-wider">
+                  {currentInLevel} / {neededForNext} XP ({xpPercent}%)
+                </span>
+                <span className="text-cyber-textMuted font-medium">
+                  {Math.max(0, neededForNext - currentInLevel)} XP TO NEXT TIER
+                </span>
+              </div>
+              <div className="h-4 w-full bg-cyber-navy/90 border border-cyber-cyan/40 rounded-full overflow-hidden p-0.5 shadow-inner relative">
+                <div
+                  className="h-full bg-gradient-to-r from-cyber-cyan via-cyber-violet to-cyber-magenta rounded-full transition-all duration-700 shadow-[0_0_15px_rgba(0,229,255,0.4)]"
+                  style={{ width: `${xpPercent}%` }}
+                />
+              </div>
+            </div>
 
-            {/* Quick Metrics */}
+            {/* Quick Metrics Badges */}
             <div className="flex flex-wrap items-center gap-3 pt-2">
-              <div className="inline-flex items-center gap-2 city-glass border border-cyber-cyan/25 px-3.5 py-1.5 rounded-xl font-mono text-xs text-cyber-text shadow-sm">
+              <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-xl bg-cyber-navy/80 border border-cyber-cyan/30 text-xs font-mono">
                 <Coins className="w-4 h-4 text-cyber-cyan fill-cyber-cyan/20" />
-                <span className="font-bold">{Number(user?.gold || 0).toLocaleString()}</span>
+                <span className="font-bold text-cyber-text">{Number(user?.gold || 0).toLocaleString()}</span>
                 <span className="text-[10px] text-cyber-dim font-normal">CREDITS</span>
               </div>
-              <div className="inline-flex items-center gap-2 city-glass border border-cyber-magenta/25 px-3.5 py-1.5 rounded-xl font-mono text-xs text-cyber-text shadow-sm">
+              <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-xl bg-cyber-navy/80 border border-cyber-magenta/30 text-xs font-mono">
                 <Flame className="w-4 h-4 text-cyber-magenta fill-cyber-magenta/20" />
-                <span className="font-bold">{streak.current_streak || 0}</span>
-                <span className="text-[10px] text-cyber-dim font-normal">DAY STREAK</span>
+                <span className="font-bold text-cyber-text">{streak.current_streak || 0} DAYS</span>
+                <span className="text-[10px] text-cyber-dim font-normal">STREAK</span>
               </div>
-              <div className="inline-flex items-center gap-2 city-glass border border-cyber-amber/25 px-3.5 py-1.5 rounded-xl font-mono text-xs text-cyber-text shadow-sm">
+              <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-xl bg-cyber-navy/80 border border-cyber-amber/30 text-xs font-mono">
                 <Zap className="w-4 h-4 text-cyber-amber fill-cyber-amber/20" />
-                <span className="font-bold">{xpPercent}%</span>
-                <span className="text-[10px] text-cyber-dim font-normal">CORE ENERGY</span>
+                <span className="font-bold text-cyber-text">{xpPercent}%</span>
+                <span className="text-[10px] text-cyber-dim font-normal">CORE POWER</span>
               </div>
             </div>
           </div>
 
-          {/* Right 3D Energy Core Hologram Projection */}
-          <div className="lg:col-span-5 city-glass border border-cyber-cyan/30 rounded-2xl p-3 relative shadow-[inset_0_0_20px_rgba(0,229,255,0.08)] flex flex-col items-center justify-center">
-            <XPCore xpPercent={xpPercent} justGainedXP={justGainedXP} accent="#00E5FF" height="210px" />
+          {/* Right 3D Operative & Energy Core Preview */}
+          <div className="lg:col-span-4 hud-card rounded-2xl p-3 relative flex flex-col items-center justify-center">
+            <XPCore xpPercent={xpPercent} justGainedXP={justGainedXP} accent="#00E5FF" height="190px" />
+            <div className="font-mono text-[10px] text-cyber-cyan tracking-widest text-center mt-1">
+              ENERGY CORE // ONLINE
+            </div>
           </div>
         </div>
       </div>
 
-      {/* 2. Main RPG Command Center Grid: 3D Operative Chamber + Progression & Attribute Matrix */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
-        {/* Left Column: Operative Chamber */}
-        <div className="lg:col-span-5 city-glass border border-cyber-cyan/25 rounded-2xl p-5 shadow-lg flex flex-col justify-between overflow-hidden">
-          <div className="flex items-center justify-between border-b border-cyber-cyan/20 pb-3">
-            <div className="flex items-center gap-2">
-              <Activity className="w-4 h-4 text-cyber-cyan animate-pulse" />
-              <span className="font-orbitron font-bold text-sm text-cyber-text tracking-wide">
-                OPERATIVE STATUS
-              </span>
+      {/* ============================================================ */}
+      {/* 2. MAIN 2-COLUMN WIREFRAME GRID: ACTIVE BOUNTIES + BOSS RAID */}
+      {/* ============================================================ */}
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+        {/* LEFT COLUMN (7 cols): ACTIVE BOUNTIES (DAILY QUESTS) */}
+        <div className="lg:col-span-7 space-y-4">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-cyber-cyan/20 pb-3">
+            <div className="flex items-center gap-2.5">
+              <div className="w-8 h-8 rounded-lg bg-cyber-cyan/15 border border-cyber-cyan/40 flex items-center justify-center">
+                <Swords className="w-4 h-4 text-cyber-cyan" />
+              </div>
+              <div>
+                <h2 className="font-orbitron font-bold text-xl text-cyber-text tracking-wide">
+                  ACTIVE BOUNTIES <span className="text-cyber-cyan text-sm font-mono">({activeQuests.length})</span>
+                </h2>
+                <p className="font-mono text-[11px] text-cyber-textMuted">
+                  DAILY TACTICAL RPG MISSIONS
+                </p>
+              </div>
             </div>
-            <span className="font-mono text-xs text-cyber-green bg-cyber-green/10 px-2.5 py-0.5 rounded-full border border-cyber-green/30 font-bold uppercase shadow-[0_0_8px_rgba(57,255,136,0.2)]">
-              RESONANCE 100%
-            </span>
+
+            <div className="flex items-center gap-2">
+              {/* Grid / 3D Map View Toggle */}
+              <div className="inline-flex hud-card p-0.5 rounded-lg">
+                <button
+                  onClick={() => setViewMode('grid')}
+                  className={`flex items-center gap-1 px-2.5 py-1 rounded text-xs font-mono font-bold cursor-pointer transition-all ${
+                    viewMode === 'grid' ? 'bg-cyber-cyan text-cyber-bg' : 'text-cyber-textMuted hover:text-cyber-text'
+                  }`}
+                >
+                  <LayoutGrid className="w-3 h-3" /> GRID
+                </button>
+                <button
+                  onClick={() => setViewMode('3d-map')}
+                  className={`flex items-center gap-1 px-2.5 py-1 rounded text-xs font-mono font-bold cursor-pointer transition-all ${
+                    viewMode === '3d-map' ? 'bg-cyber-cyan text-cyber-bg' : 'text-cyber-textMuted hover:text-cyber-text'
+                  }`}
+                >
+                  <Map className="w-3 h-3" /> 3D
+                </button>
+              </div>
+
+              <Link to="/quests">
+                <HoloButton variant="cyan" size="sm" icon={Plus}>
+                  NEW BOUNTY
+                </HoloButton>
+              </Link>
+            </div>
           </div>
 
-          {/* 3D Visualizer Canvas */}
-          <div className="my-2 relative flex items-center justify-center">
-            <PlayerPod3D
-              level={user?.level || 1}
-              username={user?.username}
-              stats={charData?.stats}
-              justGainedXP={justGainedXP}
-              xpPercent={xpPercent}
-              height="280px"
-            />
-          </div>
+          {/* 3D Map or Checklist View */}
+          {viewMode === '3d-map' ? (
+            <QuestNodeMap3D quests={activeQuests} height="360px" onSelectQuest={(q) => handleComplete(q.id)} />
+          ) : activeQuests.length === 0 ? (
+            <div className="hud-glass rounded-2xl p-10 text-center space-y-3">
+              <div className="text-3xl">🎯</div>
+              <h3 className="font-orbitron font-bold text-lg text-cyber-text">ALL BOUNTIES CLEARED</h3>
+              <p className="font-body text-xs text-cyber-textMuted max-w-sm mx-auto">
+                No active directives remaining. Forge a new tactical habit to generate additional city energy.
+              </p>
+              <Link to="/quests">
+                <HoloButton variant="cyan" size="sm">
+                  INITIALIZE BOUNTY →
+                </HoloButton>
+              </Link>
+            </div>
+          ) : (
+            <div className="space-y-3">
+              {/* Tactical RPG Interactive Checklist */}
+              {activeQuests.map((q) => (
+                <div
+                  key={q.id}
+                  className="hud-card rounded-xl p-3.5 sm:p-4 flex items-center justify-between gap-3 group transition-all"
+                >
+                  {/* Left: Holographic Checkbox + Title */}
+                  <div className="flex items-center gap-3 min-w-0 flex-1">
+                    <button
+                      onClick={() => handleComplete(q.id)}
+                      disabled={completingId === q.id}
+                      aria-label="Complete Bounty"
+                      className="w-6 h-6 rounded-md border-2 border-cyber-cyan/50 hover:border-cyber-cyan bg-cyber-navy/80 flex items-center justify-center text-cyber-cyan transition-colors shrink-0 cursor-pointer shadow-[0_0_8px_rgba(0,229,255,0.2)] disabled:opacity-50"
+                    >
+                      {completingId === q.id ? (
+                        <span className="w-3 h-3 rounded-full border-2 border-cyber-cyan border-t-transparent animate-spin" />
+                      ) : (
+                        <CheckSquare className="w-3.5 h-3.5 opacity-0 group-hover:opacity-60 transition-opacity" />
+                      )}
+                    </button>
 
-          <div className="font-mono text-xs text-center text-cyber-textMuted bg-cyber-navy/70 p-2.5 rounded-lg border border-cyber-cyan/20 flex items-center justify-center gap-2">
-            <span className="w-2 h-2 rounded-full bg-cyber-cyan animate-ping" />
-            <span>NEURAL MATRIX SYNC: OPTIMAL</span>
-          </div>
+                    <div className="min-w-0 flex-1">
+                      <p className="font-orbitron font-bold text-sm text-cyber-text group-hover:text-cyber-cyan truncate transition-colors">
+                        {q.title}
+                      </p>
+                      <div className="flex items-center gap-2 pt-1 font-mono text-[10px] text-cyber-textMuted">
+                        <span className="uppercase text-cyber-dim">{q.category}</span>
+                        {q.due_date && <span>・ DUE {q.due_date}</span>}
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Right: Difficulty & Reward Badges + Execute Button */}
+                  <div className="flex items-center gap-2 shrink-0">
+                    <span className={`font-mono text-[9px] px-2 py-0.5 rounded border uppercase font-bold ${
+                      q.difficulty === 'hard'
+                        ? 'bg-cyber-magenta/10 text-cyber-magenta border-cyber-magenta/30'
+                        : q.difficulty === 'medium'
+                        ? 'bg-cyber-cyan/10 text-cyber-cyan border-cyber-cyan/30'
+                        : 'bg-cyber-green/10 text-cyber-green border-cyber-green/30'
+                    }`}>
+                      {q.difficulty}
+                    </span>
+
+                    <span className="font-mono text-[11px] font-bold text-cyber-green bg-cyber-green/10 border border-cyber-green/30 px-2 py-0.5 rounded">
+                      +{q.xp_reward} XP
+                    </span>
+
+                    <button
+                      onClick={() => handleComplete(q.id)}
+                      disabled={completingId === q.id}
+                      className="hidden sm:inline-flex items-center gap-1 bg-cyber-cyan hover:bg-cyber-cyan/85 text-cyber-bg font-orbitron font-bold text-[10px] uppercase px-2.5 py-1 rounded shadow-[0_0_10px_rgba(0,229,255,0.3)] transition-all cursor-pointer"
+                    >
+                      <span>EXECUTE</span>
+                    </button>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
         </div>
 
-        {/* Right Column: XP Energy Matrix + RPG Attribute Matrix */}
-        <div className="lg:col-span-7 flex flex-col justify-between space-y-6">
-          <XPBar xp={user?.xp || 0} level={user?.level || 1} />
+        {/* RIGHT COLUMN (5 cols): BOSS RAID & LOOT QUICK-VIEW */}
+        <div className="lg:col-span-5 space-y-6">
+          {/* BOSS RAID FEATURE CARD (Matching Wireframe: BOSS RAID: EXAM PREP / CYBER TITAN) */}
+          <div className="hud-card rounded-2xl p-5 md:p-6 border border-cyber-magenta/35 space-y-4 relative overflow-hidden">
+            <div className="flex items-center justify-between border-b border-cyber-magenta/20 pb-3">
+              <div className="flex items-center gap-2.5">
+                <Skull className="w-5 h-5 text-cyber-magenta" />
+                <div>
+                  <h3 className="font-orbitron font-black text-base text-cyber-text tracking-wider uppercase">
+                    BOSS RAID: CYBER TITAN
+                  </h3>
+                  <span className="font-mono text-[10px] text-cyber-magenta uppercase font-bold">
+                    ACTIVE SECTOR THREAT
+                  </span>
+                </div>
+              </div>
+              <span className="font-mono text-xs text-cyber-amber font-bold">
+                HP: {bossHpPercent}%
+              </span>
+            </div>
 
-          {/* Attribute Matrix Panel */}
-          <div className="city-glass border border-cyber-cyan/25 rounded-2xl p-5 shadow-lg space-y-3.5">
+            {/* Boss HP Bar */}
+            <div className="space-y-1.5">
+              <div className="h-5 w-full bg-cyber-navy/90 border border-cyber-magenta/40 rounded-xl overflow-hidden p-0.5 shadow-inner relative">
+                <div
+                  className={`h-full rounded-lg transition-all duration-700 ${
+                    bossDamaged
+                      ? 'bg-white shadow-[0_0_20px_#fff]'
+                      : bossHpPercent > 50
+                      ? 'bg-gradient-to-r from-cyber-magenta to-rose-600 shadow-[0_0_12px_rgba(255,45,166,0.6)]'
+                      : 'bg-gradient-to-r from-cyber-amber to-cyber-magenta shadow-[0_0_12px_rgba(255,184,77,0.6)]'
+                  }`}
+                  style={{ width: `${bossHpPercent}%` }}
+                />
+              </div>
+              <div className="flex justify-between text-[10px] font-mono text-cyber-textMuted">
+                <span>{completedCount} STRIKES DEALT</span>
+                <span>{bossHpPercent === 0 ? 'STATUS: NEUTRALIZED' : 'STATUS: VULNERABLE'}</span>
+              </div>
+            </div>
+
+            {/* Sub-Tasks Checklist Preview */}
+            <div className="space-y-1.5 pt-1 border-t border-cyber-cyan/10">
+              <span className="font-mono text-[10px] text-cyber-dim uppercase tracking-wider block">
+                PRIMARY OBJECTIVES:
+              </span>
+              {activeQuests.slice(0, 3).map((q, idx) => (
+                <div key={idx} className="flex items-center gap-2 text-xs font-mono text-cyber-textMuted">
+                  <span className="text-cyber-cyan">›</span>
+                  <span className="truncate">{q.title}</span>
+                  <span className="text-cyber-green text-[10px] ml-auto shrink-0">PENDING</span>
+                </div>
+              ))}
+              {activeQuests.length === 0 && (
+                <div className="text-xs font-mono text-cyber-green flex items-center gap-1.5">
+                  <CheckSquare className="w-3.5 h-3.5" /> All raid targets neutralized!
+                </div>
+              )}
+            </div>
+
+            <Link to="/boss-raids" className="block pt-2">
+              <HoloButton variant="magenta" size="sm" className="w-full text-center justify-center">
+                ENTER FULL RAID ARENA →
+              </HoloButton>
+            </Link>
+          </div>
+
+          {/* LOOT & REWARDS QUICK-VIEW (Matching Wireframe Spec) */}
+          <div className="hud-card rounded-2xl p-5 space-y-3.5 border border-cyber-cyan/30">
             <div className="flex items-center justify-between border-b border-cyber-cyan/20 pb-2.5">
               <div className="flex items-center gap-2">
-                <Cpu className="w-4 h-4 text-cyber-cyan" />
-                <h3 className="font-orbitron font-bold text-sm text-cyber-text tracking-wider uppercase">
-                  ATTRIBUTE MATRIX // CORE TELEMETRY
-                </h3>
+                <ShoppingBag className="w-4 h-4 text-cyber-cyan" />
+                <h4 className="font-orbitron font-bold text-xs text-cyber-text uppercase tracking-wider">
+                  LOOT & GEAR ARSENAL
+                </h4>
               </div>
-              <Link
-                to="/character"
-                className="font-mono text-[10px] text-cyber-cyan hover:underline uppercase tracking-wider"
-              >
-                VIEW FULL BIO →
+              <Link to="/shop" className="font-mono text-[10px] text-cyber-cyan hover:underline">
+                BAZAAR →
               </Link>
             </div>
 
+            {/* Equipped Items Mini Preview */}
+            <div className="grid grid-cols-2 gap-2 text-xs font-mono">
+              <div className="p-2.5 rounded-lg bg-cyber-navy/80 border border-cyber-cyan/20 space-y-1">
+                <span className="text-[10px] text-cyber-dim block">WALLET BALANCE</span>
+                <span className="font-bold text-cyber-amber flex items-center gap-1">
+                  <Coins className="w-3.5 h-3.5" /> {Number(user?.gold || 0).toLocaleString()} C
+                </span>
+              </div>
+              <div className="p-2.5 rounded-lg bg-cyber-navy/80 border border-cyber-cyan/20 space-y-1">
+                <span className="text-[10px] text-cyber-dim block">EQUIPPED GEAR</span>
+                <span className="font-bold text-cyber-cyan flex items-center gap-1">
+                  <Backpack className="w-3.5 h-3.5" /> {inventory.length} ITEMS
+                </span>
+              </div>
+            </div>
+          </div>
+
+          {/* ATTRIBUTE MATRIX (Core RPG Stats) */}
+          <div className="hud-card rounded-2xl p-5 space-y-3 border border-cyber-cyan/30">
+            <div className="flex items-center justify-between border-b border-cyber-cyan/20 pb-2">
+              <div className="flex items-center gap-2">
+                <Cpu className="w-4 h-4 text-cyber-cyan" />
+                <h4 className="font-orbitron font-bold text-xs text-cyber-text uppercase tracking-wider">
+                  NEURAL ATTRIBUTE MATRIX
+                </h4>
+              </div>
+              <Link to="/character" className="font-mono text-[10px] text-cyber-cyan hover:underline">
+                EXPAND →
+              </Link>
+            </div>
             <CharacterStats stats={charData?.stats || {}} />
           </div>
         </div>
-      </div>
-
-      {/* 3. Six Compact Holographic Stat Modules */}
-      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
-        <div className="city-glass border border-cyber-cyan/25 rounded-xl p-4 shadow-sm hover:border-cyber-cyan/60 hover:shadow-[0_0_15px_rgba(0,229,255,0.2)] transition-all">
-          <div className="text-xl mb-1">⚡</div>
-          <div className="font-orbitron font-black text-2xl text-cyber-cyan text-glow-cyan">LVL {user?.level || 1}</div>
-          <div className="font-mono text-[10px] uppercase text-cyber-dim tracking-wider">Access Tier</div>
-        </div>
-
-        <div className="city-glass border border-cyber-amber/25 rounded-xl p-4 shadow-sm hover:border-cyber-amber/60 hover:shadow-[0_0_15px_rgba(255,184,77,0.2)] transition-all">
-          <div className="text-xl mb-1">🪙</div>
-          <div className="font-orbitron font-black text-2xl text-cyber-amber text-glow-gold">{Number(user?.gold || 0).toLocaleString()}</div>
-          <div className="font-mono text-[10px] uppercase text-cyber-dim tracking-wider">Credits</div>
-        </div>
-
-        <div className="city-glass border border-cyber-magenta/25 rounded-xl p-4 shadow-sm hover:border-cyber-magenta/60 hover:shadow-[0_0_15px_rgba(255,45,166,0.2)] transition-all">
-          <div className="text-xl mb-1">🔥</div>
-          <div className="font-orbitron font-black text-2xl text-cyber-magenta text-glow-magenta">{streak.current_streak || 0}D</div>
-          <div className="font-mono text-[10px] uppercase text-cyber-dim tracking-wider">Day Streak</div>
-        </div>
-
-        <div className="city-glass border border-cyber-green/25 rounded-xl p-4 shadow-sm hover:border-cyber-green/60 hover:shadow-[0_0_15px_rgba(57,255,136,0.2)] transition-all">
-          <div className="text-xl mb-1">🏆</div>
-          <div className="font-orbitron font-black text-2xl text-cyber-green text-glow-green">{streak.best_streak || 0}D</div>
-          <div className="font-mono text-[10px] uppercase text-cyber-dim tracking-wider">Best Record</div>
-        </div>
-
-        <div className="city-glass border border-cyber-violet/25 rounded-xl p-4 shadow-sm hover:border-cyber-violet/60 hover:shadow-[0_0_15px_rgba(139,92,246,0.2)] transition-all">
-          <div className="text-xl mb-1">🎯</div>
-          <div className="font-orbitron font-black text-2xl text-cyber-violet text-glow-violet">{completedCount}</div>
-          <div className="font-mono text-[10px] uppercase text-cyber-dim tracking-wider">Quests Cleared</div>
-        </div>
-
-        <div className="city-glass border border-cyber-cyan/25 rounded-xl p-4 shadow-sm hover:border-cyber-cyan/60 hover:shadow-[0_0_15px_rgba(0,229,255,0.2)] transition-all">
-          <div className="text-xl mb-1">⚡</div>
-          <div className="font-orbitron font-black text-2xl text-cyber-cyan text-glow-cyan">{xpPercent}%</div>
-          <div className="font-mono text-[10px] uppercase text-cyber-dim tracking-wider">Core Resonance</div>
-        </div>
-      </div>
-
-      {/* Active Objectives / Mission Neural Map Section */}
-      <div className="space-y-4">
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-          <div className="flex items-center gap-3">
-            <div className="w-9 h-9 rounded-xl bg-cyber-cyan/15 border border-cyber-cyan/40 flex items-center justify-center font-bold shadow-[0_0_10px_rgba(0,229,255,0.25)]">
-              <Swords className="w-5 h-5 text-cyber-cyan" />
-            </div>
-            <div>
-              <h2 className="font-orbitron font-bold text-2xl text-cyber-text tracking-wide">
-                ACTIVE QUESTS <span className="text-cyber-cyan text-lg font-mono">({activeQuests.length})</span>
-              </h2>
-              <p className="font-mono text-xs text-cyber-textMuted">
-                EXECUTE REAL-WORLD HABITS TO GENERATE CITY ENERGY
-              </p>
-            </div>
-          </div>
-
-          <div className="flex items-center gap-3">
-            {/* View Mode Switcher */}
-            <div className="inline-flex city-glass border border-cyber-cyan/30 rounded-xl p-1 shadow-sm">
-              <button
-                onClick={() => setViewMode('grid')}
-                className={`flex items-center gap-1.5 px-3 py-1 rounded-lg text-xs font-mono font-bold transition-all cursor-pointer ${
-                  viewMode === 'grid' ? 'bg-cyber-cyan text-cyber-bg shadow-[0_0_10px_rgba(0,229,255,0.4)]' : 'text-cyber-textMuted hover:text-cyber-text'
-                }`}
-              >
-                <LayoutGrid className="w-3.5 h-3.5" /> GRID
-              </button>
-              <button
-                onClick={() => setViewMode('3d-map')}
-                className={`flex items-center gap-1.5 px-3 py-1 rounded-lg text-xs font-mono font-bold transition-all cursor-pointer ${
-                  viewMode === '3d-map' ? 'bg-cyber-cyan text-cyber-bg shadow-[0_0_10px_rgba(0,229,255,0.4)]' : 'text-cyber-textMuted hover:text-cyber-text'
-                }`}
-              >
-                <Map className="w-3.5 h-3.5" /> 3D MAP
-              </button>
-            </div>
-
-            <Link to="/quests">
-              <HoloButton variant="cyan" size="sm" icon={Plus}>
-                NEW QUEST
-              </HoloButton>
-            </Link>
-          </div>
-        </div>
-
-        {/* 3D Map View or Grid View */}
-        {viewMode === '3d-map' ? (
-          <QuestNodeMap3D quests={activeQuests} height="380px" onSelectQuest={(q) => handleComplete(q.id)} />
-        ) : activeQuests.length === 0 ? (
-          <div className="city-glass border border-dashed border-cyber-border/50 rounded-2xl p-12 text-center space-y-4 shadow-glass-depth">
-            <div className="w-14 h-14 city-glass border-2 border-cyber-cyan rounded-xl shadow-holo-cyan mx-auto flex items-center justify-center text-3xl">
-              🎯
-            </div>
-            <div className="space-y-1">
-              <h3 className="font-orbitron font-bold text-xl text-cyber-text">NO PENDING DIRECTIVES</h3>
-              <p className="font-body text-xs text-cyber-textMuted max-w-sm mx-auto">
-                All daily objectives cleared! Forge a new mission to maintain core resonance.
-              </p>
-            </div>
-            <Link to="/quests">
-              <HoloButton variant="cyan" size="md">
-                INITIALIZE NEW QUEST DIRECTIVE →
-              </HoloButton>
-            </Link>
-          </div>
-        ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {activeQuests.map((q) => (
-              <QuestCard
-                key={q.id}
-                quest={q}
-                onComplete={handleComplete}
-                onDelete={handleDelete}
-                isCompleting={completingId === q.id}
-              />
-            ))}
-          </div>
-        )}
       </div>
 
       {lastReward && <RewardPopup reward={lastReward} onClose={clearLastReward} />}
