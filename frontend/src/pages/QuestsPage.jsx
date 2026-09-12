@@ -92,12 +92,12 @@ export default function QuestsPage() {
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
           <h1 className="font-orbitron font-black text-3xl md:text-4xl text-cyber-text tracking-tight flex items-center gap-3">
-            <span className="w-10 h-10 rounded bg-cyber-cyan/20 border-2 border-cyber-cyan text-cyber-cyan flex items-center justify-center text-xl shadow-holo-cyan">
+            <span className="w-11 h-11 rounded-xl bg-cyber-cyan/20 border-2 border-cyber-cyan text-cyber-cyan flex items-center justify-center text-xl shadow-holo-cyan">
               ⚔️
             </span>
             MISSION TERMINAL
           </h1>
-          <p className="font-mono text-xs text-cyber-muted mt-1">
+          <p className="font-mono text-xs text-cyber-textMuted mt-1">
             LOG // MANAGE PROTOCOLS & CLAIM HARVESTED ENERGIES
           </p>
         </div>
@@ -105,8 +105,8 @@ export default function QuestsPage() {
         <div className="flex items-center gap-3">
           <button
             onClick={() => { soundFX.playClick(); setShowMap(!showMap); }}
-            className={`inline-flex items-center gap-2 px-3 py-2 rounded text-xs font-mono font-bold border transition-all ${
-              showMap ? 'bg-cyber-cyan text-cyber-bg border-cyber-cyan' : 'bg-cyber-panel text-cyber-muted border-cyber-border'
+            className={`inline-flex items-center gap-2 px-3.5 py-2 rounded-lg text-xs font-mono font-bold border transition-all cursor-pointer ${
+              showMap ? 'bg-cyber-cyan text-cyber-bg border-cyber-cyan shadow-holo-cyan' : 'city-glass text-cyber-textMuted border-cyber-border/40 hover:text-cyber-text'
             }`}
           >
             <Map className="w-4 h-4" /> 3D MAP: {showMap ? 'ACTIVE' : 'OFF'}
@@ -125,7 +125,7 @@ export default function QuestsPage() {
 
       {/* 3D Mission Neural Map if toggled */}
       {showMap && (
-        <QuestNodeMap3D quests={quests.filter((q) => q.status === 'active')} height="320px" onSelectQuest={(q) => handleComplete(q.id)} />
+        <QuestNodeMap3D quests={quests.filter((q) => q.status === 'active')} height="340px" onSelectQuest={(q) => handleComplete(q.id)} />
       )}
 
       {/* Futuristic Tabs */}
@@ -137,10 +137,10 @@ export default function QuestsPage() {
               key={t}
               onClick={() => { soundFX.playClick(); setTab(t); }}
               className={clsx(
-                'px-4 py-2 rounded font-orbitron font-bold text-xs uppercase tracking-wider border-2 transition-all select-none cursor-pointer',
+                'px-4 py-2 rounded-lg font-orbitron font-bold text-xs uppercase tracking-wider border transition-all select-none cursor-pointer',
                 active
                   ? 'bg-cyber-cyan/25 text-cyber-cyan border-cyber-cyan shadow-holo-cyan'
-                  : 'bg-cyber-panel/60 text-cyber-muted border-cyber-border/40 hover:border-cyber-cyan/40 hover:text-cyber-text'
+                  : 'city-glass text-cyber-textMuted border-cyber-border/35 hover:border-cyber-cyan/40 hover:text-cyber-text'
               )}
             >
               {t}
@@ -153,40 +153,40 @@ export default function QuestsPage() {
       {tab === 'FORGE DIRECTIVE' && (
         <form
           onSubmit={handleCreate}
-          className="bg-cyber-panel/90 backdrop-blur-xl border-2 border-cyber-cyan rounded-xl p-6 md:p-8 shadow-holo-cyan space-y-6 cyber-corner-tl"
+          className="city-glass-elevated border border-cyber-cyan/40 rounded-2xl p-6 md:p-8 shadow-glass-depth space-y-6 cyber-corner-tl"
         >
-          <div className="border-b border-cyber-border/40 pb-3 flex items-center justify-between">
+          <div className="border-b border-cyber-border/30 pb-3 flex items-center justify-between">
             <div>
-              <h2 className="font-orbitron font-bold text-xl text-cyber-text">FORGE PROTOCOL DIRECTIVE</h2>
-              <p className="font-mono text-xs text-cyber-muted">SET MISSION PARAMETERS AND REWARD ENERGY ALLOCATIONS</p>
+              <h2 className="font-orbitron font-bold text-xl text-cyber-text text-glow-cyan">FORGE PROTOCOL DIRECTIVE</h2>
+              <p className="font-mono text-xs text-cyber-textMuted">SET MISSION PARAMETERS AND REWARD ENERGY ALLOCATIONS</p>
             </div>
-            <span className="font-mono text-xs text-cyber-cyan bg-cyber-bg px-2.5 py-1 rounded border border-cyber-cyan/40">
-              SYS.FORGE_V2
+            <span className="font-mono text-xs text-cyber-cyan city-glass px-3 py-1 rounded-full border border-cyber-cyan/40">
+              SYS.FORGE_V4
             </span>
           </div>
 
           {formError && (
-            <div className="bg-cyber-red/20 border border-cyber-red text-cyber-coral font-mono text-xs p-3 rounded">
+            <div className="bg-cyber-red/20 border border-cyber-coral text-cyber-coral font-mono text-xs p-3.5 rounded-lg">
               ⚠️ {formError}
             </div>
           )}
 
           <div className="space-y-4">
             <div>
-              <label className="block font-orbitron font-bold text-xs uppercase tracking-wider text-cyber-muted mb-1.5">
+              <label className="block font-orbitron font-bold text-xs uppercase tracking-wider text-cyber-textMuted mb-1.5">
                 Mission Directive Title *
               </label>
               <input
                 required
                 value={form.title}
                 onChange={(e) => setForm({ ...form, title: e.target.value })}
-                placeholder="e.g. Implement WebGL Shaders & Clean Architecture"
-                className="w-full bg-cyber-bg/90 border-2 border-cyber-border rounded px-4 py-3 text-sm font-mono text-cyber-text placeholder:text-cyber-muted/40 focus:border-cyber-cyan focus:shadow-holo-cyan focus:outline-none"
+                placeholder="e.g. Master Three.js Shaders & Build Cyber City"
+                className="w-full city-glass border border-cyber-border/50 rounded-lg px-4 py-3 text-sm font-mono text-cyber-text placeholder:text-cyber-muted/40 focus:border-cyber-cyan focus:shadow-holo-cyan focus:outline-none"
               />
             </div>
 
             <div>
-              <label className="block font-orbitron font-bold text-xs uppercase tracking-wider text-cyber-muted mb-1.5">
+              <label className="block font-orbitron font-bold text-xs uppercase tracking-wider text-cyber-textMuted mb-1.5">
                 Directive Specifications (Optional)
               </label>
               <textarea
@@ -194,22 +194,22 @@ export default function QuestsPage() {
                 onChange={(e) => setForm({ ...form, description: e.target.value })}
                 placeholder="Specific parameters, acceptance criteria, or logs..."
                 rows={3}
-                className="w-full bg-cyber-bg/90 border-2 border-cyber-border rounded px-4 py-3 text-sm font-mono text-cyber-text placeholder:text-cyber-muted/40 focus:border-cyber-cyan focus:shadow-holo-cyan focus:outline-none resize-none"
+                className="w-full city-glass border border-cyber-border/50 rounded-lg px-4 py-3 text-sm font-mono text-cyber-text placeholder:text-cyber-muted/40 focus:border-cyber-cyan focus:shadow-holo-cyan focus:outline-none resize-none"
               />
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
-                <label className="block font-orbitron font-bold text-xs uppercase tracking-wider text-cyber-muted mb-1.5">
+                <label className="block font-orbitron font-bold text-xs uppercase tracking-wider text-cyber-textMuted mb-1.5">
                   Target Domain & Attribute
                 </label>
                 <select
                   value={form.category}
                   onChange={(e) => setForm({ ...form, category: e.target.value })}
-                  className="w-full bg-cyber-bg/90 border-2 border-cyber-border rounded px-4 py-3 text-sm font-mono text-cyber-text focus:border-cyber-cyan focus:outline-none cursor-pointer"
+                  className="w-full city-glass border border-cyber-border/50 rounded-lg px-4 py-3 text-sm font-mono text-cyber-text focus:border-cyber-cyan focus:outline-none cursor-pointer"
                 >
                   {CATEGORIES.map((c) => (
-                    <option key={c} value={c} className="bg-cyber-panel text-cyber-text">
+                    <option key={c} value={c} className="bg-cyber-navy text-cyber-text">
                       {c}
                     </option>
                   ))}
@@ -217,30 +217,30 @@ export default function QuestsPage() {
               </div>
 
               <div>
-                <label className="block font-orbitron font-bold text-xs uppercase tracking-wider text-cyber-muted mb-1.5">
+                <label className="block font-orbitron font-bold text-xs uppercase tracking-wider text-cyber-textMuted mb-1.5">
                   Threat / Effort Tier (Sets XP & Credits)
                 </label>
                 <select
                   value={form.difficulty}
                   onChange={(e) => setForm({ ...form, difficulty: e.target.value })}
-                  className="w-full bg-cyber-bg/90 border-2 border-cyber-border rounded px-4 py-3 text-sm font-mono text-cyber-text focus:border-cyber-cyan focus:outline-none cursor-pointer"
+                  className="w-full city-glass border border-cyber-border/50 rounded-lg px-4 py-3 text-sm font-mono text-cyber-text focus:border-cyber-cyan focus:outline-none cursor-pointer"
                 >
-                  <option value="easy" className="bg-cyber-panel text-cyber-green">Tier I — Easy (+50 XP, +10 Credits, +1 Attr)</option>
-                  <option value="medium" className="bg-cyber-panel text-cyber-gold">Tier II — Medium (+100 XP, +25 Credits, +2 Attr)</option>
-                  <option value="hard" className="bg-cyber-panel text-cyber-coral">Tier III — Hard (+200 XP, +50 Credits, +3 Attr)</option>
+                  <option value="easy" className="bg-cyber-navy text-cyber-green">Tier I — Easy (+50 XP, +10 Credits, +1 Attr)</option>
+                  <option value="medium" className="bg-cyber-navy text-cyber-amber">Tier II — Medium (+100 XP, +25 Credits, +2 Attr)</option>
+                  <option value="hard" className="bg-cyber-navy text-cyber-coral">Tier III — Hard (+200 XP, +50 Credits, +3 Attr)</option>
                 </select>
               </div>
             </div>
 
             <div>
-              <label className="block font-orbitron font-bold text-xs uppercase tracking-wider text-cyber-muted mb-1.5">
+              <label className="block font-orbitron font-bold text-xs uppercase tracking-wider text-cyber-textMuted mb-1.5">
                 Target Deadline (Optional)
               </label>
               <input
                 type="date"
                 value={form.due_date}
                 onChange={(e) => setForm({ ...form, due_date: e.target.value })}
-                className="w-full bg-cyber-bg/90 border-2 border-cyber-border rounded px-4 py-3 text-sm font-mono text-cyber-text focus:border-cyber-cyan focus:outline-none"
+                className="w-full city-glass border border-cyber-border/50 rounded-lg px-4 py-3 text-sm font-mono text-cyber-text focus:border-cyber-cyan focus:outline-none"
               />
             </div>
           </div>
@@ -270,16 +270,16 @@ export default function QuestsPage() {
       {tab !== 'FORGE DIRECTIVE' && (
         <div>
           {isLoading ? (
-            <div className="flex items-center justify-center py-16 text-cyber-muted font-orbitron font-bold">
+            <div className="flex items-center justify-center py-16 text-cyber-textMuted font-orbitron font-bold">
               <Loader2 className="w-8 h-8 animate-spin mr-3 text-cyber-cyan" /> SCANNING MISSION MATRIX...
             </div>
           ) : filtered.length === 0 ? (
-            <div className="bg-cyber-panel/80 border-2 border-dashed border-cyber-border/50 rounded-xl p-12 text-center space-y-3">
+            <div className="city-glass border border-dashed border-cyber-border/50 rounded-2xl p-12 text-center space-y-3 shadow-glass-depth">
               <div className="text-4xl">📭</div>
               <h3 className="font-orbitron font-bold text-xl text-cyber-text">
                 {tab === 'VERIFIED COMPLETED' ? 'NO RECORDED COMPLETIONS YET' : 'MISSION DIRECTORY EMPTY'}
               </h3>
-              <p className="font-body text-xs text-cyber-muted max-w-sm mx-auto">
+              <p className="font-body text-xs text-cyber-textMuted max-w-sm mx-auto">
                 {tab === 'VERIFIED COMPLETED'
                   ? 'Complete your active objectives to archive verified completions!'
                   : 'Forge a new mission to jumpstart your daily core resonance.'}

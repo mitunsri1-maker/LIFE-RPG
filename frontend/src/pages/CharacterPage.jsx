@@ -8,7 +8,9 @@ import AchievementCard from '../components/ui/AchievementCard';
 import PlayerPod3D from '../components/3d/PlayerPod3D';
 import XPCore from '../components/ui/XPCore';
 import HoloPanel from '../components/hud/HoloPanel';
-import { Flame, Loader2, Shield, Trophy, Activity, Terminal } from 'lucide-react';
+import HoloButton from '../components/hud/HoloButton';
+import { soundFX } from '../utils/soundFX';
+import { Flame, Loader2, Shield, Trophy, Activity, Terminal, Printer } from 'lucide-react';
 
 function calculateLevelProgress(xp = 0, level = 1) {
   let accumulated = 0;
@@ -29,14 +31,19 @@ export default function CharacterPage() {
     characterApi.get().then((r) => { setData(r.data); setLoading(false); }).catch(() => setLoading(false));
   }, []);
 
+  const handlePrint = () => {
+    soundFX.playClick();
+    window.print();
+  };
+
   if (loading) return (
-    <div className="flex items-center justify-center h-80 text-cyber-muted font-orbitron font-bold">
+    <div className="flex items-center justify-center h-80 text-cyber-textMuted font-orbitron font-bold">
       <Loader2 className="w-8 h-8 animate-spin mr-3 text-cyber-cyan" /> DECRYPTING CHARACTER DOSSIER...
     </div>
   );
 
   if (!data) return (
-    <div className="p-8 text-cyber-red font-orbitron font-bold">
+    <div className="p-8 text-cyber-coral font-orbitron font-bold">
       FAILED TO RETRIEVE OPERATIVE ARCHIVE.
     </div>
   );
@@ -49,24 +56,35 @@ export default function CharacterPage() {
   return (
     <div className="p-4 md:p-8 max-w-6xl mx-auto space-y-8">
       {/* Dossier Header + 3D Hologram Rig */}
-      <div className="bg-cyber-panel/85 backdrop-blur-xl border-2 border-cyber-cyan/50 rounded-xl p-6 md:p-8 shadow-holo-cyan relative overflow-hidden cyber-corner-tl">
+      <div className="city-glass-elevated border border-cyber-cyan/40 rounded-2xl p-6 md:p-8 shadow-glass-depth relative overflow-hidden cyber-corner-tl">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-center">
           <div className="lg:col-span-7 space-y-3">
-            <div className="inline-flex items-center gap-2 bg-cyber-purple/20 border border-cyber-purple text-cyber-purple font-mono text-[11px] px-3 py-1 rounded font-bold uppercase tracking-wider">
-              <Terminal className="w-3.5 h-3.5" /> DOSSIER // OPERATIVE MATRIX
+            <div className="flex items-center justify-between">
+              <div className="inline-flex items-center gap-2 bg-cyber-violet/20 border border-cyber-violet/40 text-cyber-violet font-mono text-[11px] px-3 py-1 rounded-full font-bold uppercase tracking-wider">
+                <Terminal className="w-3.5 h-3.5" /> DOSSIER // OPERATIVE MATRIX
+              </div>
+
+              {/* Print / Export Dossier Button */}
+              <button
+                onClick={handlePrint}
+                className="no-print inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-mono font-bold city-glass border border-cyber-border/40 text-cyber-textMuted hover:text-cyber-cyan hover:border-cyber-cyan transition-all cursor-pointer"
+                title="Print or Save Operative Dossier Report"
+              >
+                <Printer className="w-3.5 h-3.5" /> EXPORT DOSSIER
+              </button>
             </div>
 
             <div className="flex items-center gap-4">
               <LevelBadge level={user.level || 1} large />
               <div>
-                <h1 className="font-orbitron font-black text-3xl md:text-4xl text-cyber-text">{user.username}</h1>
-                <p className="font-mono text-xs text-cyber-muted">{user.email}</p>
+                <h1 className="font-orbitron font-black text-3xl md:text-4xl text-cyber-text text-glow-cyan">{user.username}</h1>
+                <p className="font-mono text-xs text-cyber-textMuted">{user.email}</p>
               </div>
             </div>
 
             <div className="flex flex-wrap items-center gap-3 pt-2">
               <GoldCounter gold={user.gold} large />
-              <div className="inline-flex items-center gap-2 bg-cyber-bg/90 border-2 border-cyber-coral/50 px-3.5 py-1.5 rounded-lg shadow-holo-red">
+              <div className="inline-flex items-center gap-2 city-glass border border-cyber-coral/50 px-3.5 py-1.5 rounded-lg shadow-holo-red">
                 <Flame className="w-4 h-4 text-cyber-coral fill-cyber-coral/30" />
                 <span className="font-orbitron font-bold text-xs text-cyber-coral">
                   {streak.current_streak} DAY CORE RESONANCE
@@ -76,12 +94,12 @@ export default function CharacterPage() {
           </div>
 
           {/* 3D Holo Preview */}
-          <div className="lg:col-span-5 bg-cyber-bg/90 border-2 border-cyber-border/40 rounded-lg p-2 shadow-inner">
+          <div className="lg:col-span-5 city-glass border border-cyber-cyan/35 rounded-xl p-2 shadow-inner">
             <PlayerPod3D level={user.level || 1} username={user.username} stats={stats} height="220px" />
           </div>
         </div>
 
-        <div className="mt-6 pt-6 border-t border-cyber-border/30">
+        <div className="mt-6 pt-6 border-t border-cyber-border/25">
           <XPBar xp={user.xp} level={user.level} />
         </div>
       </div>
@@ -94,9 +112,10 @@ export default function CharacterPage() {
           subtitle="NEURAL ENHANCEMENTS SCALED VIA HABIT DOMAINS"
           accent="cyan"
           glow
+          tag="[SYS.ATTRIBUTES]"
         >
           <CharacterStats stats={stats} />
-          <div className="mt-4 font-mono text-xs text-cyber-muted bg-cyber-bg/80 p-3 rounded border border-cyber-border/30 leading-relaxed">
+          <div className="mt-4 font-mono text-xs text-cyber-textMuted city-glass p-3 rounded-lg border border-cyber-border/30 leading-relaxed">
             💡 <strong>TELEMETRY NOTE:</strong> Complete Coding/Study for Intellect, Gym for Strength, Cardio for Vitality, Reading for Wisdom, and Meditation for Discipline.
           </div>
         </HoloPanel>
@@ -107,8 +126,9 @@ export default function CharacterPage() {
           subtitle="RECORDED MILESTONES & ACHIEVEMENTS"
           accent="gold"
           glow
+          tag="[SYS.TROPHIES]"
           badge={
-            <span className="font-mono text-xs text-cyber-gold bg-cyber-bg px-2.5 py-1 rounded border border-cyber-gold/50 font-bold">
+            <span className="font-mono text-xs text-cyber-amber city-glass px-2.5 py-1 rounded-full border border-cyber-amber/50 font-bold">
               {Math.round((unlocked.length / Math.max(1, achievements?.length || 1)) * 100)}% UNLOCKED
             </span>
           }
@@ -116,7 +136,7 @@ export default function CharacterPage() {
           <div className="space-y-3 max-h-[460px] overflow-y-auto pr-1">
             {unlocked.length > 0 && (
               <div className="space-y-2">
-                <div className="font-orbitron font-bold text-xs uppercase tracking-wider text-cyber-gold mb-1">
+                <div className="font-orbitron font-bold text-xs uppercase tracking-wider text-cyber-amber mb-1">
                   ⭐ UNLOCKED FEATS ({unlocked.length})
                 </div>
                 {unlocked.map((a) => (
@@ -127,7 +147,7 @@ export default function CharacterPage() {
 
             {locked.length > 0 && (
               <div className="space-y-2 pt-3">
-                <div className="font-orbitron font-bold text-xs uppercase tracking-wider text-cyber-muted mb-1">
+                <div className="font-orbitron font-bold text-xs uppercase tracking-wider text-cyber-textMuted mb-1">
                   🔒 ENCRYPTED FEATS ({locked.length})
                 </div>
                 {locked.map((a) => (
