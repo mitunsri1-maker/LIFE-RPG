@@ -77,7 +77,7 @@ export default function InventoryPage() {
       </div>
 
       {/* RPG Loadout Chamber */}
-      <div className="city-glass-elevated border border-cyber-cyan/40 rounded-2xl p-6 md:p-8 shadow-glass-depth relative overflow-hidden cyber-corner-tl">
+      <div className="glass-card zero-g-float border border-cyber-cyan/40 rounded-2xl p-6 md:p-8 shadow-glass-depth relative overflow-hidden cyber-corner-tl">
         <div className="flex items-center justify-between border-b border-cyber-border/25 pb-3 mb-6">
           <div className="flex items-center gap-2">
             <Cpu className="w-4 h-4 text-cyber-cyan" />
@@ -188,10 +188,10 @@ export default function InventoryPage() {
               <div
                 key={item.id}
                 className={clsx(
-                  'relative city-glass border rounded-xl p-5 flex flex-col justify-between transition-all duration-300 overflow-hidden cyber-corner-tl',
+                  'relative glass-card zero-g-float p-5 flex flex-col justify-between transition-all duration-300 overflow-hidden cyber-corner-tl',
                   item.equipped
                     ? 'border-cyber-green/50 shadow-[0_0_20px_rgba(0,255,157,0.2)] bg-cyber-navy/50'
-                    : 'border-cyber-border/40 hover:border-cyber-cyan hover:shadow-[0_0_20px_rgba(0,240,255,0.2)] hover:-translate-y-1'
+                    : 'hover:border-cyber-cyan hover:shadow-[0_0_20px_rgba(0,240,255,0.2)] hover:-translate-y-1'
                 )}
               >
                 <div>

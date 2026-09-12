@@ -58,7 +58,7 @@ export default function QuestCard({ quest, onComplete, onDelete, isCompleting })
   return (
     <div
       className={clsx(
-        'group relative quest-card p-5 md:p-6 transition-all duration-300 overflow-hidden',
+        'group relative glass-card zero-g-float p-5 md:p-6 transition-all duration-300 overflow-hidden',
         isCompleted
           ? 'border-cyber-green/40 bg-cyber-navy/40 opacity-70 border-l-cyber-green'
           : `${diffConfig.border}`

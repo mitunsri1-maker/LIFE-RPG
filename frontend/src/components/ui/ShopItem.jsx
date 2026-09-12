@@ -1,4 +1,4 @@
-﻿import React from 'react';
+import React from 'react';
 import { ShoppingCart, Check, Coins, Sparkles } from 'lucide-react';
 import { clsx } from 'clsx';
 import HoloItem3D from '../3d/HoloItem3D';
@@ -15,10 +15,10 @@ export default function ShopItem({ item, onBuy, isBuying }) {
   return (
     <div
       className={clsx(
-        'group relative city-glass border rounded-xl p-5 flex flex-col justify-between transition-all duration-300 overflow-hidden cyber-corner-tl',
+        'group relative glass-card zero-g-float p-5 flex flex-col justify-between transition-all duration-300 overflow-hidden cyber-corner-tl',
         owned
           ? 'border-cyber-green/40 shadow-[0_0_20px_rgba(0,255,157,0.15)] bg-cyber-navy/50 opacity-90'
-          : 'border-cyber-border/40 hover:border-cyber-amber hover:shadow-[0_0_25px_rgba(255,184,0,0.25)] hover:-translate-y-1'
+          : 'hover:border-cyber-amber hover:shadow-[0_0_25px_rgba(255,184,0,0.25)] hover:-translate-y-1'
       )}
     >
       <div>

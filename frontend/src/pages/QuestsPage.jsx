@@ -153,7 +153,7 @@ export default function QuestsPage() {
       {tab === 'FORGE DIRECTIVE' && (
         <form
           onSubmit={handleCreate}
-          className="city-glass-elevated border border-cyber-cyan/35 rounded-2xl p-6 md:p-8 shadow-[0_10px_35px_rgba(0,0,0,0.6)] space-y-6"
+          className="glass-card zero-g-float border border-cyber-cyan/35 rounded-2xl p-6 md:p-8 shadow-[0_10px_35px_rgba(0,0,0,0.6)] space-y-6"
         >
           <div className="border-b border-cyber-cyan/20 pb-3 flex items-center justify-between">
             <div>

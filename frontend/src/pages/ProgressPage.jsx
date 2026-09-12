@@ -101,28 +101,28 @@ export default function ProgressPage() {
 
       {/* Stat Matrix */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-        <div className="city-glass border border-cyber-green/30 p-5 rounded-xl shadow-sm hover:border-cyber-green/60 transition-all">
+        <div className="glass-card zero-g-float border border-cyber-green/30 p-5 shadow-sm hover:border-cyber-green/60 transition-all">
           <div className="font-mono text-xs text-cyber-dim uppercase">Missions Cleared</div>
           <div className="font-orbitron font-black text-3xl text-cyber-green text-glow-green mt-1">
             {progress?.stats?.total_completed || 0}
           </div>
         </div>
 
-        <div className="city-glass border border-cyber-cyan/30 p-5 rounded-xl shadow-sm hover:border-cyber-cyan/60 transition-all">
+        <div className="glass-card zero-g-float border border-cyber-cyan/30 p-5 shadow-sm hover:border-cyber-cyan/60 transition-all">
           <div className="font-mono text-xs text-cyber-dim uppercase">Active Directives</div>
           <div className="font-orbitron font-black text-3xl text-cyber-cyan text-glow-cyan mt-1">
             {progress?.stats?.total_active || 0}
           </div>
         </div>
 
-        <div className="city-glass border border-cyber-magenta/30 p-5 rounded-xl shadow-sm hover:border-cyber-magenta/60 transition-all">
+        <div className="glass-card zero-g-float border border-cyber-magenta/30 p-5 shadow-sm hover:border-cyber-magenta/60 transition-all">
           <div className="font-mono text-xs text-cyber-dim uppercase">Current Streak</div>
           <div className="font-orbitron font-black text-3xl text-cyber-magenta text-glow-magenta mt-1">
             {progress?.streak?.current_streak || 0}D
           </div>
         </div>
 
-        <div className="city-glass border border-cyber-amber/30 p-5 rounded-xl shadow-sm hover:border-cyber-amber/60 transition-all">
+        <div className="glass-card zero-g-float border border-cyber-amber/30 p-5 shadow-sm hover:border-cyber-amber/60 transition-all">
           <div className="font-mono text-xs text-cyber-dim uppercase">Max Streak Record</div>
           <div className="font-orbitron font-black text-3xl text-cyber-amber text-glow-gold mt-1">
             {progress?.streak?.best_streak || 0}D

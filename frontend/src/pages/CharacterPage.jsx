@@ -56,7 +56,7 @@ export default function CharacterPage() {
   return (
     <div className="p-4 md:p-8 max-w-6xl mx-auto space-y-8">
       {/* Dossier Header + 3D Hologram Rig */}
-      <div className="city-glass-elevated border border-cyber-cyan/35 rounded-2xl p-6 md:p-8 shadow-[0_10px_35px_rgba(0,0,0,0.6)] relative overflow-hidden">
+      <div className="glass-card zero-g-float border border-cyber-cyan/35 rounded-2xl p-6 md:p-8 shadow-[0_10px_35px_rgba(0,0,0,0.6)] relative overflow-hidden">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-center">
           <div className="lg:col-span-7 space-y-3">
             <div className="flex items-center justify-between">
