@@ -91,13 +91,13 @@ export default function QuestsPage() {
       {/* Title & Actions */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h1 className="font-orbitron font-black text-3xl md:text-4xl text-slate-800 tracking-tight flex items-center gap-3">
-            <span className="w-11 h-11 rounded-xl bg-sky-50 border border-sky-200 text-sky-600 flex items-center justify-center text-xl shadow-xs">
+          <h1 className="font-orbitron font-black text-3xl md:text-4xl text-cyber-text tracking-tight flex items-center gap-3 text-glow-cyan">
+            <span className="w-11 h-11 rounded-xl bg-cyber-cyan/15 border border-cyber-cyan/40 text-cyber-cyan flex items-center justify-center text-xl shadow-[0_0_15px_rgba(0,229,255,0.25)]">
               ⚔️
             </span>
             MISSION TERMINAL
           </h1>
-          <p className="font-mono text-xs text-slate-500 mt-1">
+          <p className="font-mono text-xs text-cyber-textMuted mt-1">
             LOG // MANAGE DIRECTIVES & HARVEST ENERGY ALLOCATIONS
           </p>
         </div>
@@ -105,8 +105,8 @@ export default function QuestsPage() {
         <div className="flex items-center gap-3">
           <button
             onClick={() => { soundFX.playClick(); setShowMap(!showMap); }}
-            className={`inline-flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs font-mono font-bold border transition-all cursor-pointer shadow-2xs ${
-              showMap ? 'bg-sky-500 text-white border-sky-500 shadow-xs' : 'city-glass text-slate-600 border-slate-200 hover:text-slate-900'
+            className={`inline-flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs font-mono font-bold border transition-all cursor-pointer shadow-sm ${
+              showMap ? 'bg-cyber-cyan text-cyber-bg border-cyber-cyan shadow-[0_0_15px_rgba(0,229,255,0.4)]' : 'city-glass text-cyber-textMuted border-cyber-cyan/25 hover:text-cyber-text'
             }`}
           >
             <Map className="w-4 h-4" /> 3D MAP: {showMap ? 'ACTIVE' : 'OFF'}
@@ -128,7 +128,7 @@ export default function QuestsPage() {
         <QuestNodeMap3D quests={quests.filter((q) => q.status === 'active')} height="340px" onSelectQuest={(q) => handleComplete(q.id)} />
       )}
 
-      {/* Daylight Tabs */}
+      {/* Dark Cyber Tabs */}
       <div className="flex flex-wrap gap-2">
         {TABS.map((t) => {
           const active = tab === t;
@@ -137,10 +137,10 @@ export default function QuestsPage() {
               key={t}
               onClick={() => { soundFX.playClick(); setTab(t); }}
               className={clsx(
-                'px-4 py-2 rounded-xl font-orbitron font-bold text-xs uppercase tracking-wider border transition-all select-none cursor-pointer shadow-2xs',
+                'px-4 py-2 rounded-xl font-orbitron font-bold text-xs uppercase tracking-wider border transition-all select-none cursor-pointer shadow-sm',
                 active
-                  ? 'bg-sky-500 text-white border-sky-500 shadow-xs'
-                  : 'city-glass text-slate-600 border-slate-200 hover:border-sky-300 hover:text-slate-900'
+                  ? 'bg-cyber-cyan text-cyber-bg border-cyber-cyan shadow-[0_0_12px_rgba(0,229,255,0.4)]'
+                  : 'city-glass text-cyber-textMuted border-cyber-cyan/25 hover:border-cyber-cyan/60 hover:text-cyber-text'
               )}
             >
               {t}
@@ -153,27 +153,27 @@ export default function QuestsPage() {
       {tab === 'FORGE DIRECTIVE' && (
         <form
           onSubmit={handleCreate}
-          className="city-glass-elevated border border-white/90 rounded-2xl p-6 md:p-8 shadow-sm space-y-6"
+          className="city-glass-elevated border border-cyber-cyan/35 rounded-2xl p-6 md:p-8 shadow-[0_10px_35px_rgba(0,0,0,0.6)] space-y-6"
         >
-          <div className="border-b border-slate-200 pb-3 flex items-center justify-between">
+          <div className="border-b border-cyber-cyan/20 pb-3 flex items-center justify-between">
             <div>
-              <h2 className="font-orbitron font-bold text-xl text-slate-800">FORGE PROTOCOL DIRECTIVE</h2>
-              <p className="font-mono text-xs text-slate-500">SET MISSION PARAMETERS AND REWARD ENERGY ALLOCATIONS</p>
+              <h2 className="font-orbitron font-bold text-xl text-cyber-text">FORGE PROTOCOL DIRECTIVE</h2>
+              <p className="font-mono text-xs text-cyber-textMuted">SET MISSION PARAMETERS AND REWARD ENERGY ALLOCATIONS</p>
             </div>
-            <span className="font-mono text-xs text-sky-700 bg-sky-50 px-3 py-1 rounded-full border border-sky-200">
+            <span className="font-mono text-xs text-cyber-cyan bg-cyber-cyan/10 px-3 py-1 rounded-full border border-cyber-cyan/30">
               SYS.FORGE_V4
             </span>
           </div>
 
           {formError && (
-            <div className="bg-rose-50 border border-rose-200 text-rose-700 font-mono text-xs p-3.5 rounded-lg">
+            <div className="bg-cyber-magenta/10 border border-cyber-magenta/30 text-cyber-magenta font-mono text-xs p-3.5 rounded-lg">
               ⚠️ {formError}
             </div>
           )}
 
           <div className="space-y-4">
             <div>
-              <label className="block font-orbitron font-bold text-xs uppercase tracking-wider text-slate-600 mb-1.5">
+              <label className="block font-orbitron font-bold text-xs uppercase tracking-wider text-cyber-text mb-1.5">
                 Mission Directive Title *
               </label>
               <input
@@ -181,12 +181,12 @@ export default function QuestsPage() {
                 value={form.title}
                 onChange={(e) => setForm({ ...form, title: e.target.value })}
                 placeholder="e.g. Master Three.js Shaders & Build Cyber City"
-                className="w-full bg-white border border-slate-200 rounded-xl px-4 py-3 text-sm font-mono text-slate-800 placeholder:text-slate-400 focus:border-sky-500 focus:ring-1 focus:ring-sky-500 focus:outline-none shadow-2xs"
+                className="w-full bg-cyber-navy/80 border border-cyber-cyan/30 rounded-xl px-4 py-3 text-sm font-mono text-cyber-text placeholder:text-cyber-dim focus:border-cyber-cyan focus:ring-1 focus:ring-cyber-cyan focus:outline-none shadow-sm"
               />
             </div>
 
             <div>
-              <label className="block font-orbitron font-bold text-xs uppercase tracking-wider text-slate-600 mb-1.5">
+              <label className="block font-orbitron font-bold text-xs uppercase tracking-wider text-cyber-text mb-1.5">
                 Directive Specifications (Optional)
               </label>
               <textarea
@@ -194,22 +194,22 @@ export default function QuestsPage() {
                 onChange={(e) => setForm({ ...form, description: e.target.value })}
                 placeholder="Specific parameters, acceptance criteria, or logs..."
                 rows={3}
-                className="w-full bg-white border border-slate-200 rounded-xl px-4 py-3 text-sm font-mono text-slate-800 placeholder:text-slate-400 focus:border-sky-500 focus:ring-1 focus:ring-sky-500 focus:outline-none resize-none shadow-2xs"
+                className="w-full bg-cyber-navy/80 border border-cyber-cyan/30 rounded-xl px-4 py-3 text-sm font-mono text-cyber-text placeholder:text-cyber-dim focus:border-cyber-cyan focus:ring-1 focus:ring-cyber-cyan focus:outline-none resize-none shadow-sm"
               />
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
-                <label className="block font-orbitron font-bold text-xs uppercase tracking-wider text-slate-600 mb-1.5">
+                <label className="block font-orbitron font-bold text-xs uppercase tracking-wider text-cyber-text mb-1.5">
                   Target Domain & Attribute
                 </label>
                 <select
                   value={form.category}
                   onChange={(e) => setForm({ ...form, category: e.target.value })}
-                  className="w-full bg-white border border-slate-200 rounded-xl px-4 py-3 text-sm font-mono text-slate-800 focus:border-sky-500 focus:outline-none cursor-pointer shadow-2xs"
+                  className="w-full bg-cyber-navy/80 border border-cyber-cyan/30 rounded-xl px-4 py-3 text-sm font-mono text-cyber-text focus:border-cyber-cyan focus:outline-none cursor-pointer shadow-sm"
                 >
                   {CATEGORIES.map((c) => (
-                    <option key={c} value={c} className="bg-white text-slate-800">
+                    <option key={c} value={c} className="bg-cyber-navy text-cyber-text">
                       {c}
                     </option>
                   ))}
@@ -217,35 +217,35 @@ export default function QuestsPage() {
               </div>
 
               <div>
-                <label className="block font-orbitron font-bold text-xs uppercase tracking-wider text-slate-600 mb-1.5">
+                <label className="block font-orbitron font-bold text-xs uppercase tracking-wider text-cyber-text mb-1.5">
                   Threat / Effort Tier (Sets XP & Credits)
                 </label>
                 <select
                   value={form.difficulty}
                   onChange={(e) => setForm({ ...form, difficulty: e.target.value })}
-                  className="w-full bg-white border border-slate-200 rounded-xl px-4 py-3 text-sm font-mono text-slate-800 focus:border-sky-500 focus:outline-none cursor-pointer shadow-2xs"
+                  className="w-full bg-cyber-navy/80 border border-cyber-cyan/30 rounded-xl px-4 py-3 text-sm font-mono text-cyber-text focus:border-cyber-cyan focus:outline-none cursor-pointer shadow-sm"
                 >
-                  <option value="easy" className="text-emerald-700">Tier I — Easy (+50 XP, +10 Credits, +1 Attr)</option>
-                  <option value="medium" className="text-amber-700">Tier II — Medium (+100 XP, +25 Credits, +2 Attr)</option>
-                  <option value="hard" className="text-rose-700">Tier III — Hard (+200 XP, +50 Credits, +3 Attr)</option>
+                  <option value="easy" className="text-cyber-green bg-cyber-navy">Tier I — Easy (+50 XP, +10 Credits, +1 Attr)</option>
+                  <option value="medium" className="text-cyber-amber bg-cyber-navy">Tier II — Medium (+100 XP, +25 Credits, +2 Attr)</option>
+                  <option value="hard" className="text-cyber-magenta bg-cyber-navy">Tier III — Hard (+200 XP, +50 Credits, +3 Attr)</option>
                 </select>
               </div>
             </div>
 
             <div>
-              <label className="block font-orbitron font-bold text-xs uppercase tracking-wider text-slate-600 mb-1.5">
+              <label className="block font-orbitron font-bold text-xs uppercase tracking-wider text-cyber-text mb-1.5">
                 Target Deadline (Optional)
               </label>
               <input
                 type="date"
                 value={form.due_date}
                 onChange={(e) => setForm({ ...form, due_date: e.target.value })}
-                className="w-full bg-white border border-slate-200 rounded-xl px-4 py-3 text-sm font-mono text-slate-800 focus:border-sky-500 focus:outline-none shadow-2xs"
+                className="w-full bg-cyber-navy/80 border border-cyber-cyan/30 rounded-xl px-4 py-3 text-sm font-mono text-cyber-text focus:border-cyber-cyan focus:outline-none shadow-sm"
               />
             </div>
           </div>
 
-          <div className="flex items-center justify-end gap-3 pt-3 border-t border-cyber-border/30">
+          <div className="flex items-center justify-end gap-3 pt-3 border-t border-cyber-cyan/20">
             <HoloButton
               variant="ghost"
               size="sm"

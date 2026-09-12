@@ -2,7 +2,7 @@ import { useRef, useMemo } from 'react';
 import { Canvas, useFrame } from '@react-three/fiber';
 import * as THREE from 'three';
 
-function CoreMesh({ xpPercent = 0, justGainedXP = false, accent = '#00F0FF' }) {
+function CoreMesh({ xpPercent = 0, justGainedXP = false, accent = '#00E5FF' }) {
   const coreRef = useRef();
   const wireRef = useRef();
   const ringsRef = useRef();
@@ -54,7 +54,7 @@ function CoreMesh({ xpPercent = 0, justGainedXP = false, accent = '#00F0FF' }) {
       coreRef.current.scale.setScalar(burstScale);
       if (coreRef.current.material) {
         coreRef.current.material.emissiveIntensity =
-          1.5 + xpPercent / 50 + pulse.current * 4.0;
+          1.8 + xpPercent / 40 + pulse.current * 5.0;
       }
     }
   });
@@ -65,29 +65,29 @@ function CoreMesh({ xpPercent = 0, justGainedXP = false, accent = '#00F0FF' }) {
       <mesh ref={coreRef}>
         <octahedronGeometry args={[0.9, 0]} />
         <meshStandardMaterial
-          color="#38BDF8"
+          color="#00E5FF"
           emissive={accent}
-          emissiveIntensity={1.4}
+          emissiveIntensity={2.0}
           roughness={0.05}
-          metalness={0.9}
+          metalness={0.95}
         />
       </mesh>
 
       {/* Outer geodesic wireframe containment shell */}
       <mesh ref={wireRef} scale={1.42}>
         <icosahedronGeometry args={[1, 1]} />
-        <meshBasicMaterial color="#0284C7" wireframe transparent opacity={0.35} />
+        <meshBasicMaterial color="#00E5FF" wireframe transparent opacity={0.45} />
       </mesh>
 
-      {/* Holographic Gyro Rings (Cyan & Soft Magenta) */}
+      {/* Holographic Gyro Rings (Cyan & Vivid Magenta) */}
       <group ref={ringsRef}>
         <mesh>
           <torusGeometry args={[1.75, 0.015, 16, 64]} />
-          <meshBasicMaterial color="#00B4D8" transparent opacity={0.7} />
+          <meshBasicMaterial color="#00E5FF" transparent opacity={0.8} />
         </mesh>
         <mesh rotation={[Math.PI / 3, 0, 0]}>
           <torusGeometry args={[1.9, 0.012, 16, 64]} />
-          <meshBasicMaterial color="#E11D48" transparent opacity={0.4} />
+          <meshBasicMaterial color="#FF2DA6" transparent opacity={0.65} />
         </mesh>
       </group>
 
@@ -101,18 +101,18 @@ function CoreMesh({ xpPercent = 0, justGainedXP = false, accent = '#00F0FF' }) {
             itemSize={3}
           />
         </bufferGeometry>
-        <pointsMaterial color="#00B4D8" size={0.065} sizeAttenuation transparent opacity={0.85} />
+        <pointsMaterial color="#00E5FF" size={0.075} sizeAttenuation transparent opacity={0.9} />
       </points>
 
-      {/* Daylight illumination */}
-      <ambientLight intensity={1.2} />
-      <pointLight position={[0, 0, 3]} intensity={2.5} color="#00B4D8" distance={12} />
-      <pointLight position={[0, 2, -2]} intensity={1.5} color="#E11D48" distance={10} />
+      {/* Dark Ambient & Vivid Neon Illumination */}
+      <ambientLight intensity={0.4} />
+      <pointLight position={[0, 0, 3]} intensity={3.5} color="#00E5FF" distance={15} />
+      <pointLight position={[0, 2, -2]} intensity={2.8} color="#FF2DA6" distance={12} />
     </group>
   );
 }
 
-export default function XPCore({ xpPercent = 0, justGainedXP = false, accent = '#00B4D8', height = '240px', className = '' }) {
+export default function XPCore({ xpPercent = 0, justGainedXP = false, accent = '#00E5FF', height = '240px', className = '' }) {
   return (
     <div style={{ width: '100%', height }} className={`relative select-none ${className}`}>
       <Canvas camera={{ position: [0, 0, 4.3], fov: 44 }} gl={{ alpha: true, antialias: true }}>

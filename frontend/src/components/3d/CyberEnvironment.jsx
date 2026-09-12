@@ -2,131 +2,144 @@ import React, { useRef, useMemo, useEffect } from 'react';
 import { Canvas, useFrame } from '@react-three/fiber';
 import * as THREE from 'three';
 
-// Procedural Realistic Daylight Cyberpunk Metropolis
-function DayCity({ level = 1 }) {
+// Procedural Realistic Dark Cyberpunk Night Metropolis
+function DarkNeonCity({ level = 1 }) {
   const meshRef = useRef();
-  const glassRef = useRef();
-  const gardensRef = useRef();
+  const windowsRef = useRef();
   const billboardsRef = useRef();
-  const trainsRef = useRef();
+  const trafficRef = useRef();
   const aerocarsRef = useRef();
-  const dronesRef = useRef();
-  const cloudRef = useRef();
+  const rainRef = useRef();
 
-  // City scale scales slightly with player progression
-  const buildingCount = Math.min(140, 60 + level * 3);
+  // City scale scales with player progression
+  const buildingCount = Math.min(130, 60 + level * 3);
   const citySpread = 90;
 
-  // Generate architectural towers, glass arrays, rooftop gardens, and holographic billboards
+  // Generate architectural towers, glowing neon window bands, and holographic billboards
   const {
     buildingData,
-    glassData,
-    gardenData,
-    billboardData
+    windowData,
+    billboardData,
   } = useMemo(() => {
     const buildings = [];
-    const glassPanels = [];
-    const gardens = [];
+    const windows = [];
     const billboards = [];
     const dummy = new THREE.Object3D();
 
     for (let i = 0; i < buildingCount; i++) {
-      const angle = (i / buildingCount) * Math.PI * 2 + (Math.random() * 0.2);
+      const angle = (i / buildingCount) * Math.PI * 2 + (Math.random() * 0.25);
       const dist = 16 + Math.random() * citySpread;
       const x = Math.cos(angle) * dist;
       const z = Math.sin(angle) * dist - 22;
 
-      // Daylight architecture: sleek white/silver stepped towers
-      const heightBonus = Math.min(40, level * 1.6);
-      const height = 14 + Math.random() * (28 + heightBonus);
-      const width = 3.5 + Math.random() * 4.5;
-      const depth = 3.5 + Math.random() * 4.5;
+      // Dark futuristic skyscraper proportions
+      const heightBonus = Math.min(45, level * 1.8);
+      const height = 16 + Math.random() * (30 + heightBonus);
+      const width = 3.2 + Math.random() * 4.5;
+      const depth = 3.2 + Math.random() * 4.5;
       const y = height / 2 - 14;
 
       dummy.position.set(x, y, z);
       dummy.scale.set(width, height, depth);
-      dummy.rotation.y = (i % 6) * (Math.PI / 6) + 0.1;
+      dummy.rotation.y = (i % 8) * (Math.PI / 4) + 0.05;
       dummy.updateMatrix();
       buildings.push(dummy.matrix.clone());
 
-      // Sleek Azure Glass Facade Bands
-      const numBands = 2 + Math.floor(Math.random() * 3);
+      // Glowing Neon Window Bands (Cyan, Amber, Violet)
+      const numBands = 3 + Math.floor(Math.random() * 5);
       for (let b = 0; b < numBands; b++) {
-        const bandY = y + (b / numBands - 0.45) * (height * 0.7);
+        const bandY = y + (b / numBands - 0.45) * (height * 0.75);
         dummy.position.set(x, bandY, z + depth * 0.51);
-        dummy.scale.set(width * 0.88, 1.2 + Math.random() * 0.8, 0.1);
+        dummy.scale.set(width * 0.85, 0.5 + Math.random() * 0.4, 0.08);
         dummy.updateMatrix();
-        glassPanels.push(dummy.matrix.clone());
+        windows.push({
+          matrix: dummy.matrix.clone(),
+          color: (i + b) % 3 === 0 ? '#00E5FF' : (i + b) % 3 === 1 ? '#FFB84D' : '#FF2DA6',
+        });
       }
 
-      // Rooftop Sky Gardens / Greenery Terraces (Solarpunk aesthetic)
-      if (height > 18 && i % 2 === 0) {
-        dummy.position.set(x, y + height / 2 + 0.15, z);
-        dummy.scale.set(width * 0.7, 0.3, depth * 0.7);
-        dummy.updateMatrix();
-        gardens.push(dummy.matrix.clone());
-      }
-
-      // Daylight Holographic Billboards (Cyan, Magenta, Violet, Emerald)
-      if (i % 6 === 0 && height > 24) {
-        dummy.position.set(x, y + (Math.random() - 0.1) * (height * 0.35), z + depth * 0.54);
-        dummy.scale.set(width * 0.7, 3.2, 0.1);
+      // Neon Holographic Billboards (Magenta, Cyan, Violet ads)
+      if (i % 5 === 0 && height > 22) {
+        dummy.position.set(x, y + (Math.random() - 0.1) * (height * 0.3), z + depth * 0.54);
+        dummy.scale.set(width * 0.75, 3.4, 0.1);
         dummy.updateMatrix();
         billboards.push({
           matrix: dummy.matrix.clone(),
-          color: i % 12 === 0 ? '#E11D48' : i % 12 === 6 ? '#00B4D8' : '#9333EA',
+          color: i % 15 === 0 ? '#FF2DA6' : i % 15 === 5 ? '#00E5FF' : '#8B5CF6',
         });
       }
     }
 
     return {
       buildingData: buildings,
-      glassData: glassPanels,
-      gardenData: gardens,
+      windowData: windows,
       billboardData: billboards,
     };
   }, [buildingCount, level]);
 
-  // Flying Sky Aerocars & Shuttles cruising in daylight
-  const aerocarCount = Math.min(24, 12 + Math.floor(level * 1.5));
+  // Traffic Light Trails on Elevated Highways (Cyan/White headlights Eastbound, Red/Pink taillights Westbound)
+  const trafficCount = 38;
+  const trafficInitial = useMemo(() => {
+    return Array.from({ length: trafficCount }, (_, i) => {
+      const isUpper = i % 2 === 0;
+      const isEastbound = i % 4 < 2;
+      return {
+        x: (Math.random() - 0.5) * 110,
+        y: isUpper ? 1.4 : -2.8,
+        z: isUpper ? -28 + (isEastbound ? 0.8 : -0.8) : -18 + (isEastbound ? 0.8 : -0.8),
+        speed: (0.35 + Math.random() * 0.4) * (isEastbound ? 1 : -1),
+        isEastbound,
+        color: isEastbound ? '#00E5FF' : '#FF2DA6',
+        length: 2.2 + Math.random() * 2.0,
+      };
+    });
+  }, [trafficCount]);
+
+  // Flying Neon Aerocars cruising across the skyline
+  const aerocarCount = Math.min(20, 10 + Math.floor(level * 1.4));
   const aerocarsInitial = useMemo(() => {
     return Array.from({ length: aerocarCount }, (_, i) => {
       const isEastbound = i % 2 === 0;
       return {
-        x: (Math.random() - 0.5) * 90,
-        y: 2 + Math.random() * 20,
-        z: -10 - Math.random() * 45,
-        speed: (0.18 + Math.random() * 0.35) * (isEastbound ? 1 : -1),
+        x: (Math.random() - 0.5) * 85,
+        y: 4 + Math.random() * 24,
+        z: -12 - Math.random() * 40,
+        speed: (0.16 + Math.random() * 0.28) * (isEastbound ? 1 : -1),
         isEastbound,
-        color: isEastbound ? '#FFFFFF' : '#E2E8F0',
-        length: 1.4 + Math.random() * 1.2,
+        color: isEastbound ? '#00E5FF' : '#FF2DA6',
+        length: 1.8 + Math.random() * 1.0,
       };
     });
   }, [aerocarCount, level]);
 
-  // Autonomous Drone Swarms
-  const droneCount = 14;
-  const dronesInitial = useMemo(() => {
-    return Array.from({ length: droneCount }, (_, i) => ({
-      x: (Math.random() - 0.5) * 60,
-      y: 6 + Math.random() * 18,
-      z: -8 - Math.random() * 35,
-      radius: 3 + Math.random() * 6,
-      speed: 0.6 + Math.random() * 0.8,
-      offset: i * ((Math.PI * 2) / droneCount),
-    }));
-  }, [droneCount]);
+  // Cyber Rain / Digital Mist particles falling gently
+  const rainCount = 180;
+  const rainParticles = useMemo(() => {
+    const pos = new Float32Array(rainCount * 3);
+    for (let i = 0; i < rainCount; i++) {
+      pos[i * 3] = (Math.random() - 0.5) * 70;
+      pos[i * 3 + 1] = Math.random() * 40 - 10;
+      pos[i * 3 + 2] = (Math.random() - 0.5) * 50 - 15;
+    }
+    return pos;
+  }, [rainCount]);
 
-  // High-Speed Sky Train / Monorail on elevated transit viaduct
-  const skyTrains = useMemo(() => [
-    { x: -40, y: -2.8, z: -18, speed: 0.42, length: 7, color: '#FFFFFF' },
-    { x: 30, y: 1.5, z: -28, speed: -0.38, length: 8, color: '#F8FAFC' },
-  ], []);
-
-  useFrame((state, delta) => {
+  useFrame((state) => {
     const t = state.clock.elapsedTime;
 
-    // Animate Aerocars cruising between towers
+    // Animate Highway Traffic Light Trails
+    if (trafficRef.current) {
+      trafficRef.current.children.forEach((child, i) => {
+        const car = trafficInitial[i];
+        if (car) {
+          child.position.x += car.speed;
+          if (car.isEastbound && child.position.x > 55) child.position.x = -55;
+          if (!car.isEastbound && child.position.x < -55) child.position.x = 55;
+        }
+      });
+    }
+
+    // Animate Flying Aerocars
     if (aerocarsRef.current) {
       aerocarsRef.current.children.forEach((child, i) => {
         const car = aerocarsInitial[i];
@@ -134,72 +147,45 @@ function DayCity({ level = 1 }) {
           child.position.x += car.speed;
           if (car.isEastbound && child.position.x > 50) child.position.x = -50;
           if (!car.isEastbound && child.position.x < -50) child.position.x = 50;
-          child.position.y += Math.sin(t * 1.5 + i) * 0.008; // Subtle flight buoyancy
+          child.position.y += Math.sin(t * 1.2 + i) * 0.008;
         }
       });
     }
 
-    // Animate Drone orbits
-    if (dronesRef.current) {
-      dronesRef.current.children.forEach((child, i) => {
-        const d = dronesInitial[i];
-        if (d) {
-          child.position.x = d.x + Math.cos(t * d.speed + d.offset) * d.radius;
-          child.position.y = d.y + Math.sin(t * d.speed * 1.4 + d.offset) * 0.6;
-          child.position.z = d.z + Math.sin(t * d.speed + d.offset) * d.radius * 0.5;
-        }
-      });
-    }
-
-    // Animate High-speed Sky Trains
-    if (trainsRef.current) {
-      trainsRef.current.children.forEach((child, i) => {
-        const train = skyTrains[i];
-        if (train) {
-          child.position.x += train.speed;
-          if (train.speed > 0 && child.position.x > 60) child.position.x = -60;
-          if (train.speed < 0 && child.position.x < -60) child.position.x = 60;
-        }
-      });
-    }
-
-    // Animate gentle daytime clouds drift
-    if (cloudRef.current) {
-      cloudRef.current.rotation.y = t * 0.008;
-    }
-
-    // Daylight holographic ads shimmer
+    // Animate Holographic Billboards pulse
     if (billboardsRef.current) {
       billboardsRef.current.children.forEach((mesh, idx) => {
         if (mesh.material) {
-          mesh.material.opacity = 0.75 + Math.sin(t * 2 + idx) * 0.15;
+          mesh.material.opacity = 0.72 + Math.sin(t * 2.5 + idx) * 0.18;
         }
       });
+    }
+
+    // Animate Rain / Mist falling
+    if (rainRef.current) {
+      const positions = rainRef.current.geometry.attributes.position.array;
+      for (let i = 0; i < rainCount; i++) {
+        positions[i * 3 + 1] -= 0.35; // fall speed
+        if (positions[i * 3 + 1] < -12) {
+          positions[i * 3 + 1] = 30;
+        }
+      }
+      rainRef.current.geometry.attributes.position.needsUpdate = true;
     }
   });
 
   return (
     <group>
-      {/* Soft Daylight Atmospheric Blue-White Fog */}
-      <fog attach="fog" args={['#C5E1F9', 30, 115]} />
+      {/* Deep Cyberpunk Atmospheric Night Sky & Fog */}
+      <fog attach="fog" args={['#050810', 25, 110]} />
 
-      {/* Daylight Sky Dome Gradient */}
+      {/* Atmospheric Night Sky Dome */}
       <mesh position={[0, 20, -50]}>
         <sphereGeometry args={[110, 32, 16]} />
-        <meshBasicMaterial color="#7EB6E8" side={THREE.BackSide} />
+        <meshBasicMaterial color="#050810" side={THREE.BackSide} />
       </mesh>
 
-      {/* Gentle Atmospheric Daylight Clouds */}
-      <group ref={cloudRef} position={[0, 25, -30]}>
-        {[-35, -15, 12, 38].map((cx, idx) => (
-          <mesh key={`cloud-${idx}`} position={[cx, 8 + Math.sin(idx) * 3, -15 - idx * 4]}>
-            <sphereGeometry args={[7 + idx * 1.5, 16, 12]} />
-            <meshBasicMaterial color="#FFFFFF" transparent opacity={0.35} />
-          </mesh>
-        ))}
-      </group>
-
-      {/* Instanced White / Silver Architectural Skyscraper Volumes */}
+      {/* Instanced Dark Monolith Skyscraper Volumes */}
       <instancedMesh
         ref={meshRef}
         args={[null, null, buildingData.length]}
@@ -210,49 +196,28 @@ function DayCity({ level = 1 }) {
       >
         <boxGeometry args={[1, 1, 1]} />
         <meshStandardMaterial
-          color="#F1F5F9"
-          roughness={0.25}
-          metalness={0.3}
+          color="#0B1220"
+          roughness={0.4}
+          metalness={0.7}
         />
       </instancedMesh>
 
-      {/* Instanced Azure Reflective Glass Windows on Facades */}
-      <instancedMesh
-        ref={glassRef}
-        args={[null, null, glassData.length]}
-        onUpdate={(self) => {
-          glassData.forEach((mat, i) => self.setMatrixAt(i, mat));
-          self.instanceMatrix.needsUpdate = true;
-        }}
-      >
-        <boxGeometry args={[1, 1, 1]} />
-        <meshStandardMaterial
-          color="#38BDF8"
-          roughness={0.1}
-          metalness={0.8}
-          transparent
-          opacity={0.85}
-        />
-      </instancedMesh>
+      {/* Neon Windows on Skyscraper Facades */}
+      <group ref={windowsRef}>
+        {windowData.slice(0, 80).map((w, i) => (
+          <mesh
+            key={`win-${i}`}
+            onUpdate={(self) => {
+              self.applyMatrix4(w.matrix);
+            }}
+          >
+            <boxGeometry args={[1, 1, 1]} />
+            <meshBasicMaterial color={w.color} />
+          </mesh>
+        ))}
+      </group>
 
-      {/* Instanced Rooftop Greenery / Sky Gardens */}
-      <instancedMesh
-        ref={gardensRef}
-        args={[null, null, gardenData.length]}
-        onUpdate={(self) => {
-          gardenData.forEach((mat, i) => self.setMatrixAt(i, mat));
-          self.instanceMatrix.needsUpdate = true;
-        }}
-      >
-        <boxGeometry args={[1, 1, 1]} />
-        <meshStandardMaterial
-          color="#10B981"
-          roughness={0.8}
-          metalness={0.1}
-        />
-      </instancedMesh>
-
-      {/* Holographic Day Billboards */}
+      {/* Glowing Holographic Night Billboards */}
       <group ref={billboardsRef}>
         {billboardData.map((b, i) => (
           <mesh
@@ -265,85 +230,97 @@ function DayCity({ level = 1 }) {
             <meshBasicMaterial
               color={b.color}
               transparent
-              opacity={0.8}
+              opacity={0.82}
               side={THREE.DoubleSide}
             />
           </mesh>
         ))}
       </group>
 
-      {/* Flying Sky Aerocars & Shuttles */}
+      {/* Elevated Viaduct Highway Overpasses (Dark Concrete & Steel) */}
+      <mesh position={[0, -3.2, -18]}>
+        <boxGeometry args={[130, 0.4, 4.2]} />
+        <meshStandardMaterial color="#0A0F1D" roughness={0.7} metalness={0.5} />
+      </mesh>
+      <mesh position={[0, 1.2, -28]}>
+        <boxGeometry args={[140, 0.4, 4.2]} />
+        <meshStandardMaterial color="#0A0F1D" roughness={0.7} metalness={0.5} />
+      </mesh>
+
+      {/* Highway Neon Guardrails */}
+      <mesh position={[0, -2.8, -16]}>
+        <boxGeometry args={[130, 0.15, 0.15]} />
+        <meshBasicMaterial color="#00E5FF" />
+      </mesh>
+      <mesh position={[0, -2.8, -20]}>
+        <boxGeometry args={[130, 0.15, 0.15]} />
+        <meshBasicMaterial color="#FF2DA6" />
+      </mesh>
+
+      {/* High-Speed Highway Traffic Light Streaks */}
+      <group ref={trafficRef}>
+        {trafficInitial.map((car, i) => (
+          <mesh key={`traffic-${i}`} position={[car.x, car.y, car.z]}>
+            <boxGeometry args={[car.length, 0.25, 0.4]} />
+            <meshBasicMaterial color={car.color} />
+          </mesh>
+        ))}
+      </group>
+
+      {/* Flying Neon Aerocars */}
       <group ref={aerocarsRef}>
         {aerocarsInitial.map((car, i) => (
           <mesh key={`aerocar-${i}`} position={[car.x, car.y, car.z]}>
-            <boxGeometry args={[car.length, 0.35, 0.7]} />
-            <meshStandardMaterial color={car.color} roughness={0.2} metalness={0.6} />
+            <boxGeometry args={[car.length, 0.28, 0.55]} />
+            <meshStandardMaterial color="#0F172A" roughness={0.3} metalness={0.8} />
+            {/* Glowing neon side stripe */}
+            <mesh position={[0, 0, 0.28]}>
+              <boxGeometry args={[car.length * 0.9, 0.08, 0.05]} />
+              <meshBasicMaterial color={car.color} />
+            </mesh>
           </mesh>
         ))}
       </group>
 
-      {/* Autonomous Delivery Drones */}
-      <group ref={dronesRef}>
-        {dronesInitial.map((_, i) => (
-          <mesh key={`drone-${i}`}>
-            <sphereGeometry args={[0.22, 10, 10]} />
-            <meshStandardMaterial color="#0284C7" emissive="#00B4D8" emissiveIntensity={0.6} />
-          </mesh>
-        ))}
-      </group>
-
-      {/* Elevated Viaduct Highway Overpasses */}
-      <mesh position={[0, -3.2, -18]}>
-        <boxGeometry args={[130, 0.4, 3.8]} />
-        <meshStandardMaterial color="#E2E8F0" roughness={0.3} metalness={0.4} />
-      </mesh>
-      <mesh position={[0, 1.2, -28]}>
-        <boxGeometry args={[140, 0.4, 3.8]} />
-        <meshStandardMaterial color="#E2E8F0" roughness={0.3} metalness={0.4} />
-      </mesh>
-
-      {/* High-Speed Sky Trains running on Viaducts */}
-      <group ref={trainsRef}>
-        {skyTrains.map((tr, i) => (
-          <mesh key={`train-${i}`} position={[tr.x, tr.y + 0.5, tr.z]}>
-            <boxGeometry args={[tr.length, 0.65, 1.1]} />
-            <meshStandardMaterial color="#FFFFFF" roughness={0.15} metalness={0.7} />
-          </mesh>
-        ))}
-      </group>
-
-      {/* Sparkling Urban River / Waterway Basin Ground Plane */}
+      {/* Wet Reflective Dark City Asphalt Ground Plane */}
       <mesh position={[0, -14, -20]} rotation={[-Math.PI / 2, 0, 0]}>
         <planeGeometry args={[180, 180]} />
         <meshStandardMaterial
-          color="#2563EB"
-          roughness={0.08}
-          metalness={0.85}
+          color="#060913"
+          roughness={0.15}
+          metalness={0.9}
         />
       </mesh>
 
-      {/* Lush Greenery Waterfront Parks & City Embankment */}
-      <mesh position={[0, -13.8, -12]} rotation={[-Math.PI / 2, 0, 0]}>
-        <planeGeometry args={[150, 24]} />
-        <meshStandardMaterial color="#059669" roughness={0.85} metalness={0.05} />
-      </mesh>
+      {/* Cyber Rain / Atmospheric Neon Drizzle */}
+      <points ref={rainRef}>
+        <bufferGeometry>
+          <bufferAttribute
+            attach="attributes-position"
+            count={rainCount}
+            array={rainParticles}
+            itemSize={3}
+          />
+        </bufferGeometry>
+        <pointsMaterial
+          size={0.15}
+          color="#00E5FF"
+          transparent
+          opacity={0.4}
+          sizeAttenuation
+        />
+      </points>
 
-      {/* Realistic Bright Daylight Illumination */}
-      <ambientLight intensity={1.1} color="#E0F2FE" />
-      <directionalLight
-        position={[45, 60, 30]}
-        intensity={2.2}
-        color="#FFFBEB"
-        castShadow
-      />
-      {/* Daylight Sky Fill Bounce Light */}
-      <directionalLight
-        position={[-30, 30, -20]}
-        intensity={0.8}
-        color="#BAE6FD"
-      />
-      {/* Cyan Holographic Accent Fill */}
-      <pointLight position={[0, 15, -10]} intensity={2.0} color="#00B4D8" distance={60} />
+      {/* Dark Ambient Lighting + Vivid Neon Point Lights */}
+      <ambientLight intensity={0.35} color="#0B1528" />
+      {/* Cyan Skyscraper Accent Light */}
+      <pointLight position={[-15, 20, -15]} intensity={3.0} color="#00E5FF" distance={65} />
+      {/* Magenta Billboard Accent Light */}
+      <pointLight position={[18, 16, -18]} intensity={3.2} color="#FF2DA6" distance={65} />
+      {/* Violet City Center Fill Light */}
+      <pointLight position={[0, 10, -12]} intensity={2.5} color="#8B5CF6" distance={50} />
+      {/* Amber Street Rim Light */}
+      <pointLight position={[0, -2, -10]} intensity={2.2} color="#FFB84D" distance={40} />
     </group>
   );
 }
@@ -384,10 +361,10 @@ export default function CyberEnvironment({ level = 1, enabled = true }) {
         dpr={[1, 1.5]}
       >
         <ParallaxRig mouseRef={mouseRef} />
-        <DayCity level={level} />
+        <DarkNeonCity level={level} />
       </Canvas>
-      {/* Subtle daylight atmospheric gradient for depth */}
-      <div className="absolute inset-0 bg-gradient-to-t from-[#EAF3FA]/80 via-transparent to-[#BAE6FD]/30 pointer-events-none" />
+      {/* Dark vignette & subtle neon atmospheric fog gradient */}
+      <div className="absolute inset-0 bg-gradient-to-t from-[#050810]/90 via-transparent to-[#050810]/50 pointer-events-none" />
     </div>
   );
 }

@@ -13,13 +13,13 @@ export function HoloButton({
   type = 'button',
 }) {
   const styles = {
-    cyan: 'bg-cyber-cyan text-white border-cyber-cyan hover:bg-cyber-blue shadow-holo-cyan',
-    magenta: 'bg-cyber-magenta text-white border-cyber-magenta hover:opacity-90 shadow-holo-purple',
-    green: 'bg-cyber-green text-white border-cyber-green hover:opacity-90 shadow-holo-green',
-    gold: 'bg-cyber-amber text-white border-cyber-amber hover:opacity-90 shadow-holo-gold',
-    red: 'bg-cyber-red text-white border-cyber-red hover:opacity-90 shadow-holo-red',
-    ghost: 'city-glass text-cyber-text border-slate-200 hover:border-cyber-cyan hover:text-cyber-cyan shadow-sm',
-    elevated: 'bg-white text-cyber-cyan border-cyber-cyan/50 hover:bg-cyber-cyan hover:text-white shadow-md',
+    cyan: 'bg-cyber-cyan text-cyber-bg font-bold border-cyber-cyan hover:bg-cyber-cyan/85 shadow-[0_0_15px_rgba(0,229,255,0.4)]',
+    magenta: 'bg-cyber-magenta text-white font-bold border-cyber-magenta hover:opacity-90 shadow-[0_0_15px_rgba(255,45,166,0.4)]',
+    green: 'bg-cyber-green text-cyber-bg font-bold border-cyber-green hover:opacity-90 shadow-[0_0_15px_rgba(57,255,136,0.4)]',
+    gold: 'bg-cyber-amber text-cyber-bg font-bold border-cyber-amber hover:opacity-90 shadow-[0_0_15px_rgba(255,184,77,0.4)]',
+    red: 'bg-cyber-red text-white font-bold border-cyber-red hover:opacity-90 shadow-[0_0_15px_rgba(255,51,102,0.4)]',
+    ghost: 'city-glass text-cyber-text border-cyber-cyan/30 hover:border-cyber-cyan hover:text-cyber-cyan hover:shadow-[0_0_15px_rgba(0,229,255,0.25)]',
+    elevated: 'bg-cyber-navy/90 text-cyber-cyan border-cyber-cyan hover:bg-cyber-cyan hover:text-cyber-bg shadow-[0_0_15px_rgba(0,229,255,0.3)]',
   }[variant] || styles.cyan;
 
   const sizes = {

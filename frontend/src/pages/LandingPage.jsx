@@ -22,14 +22,14 @@ export default function LandingPage() {
       <CyberEnvironment level={12} enabled={true} />
 
       {/* Navigation */}
-      <nav className="relative z-20 border-b border-white/80 city-glass sticky top-0 shadow-xs">
+      <nav className="relative z-20 border-b border-cyber-cyan/25 city-glass sticky top-0 shadow-[0_4px_20px_rgba(0,0,0,0.5)]">
         <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-sky-500 text-white flex items-center justify-center shadow-xs">
-              <Zap className="w-5 h-5 text-white fill-white" />
+            <div className="w-10 h-10 rounded-xl bg-cyber-cyan/15 border border-cyber-cyan/50 text-cyber-cyan flex items-center justify-center shadow-[0_0_12px_rgba(0,229,255,0.3)]">
+              <Zap className="w-5 h-5 text-cyber-cyan fill-cyber-cyan" />
             </div>
-            <span className="font-orbitron font-black text-2xl tracking-wider text-slate-800">
-              LIFE<span className="text-sky-500">//</span>OS
+            <span className="font-orbitron font-black text-2xl tracking-wider text-cyber-text text-glow-cyan">
+              LIFE<span className="text-cyber-cyan">//</span>OS
             </span>
           </div>
 
@@ -37,7 +37,7 @@ export default function LandingPage() {
             <SoundToggle />
             <Link
               to="/login"
-              className="font-orbitron font-bold text-xs uppercase tracking-wider text-slate-700 hover:text-sky-600 px-4 py-2 transition-colors"
+              className="font-orbitron font-bold text-xs uppercase tracking-wider text-cyber-textMuted hover:text-cyber-cyan px-4 py-2 transition-colors"
             >
               AUTHENTICATE
             </Link>
@@ -52,21 +52,21 @@ export default function LandingPage() {
 
       {/* Hero Section — Futuristic City Command Deck */}
       <section className="relative z-10 max-w-6xl mx-auto px-6 pt-20 pb-16 text-center space-y-8">
-        <div className="inline-flex items-center gap-2 bg-white/90 border border-sky-200 text-sky-700 font-mono text-xs px-4 py-1.5 rounded-full uppercase tracking-widest font-bold shadow-xs">
-          <span className="w-2 h-2 rounded-full bg-emerald-500 animate-ping" />
+        <div className="inline-flex items-center gap-2 bg-cyber-cyan/10 border border-cyber-cyan/30 text-cyber-cyan font-mono text-xs px-4 py-1.5 rounded-full uppercase tracking-widest font-bold shadow-[0_0_10px_rgba(0,229,255,0.2)]">
+          <span className="w-2 h-2 rounded-full bg-cyber-green animate-ping" />
           NEURAL LIFE OPERATING SYSTEM // V4.2
         </div>
 
         <div className="relative max-w-4xl mx-auto">
-          <h1 className="font-orbitron font-black text-5xl sm:text-7xl lg:text-8xl text-slate-900 tracking-tight uppercase leading-none drop-shadow-sm">
+          <h1 className="font-orbitron font-black text-5xl sm:text-7xl lg:text-8xl text-cyber-text tracking-tight uppercase leading-none text-glow-cyan">
             YOUR LIFE IS AN{' '}
-            <span className="text-sky-500 underline decoration-sky-300 decoration-4 underline-offset-8">
+            <span className="text-cyber-cyan underline decoration-cyber-cyan/50 decoration-4 underline-offset-8">
               RPG
             </span>
           </h1>
         </div>
 
-        <p className="font-body text-base sm:text-xl text-slate-600 max-w-2xl mx-auto leading-relaxed">
+        <p className="font-body text-base sm:text-xl text-cyber-textMuted max-w-2xl mx-auto leading-relaxed">
           Transform daily habits into mission directives. Power a 3D Energy Core, harvest credits, level up core attributes, and evolve the futuristic city.
         </p>
 

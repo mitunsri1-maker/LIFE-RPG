@@ -65,13 +65,13 @@ export default function InventoryPage() {
     <div className="p-4 md:p-8 max-w-6xl mx-auto space-y-8">
       {/* Header */}
       <div>
-        <h1 className="font-orbitron font-black text-3xl md:text-4xl text-slate-800 tracking-tight flex items-center gap-3">
-          <span className="w-11 h-11 rounded-xl bg-purple-50 border border-purple-200 text-purple-600 flex items-center justify-center text-xl shadow-xs">
+        <h1 className="font-orbitron font-black text-3xl md:text-4xl text-cyber-text tracking-tight flex items-center gap-3 text-glow-cyan">
+          <span className="w-11 h-11 rounded-xl bg-cyber-violet/15 border border-cyber-violet/40 text-cyber-violet flex items-center justify-center text-xl shadow-[0_0_15px_rgba(139,92,246,0.25)]">
             🎒
           </span>
           TACTICAL LOADOUT & VAULT
         </h1>
-        <p className="font-mono text-xs text-slate-500 mt-1">
+        <p className="font-mono text-xs text-cyber-textMuted mt-1">
           EQUIP GEAR // BIO-CYBERNETIC ARTIFACT MATRIX
         </p>
       </div>

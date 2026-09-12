@@ -29,13 +29,13 @@ export default function LoginPage() {
       <div className="relative z-10 w-full max-w-md space-y-6">
         {/* Header */}
         <div className="text-center space-y-2">
-          <div className="w-14 h-14 rounded-2xl bg-sky-500 text-white shadow-xs flex items-center justify-center mx-auto">
-            <Zap className="w-8 h-8 fill-white" />
+          <div className="w-14 h-14 rounded-2xl bg-cyber-cyan/15 border border-cyber-cyan/50 text-cyber-cyan shadow-[0_0_15px_rgba(0,229,255,0.3)] flex items-center justify-center mx-auto">
+            <Zap className="w-8 h-8 fill-cyber-cyan text-cyber-cyan" />
           </div>
-          <h1 className="font-orbitron font-black text-3xl text-slate-900 uppercase tracking-tight">
+          <h1 className="font-orbitron font-black text-3xl text-cyber-text uppercase tracking-tight text-glow-cyan">
             AUTHENTICATE SESSION
           </h1>
-          <p className="font-mono text-xs text-slate-500">
+          <p className="font-mono text-xs text-cyber-textMuted">
             ENTER CREDENTIALS TO INITIALIZE NEURAL LINK
           </p>
         </div>
@@ -43,16 +43,16 @@ export default function LoginPage() {
         {/* Card */}
         <form
           onSubmit={handleSubmit}
-          className="city-glass-elevated border border-white/90 rounded-2xl p-6 md:p-8 shadow-sm space-y-5"
+          className="city-glass-elevated border border-cyber-cyan/35 rounded-2xl p-6 md:p-8 shadow-[0_10px_35px_rgba(0,0,0,0.6)] space-y-5"
         >
           {error && (
-            <div className="flex items-center gap-2 text-xs font-mono font-bold text-rose-700 bg-rose-50 border border-rose-200 rounded-lg p-3">
+            <div className="flex items-center gap-2 text-xs font-mono font-bold text-cyber-magenta bg-cyber-magenta/10 border border-cyber-magenta/30 rounded-lg p-3">
               <AlertCircle className="w-4 h-4 shrink-0" /> {error}
             </div>
           )}
 
           <div>
-            <label className="block font-orbitron font-bold text-xs uppercase tracking-wider text-slate-600 mb-1.5">
+            <label className="block font-orbitron font-bold text-xs uppercase tracking-wider text-cyber-text mb-1.5">
               Operative Email Identifier
             </label>
             <input
@@ -62,12 +62,12 @@ export default function LoginPage() {
               value={form.email}
               onChange={(e) => setForm({ ...form, email: e.target.value })}
               placeholder="hero@liferpg.com"
-              className="w-full bg-white border border-slate-200 rounded-xl px-4 py-3 text-sm font-mono text-slate-800 placeholder:text-slate-400 focus:border-sky-500 focus:ring-1 focus:ring-sky-500 focus:outline-none shadow-2xs"
+              className="w-full bg-cyber-navy/80 border border-cyber-cyan/30 rounded-xl px-4 py-3 text-sm font-mono text-cyber-text placeholder:text-cyber-dim focus:border-cyber-cyan focus:ring-1 focus:ring-cyber-cyan focus:outline-none shadow-sm"
             />
           </div>
 
           <div>
-            <label className="block font-orbitron font-bold text-xs uppercase tracking-wider text-slate-600 mb-1.5">
+            <label className="block font-orbitron font-bold text-xs uppercase tracking-wider text-cyber-text mb-1.5">
               Secret Passkey
             </label>
             <div className="relative">
@@ -78,12 +78,12 @@ export default function LoginPage() {
                 value={form.password}
                 onChange={(e) => setForm({ ...form, password: e.target.value })}
                 placeholder="••••••••"
-                className="w-full bg-white border border-slate-200 rounded-xl px-4 py-3 text-sm font-mono text-slate-800 placeholder:text-slate-400 focus:border-sky-500 focus:ring-1 focus:ring-sky-500 focus:outline-none pr-11 shadow-2xs"
+                className="w-full bg-cyber-navy/80 border border-cyber-cyan/30 rounded-xl px-4 py-3 text-sm font-mono text-cyber-text placeholder:text-cyber-dim focus:border-cyber-cyan focus:ring-1 focus:ring-cyber-cyan focus:outline-none pr-11 shadow-sm"
               />
               <button
                 type="button"
                 onClick={() => setShowPass(!showPass)}
-                className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-sky-600 cursor-pointer"
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-cyber-dim hover:text-cyber-cyan cursor-pointer"
               >
                 {showPass ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
               </button>
@@ -95,15 +95,15 @@ export default function LoginPage() {
             variant="cyan"
             size="lg"
             disabled={isLoading}
-            className="w-full shadow-md"
+            className="w-full shadow-lg"
           >
             {isLoading ? 'DECRYPTING LINK...' : 'ESTABLISH LINK →'}
           </HoloButton>
         </form>
 
-        <p className="text-center font-mono text-xs text-slate-500">
+        <p className="text-center font-mono text-xs text-cyber-textMuted">
           UNREGISTERED OPERATIVE?{' '}
-          <Link to="/signup" className="text-sky-600 underline hover:text-sky-700 font-bold ml-1">
+          <Link to="/signup" className="text-cyber-cyan underline hover:text-cyber-cyan/80 font-bold ml-1">
             ENROLL DOSSIER
           </Link>
         </p>

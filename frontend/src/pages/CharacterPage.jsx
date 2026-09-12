@@ -56,18 +56,18 @@ export default function CharacterPage() {
   return (
     <div className="p-4 md:p-8 max-w-6xl mx-auto space-y-8">
       {/* Dossier Header + 3D Hologram Rig */}
-      <div className="city-glass-elevated border border-white/90 rounded-2xl p-6 md:p-8 shadow-sm relative overflow-hidden">
+      <div className="city-glass-elevated border border-cyber-cyan/35 rounded-2xl p-6 md:p-8 shadow-[0_10px_35px_rgba(0,0,0,0.6)] relative overflow-hidden">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-center">
           <div className="lg:col-span-7 space-y-3">
             <div className="flex items-center justify-between">
-              <div className="inline-flex items-center gap-2 bg-purple-50 border border-purple-200 text-purple-700 font-mono text-[11px] px-3 py-1 rounded-full font-bold uppercase tracking-wider">
+              <div className="inline-flex items-center gap-2 bg-cyber-violet/15 border border-cyber-violet/40 text-cyber-violet font-mono text-[11px] px-3 py-1 rounded-full font-bold uppercase tracking-wider shadow-[0_0_10px_rgba(139,92,246,0.2)]">
                 <Terminal className="w-3.5 h-3.5" /> DOSSIER // OPERATIVE MATRIX
               </div>
 
               {/* Print / Export Dossier Button */}
               <button
                 onClick={handlePrint}
-                className="no-print inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-mono font-bold bg-white border border-slate-200 text-slate-600 hover:text-sky-600 hover:border-sky-300 transition-all cursor-pointer shadow-2xs"
+                className="no-print inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-mono font-bold bg-cyber-navy/80 border border-cyber-cyan/30 text-cyber-textMuted hover:text-cyber-cyan hover:border-cyber-cyan/60 transition-all cursor-pointer shadow-sm"
                 title="Print or Save Operative Dossier Report"
               >
                 <Printer className="w-3.5 h-3.5" /> EXPORT DOSSIER
@@ -77,9 +77,9 @@ export default function CharacterPage() {
             <div className="flex items-center gap-4">
               <LevelBadge level={user.level || 1} large />
               <div>
-                <h1 className="font-orbitron font-black text-3xl md:text-4xl text-slate-900">{user.username}</h1>
-                <p className="font-mono text-xs text-slate-500">{user.email}</p>
-                <span className="inline-block mt-1 text-[10px] font-mono font-bold text-sky-700 bg-sky-50 px-2 py-0.5 rounded border border-sky-200">
+                <h1 className="font-orbitron font-black text-3xl md:text-4xl text-cyber-text text-glow-cyan">{user.username}</h1>
+                <p className="font-mono text-xs text-cyber-textMuted">{user.email}</p>
+                <span className="inline-block mt-1 text-[10px] font-mono font-bold text-cyber-cyan bg-cyber-cyan/10 px-2 py-0.5 rounded border border-cyber-cyan/30">
                   TIER {user.level || 1} METROPOLIS OPERATIVE
                 </span>
               </div>
@@ -87,9 +87,9 @@ export default function CharacterPage() {
 
             <div className="flex flex-wrap items-center gap-3 pt-2">
               <GoldCounter gold={user.gold} large />
-              <div className="inline-flex items-center gap-2 city-glass border border-slate-200 px-3.5 py-1.5 rounded-xl shadow-2xs">
-                <Flame className="w-4 h-4 text-rose-500 fill-rose-500/30" />
-                <span className="font-orbitron font-bold text-xs text-rose-600">
+              <div className="inline-flex items-center gap-2 city-glass border border-cyber-magenta/30 px-3.5 py-1.5 rounded-xl shadow-sm">
+                <Flame className="w-4 h-4 text-cyber-magenta fill-cyber-magenta/30" />
+                <span className="font-orbitron font-bold text-xs text-cyber-magenta">
                   {streak.current_streak} DAY CORE RESONANCE
                 </span>
               </div>
@@ -97,12 +97,12 @@ export default function CharacterPage() {
           </div>
 
           {/* 3D Holo Preview */}
-          <div className="lg:col-span-5 city-glass border border-sky-100 rounded-2xl p-2 shadow-inner flex items-center justify-center">
+          <div className="lg:col-span-5 city-glass border border-cyber-cyan/25 rounded-2xl p-2 shadow-inner flex items-center justify-center">
             <PlayerPod3D level={user.level || 1} username={user.username} stats={stats} height="220px" />
           </div>
         </div>
 
-        <div className="mt-6 pt-6 border-t border-slate-200/80">
+        <div className="mt-6 pt-6 border-t border-cyber-cyan/20">
           <XPBar xp={user.xp} level={user.level} />
         </div>
       </div>

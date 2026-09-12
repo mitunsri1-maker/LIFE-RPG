@@ -60,22 +60,22 @@ export default function AppLayout() {
 
       {/* Main App Container */}
       <div className="relative z-10 flex flex-col h-screen overflow-hidden">
-        {/* Top Global Daylight Header Bar */}
-        <header className="h-14 city-glass border-b border-white/80 px-4 md:px-6 flex items-center justify-between shrink-0 select-none shadow-xs">
+        {/* Top Global Holographic Header Bar */}
+        <header className="h-14 city-glass border-b border-cyber-cyan/25 px-4 md:px-6 flex items-center justify-between shrink-0 select-none shadow-[0_4px_20px_rgba(0,0,0,0.5)]">
           {/* Brand & System Status */}
           <div className="flex items-center gap-3 md:gap-5">
             <div className="flex items-center gap-2.5">
-              <div className="w-8 h-8 rounded-lg bg-sky-500 text-white flex items-center justify-center shadow-xs">
-                <Zap className="w-4 h-4 text-white fill-white" />
+              <div className="w-8 h-8 rounded-lg bg-cyber-cyan/15 border border-cyber-cyan/50 text-cyber-cyan flex items-center justify-center shadow-[0_0_12px_rgba(0,229,255,0.3)]">
+                <Zap className="w-4 h-4 text-cyber-cyan fill-cyber-cyan" />
               </div>
-              <span className="font-orbitron font-black text-lg md:text-xl tracking-wider text-slate-800">
-                LIFE<span className="text-sky-500">//</span>OS
+              <span className="font-orbitron font-black text-lg md:text-xl tracking-wider text-cyber-text text-glow-cyan">
+                LIFE<span className="text-cyber-cyan">//</span>OS
               </span>
             </div>
 
-            <div className="hidden lg:flex items-center gap-2 text-[10px] font-mono text-slate-500 bg-white/80 border border-slate-200 px-2.5 py-1 rounded-full shadow-2xs">
-              <span className="w-2 h-2 rounded-full bg-emerald-500 animate-ping" />
-              METROPOLIS GRID // ONLINE
+            <div className="hidden lg:flex items-center gap-2 text-[10px] font-mono text-cyber-dim bg-cyber-navy/80 border border-cyber-cyan/25 px-2.5 py-1 rounded-full">
+              <span className="w-2 h-2 rounded-full bg-cyber-green animate-ping" />
+              <span className="text-cyber-textMuted">METROPOLIS GRID // ONLINE</span>
             </div>
           </div>
 
@@ -89,7 +89,7 @@ export default function AppLayout() {
             )}
 
             {/* Live Telemetry Clock */}
-            <div className="hidden md:block font-mono text-xs text-sky-700 bg-white/80 border border-sky-200 px-2.5 py-1 rounded-lg shadow-2xs">
+            <div className="hidden md:block font-mono text-xs text-cyber-cyan bg-cyber-navy/80 border border-cyber-cyan/30 px-2.5 py-1 rounded-lg shadow-[0_0_10px_rgba(0,229,255,0.15)]">
               UTC {time}
             </div>
 
@@ -97,10 +97,10 @@ export default function AppLayout() {
             <button
               onClick={() => setEnable3D(!enable3D)}
               title={enable3D ? "Disable 3D Background" : "Enable 3D Background"}
-              className={`hidden sm:inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-xs font-mono border transition-all cursor-pointer shadow-2xs ${
+              className={`hidden sm:inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-xs font-mono border transition-all cursor-pointer ${
                 enable3D
-                  ? 'bg-sky-500 text-white border-sky-500 shadow-xs'
-                  : 'bg-white text-slate-600 border-slate-200 hover:border-slate-300'
+                  ? 'bg-cyber-cyan/20 text-cyber-cyan border-cyber-cyan shadow-[0_0_12px_rgba(0,229,255,0.3)]'
+                  : 'bg-cyber-navy/80 text-cyber-dim border-cyber-dim/40 hover:border-cyber-cyan/40 hover:text-cyber-text'
               }`}
             >
               <Monitor className="w-3.5 h-3.5" />
@@ -114,24 +114,24 @@ export default function AppLayout() {
 
         {/* Core Layout: Sidebar + Main Content Area */}
         <div className="flex flex-1 overflow-hidden">
-          {/* Daylight Sidebar (Desktop) */}
-          <aside className="hidden md:flex flex-col w-64 city-glass border-r border-white/80 shrink-0">
+          {/* Dark Cyberpunk Sidebar (Desktop) */}
+          <aside className="hidden md:flex flex-col w-64 city-glass border-r border-cyber-cyan/25 shrink-0">
             {/* Player Quick Badge */}
             {user && (
-              <div className="p-3.5 mx-3 my-3 city-glass-elevated border border-slate-200 rounded-xl shadow-sm space-y-2.5">
+              <div className="p-3.5 mx-3 my-3 city-glass-elevated border border-cyber-cyan/30 rounded-xl space-y-2.5">
                 <div className="flex items-center gap-3">
                   <LevelBadge level={user.level || 1} />
                   <div className="min-w-0 flex-1">
-                    <p className="font-orbitron font-bold text-sm text-slate-800 truncate">
+                    <p className="font-orbitron font-bold text-sm text-cyber-text truncate">
                       {user.username}
                     </p>
-                    <p className="font-mono text-[10px] text-sky-600 uppercase tracking-wider font-semibold">
+                    <p className="font-mono text-[10px] text-cyber-cyan uppercase tracking-wider font-semibold">
                       RANK // OPERATIVE
                     </p>
                   </div>
                 </div>
 
-                <div className="sm:hidden flex flex-wrap gap-2 pt-1 border-t border-slate-100">
+                <div className="sm:hidden flex flex-wrap gap-2 pt-1 border-t border-cyber-cyan/20">
                   <GoldCounter gold={user.gold} />
                   <StreakCounter />
                 </div>
@@ -149,25 +149,25 @@ export default function AppLayout() {
                     onClick={handleNavClick}
                     className={`group flex items-center justify-between px-3.5 py-2.5 rounded-xl font-orbitron text-xs font-bold tracking-wider transition-all duration-200 border select-none ${
                       active
-                        ? 'bg-sky-500 text-white border-sky-500 shadow-xs translate-x-1'
-                        : 'text-slate-600 border-transparent hover:border-slate-200 hover:text-slate-900 hover:bg-white/60'
+                        ? 'bg-gradient-to-r from-cyber-cyan/25 to-cyber-violet/25 text-cyber-cyan border-cyber-cyan shadow-[0_0_15px_rgba(0,229,255,0.25)] translate-x-1'
+                        : 'text-cyber-textMuted border-transparent hover:border-cyber-cyan/30 hover:text-cyber-text hover:bg-cyber-navy/50'
                     }`}
                   >
                     <div className="flex items-center gap-3">
-                      <Icon className={`w-4 h-4 shrink-0 transition-transform ${active ? 'scale-110 text-white' : 'group-hover:text-sky-600'}`} />
+                      <Icon className={`w-4 h-4 shrink-0 transition-transform ${active ? 'scale-110 text-cyber-cyan' : 'group-hover:text-cyber-cyan'}`} />
                       <span>{label}</span>
                     </div>
-                    <span className={`font-mono text-[10px] ${active ? 'opacity-90' : 'opacity-40'}`}>[{code}]</span>
+                    <span className={`font-mono text-[10px] ${active ? 'opacity-90 text-cyber-cyan' : 'opacity-40'}`}>[{code}]</span>
                   </NavLink>
                 );
               })}
             </nav>
 
             {/* Logout Button */}
-            <div className="p-3 border-t border-slate-200/80">
+            <div className="p-3 border-t border-cyber-cyan/20">
               <button
                 onClick={handleLogout}
-                className="w-full flex items-center justify-center gap-2 px-3 py-2.5 rounded-xl font-orbitron font-bold text-xs uppercase tracking-wider text-rose-600 bg-rose-50 border border-rose-200 hover:bg-rose-600 hover:text-white transition-all cursor-pointer shadow-2xs"
+                className="w-full flex items-center justify-center gap-2 px-3 py-2.5 rounded-xl font-orbitron font-bold text-xs uppercase tracking-wider text-cyber-magenta bg-cyber-magenta/10 border border-cyber-magenta/40 hover:bg-cyber-magenta hover:text-white transition-all cursor-pointer shadow-[0_0_12px_rgba(255,45,166,0.2)]"
               >
                 <LogOut className="w-3.5 h-3.5 stroke-[2.5]" /> DISCONNECT
               </button>
