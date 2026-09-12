@@ -1,4 +1,4 @@
-﻿import { create } from 'zustand';
+import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 import { authApi } from '../api';
 
@@ -19,7 +19,7 @@ export const useAuthStore = create(
           set({ user, token, isLoading: false });
           return { success: true };
         } catch (err) {
-          const msg = err.response?.data?.error || 'Login failed.';
+          const msg = err.response?.data?.error || (err.message === 'Network Error' ? 'Cannot connect to neural link (Server offline or booting up). Try again in a moment.' : err.message) || 'Login failed.';
           set({ isLoading: false, error: msg });
           return { success: false, error: msg };
         }
@@ -34,7 +34,7 @@ export const useAuthStore = create(
           set({ user, token, isLoading: false });
           return { success: true };
         } catch (err) {
-          const msg = err.response?.data?.error || 'Signup failed.';
+          const msg = err.response?.data?.error || (err.message === 'Network Error' ? 'Cannot connect to neural link (Server offline or booting up). Try again in a moment.' : err.message) || 'Signup failed.';
           set({ isLoading: false, error: msg });
           return { success: false, error: msg };
         }

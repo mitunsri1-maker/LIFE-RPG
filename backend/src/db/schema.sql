@@ -1,4 +1,4 @@
-﻿-- Life RPG Database Schema (SQLite)
+-- Life RPG Database Schema (SQLite)
 
 CREATE TABLE IF NOT EXISTS users (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -85,3 +85,4 @@ CREATE INDEX IF NOT EXISTS idx_activity_logs_user_id ON activity_logs(user_id);
 CREATE INDEX IF NOT EXISTS idx_activity_logs_completed_at ON activity_logs(completed_at);
 CREATE INDEX IF NOT EXISTS idx_achievements_user_id ON achievements(user_id);
 CREATE INDEX IF NOT EXISTS idx_inventory_user_id ON inventory(user_id);
+CREATE UNIQUE INDEX IF NOT EXISTS idx_items_name ON items(name);

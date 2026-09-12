@@ -1,8 +1,15 @@
-﻿import axios from 'axios';
+import axios from 'axios';
+
+const getBaseURL = () => {
+  const raw = import.meta.env.VITE_API_URL;
+  if (!raw || typeof raw !== 'string') return '/api';
+  const clean = raw.trim().replace(/\/+$/, '');
+  return clean.endsWith('/api') ? clean : `${clean}/api`;
+};
 
 const api = axios.create({
-  baseURL: import.meta.env.VITE_API_URL || '/api',
-  timeout: 10000,
+  baseURL: getBaseURL(),
+  timeout: 15000,
   headers: { 'Content-Type': 'application/json' },
 });
 

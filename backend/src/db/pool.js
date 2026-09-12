@@ -1,4 +1,4 @@
-﻿const Database = require('better-sqlite3');
+const Database = require('better-sqlite3');
 const path = require('path');
 require('dotenv').config();
 
@@ -16,6 +16,23 @@ const db = new Database(dbPath);
 // Enable WAL mode for better performance
 db.pragma('journal_mode = WAL');
 db.pragma('foreign_keys = ON');
+
+// Auto-initialize schema and seeds if not already present
+try {
+  const schemaPath = path.join(__dirname, 'schema.sql');
+  const seedPath = path.join(__dirname, 'seed.sql');
+  if (fs.existsSync(schemaPath)) {
+    const schemaSql = fs.readFileSync(schemaPath, 'utf8');
+    db.exec(schemaSql);
+  }
+  if (fs.existsSync(seedPath)) {
+    const seedSql = fs.readFileSync(seedPath, 'utf8');
+    db.exec(seedSql);
+  }
+  console.log('[Life RPG] Database schema and seeds ready.');
+} catch (initErr) {
+  console.error('[Life RPG] Database auto-init error:', initErr.message);
+}
 
 // Wrap in a pg-compatible interface so routes don't need to change much
 const pool = {
