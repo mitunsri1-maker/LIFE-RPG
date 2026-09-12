@@ -17,9 +17,9 @@ const features = [
 
 export default function LandingPage() {
   return (
-    <div className="relative min-h-screen bg-cyber-bg text-cyber-text font-body selection:bg-cyber-cyan selection:text-cyber-bg overflow-x-hidden">
-      {/* 3D Cyberpunk City Ambient Background */}
-      <CyberEnvironment level={12} enabled={true} />
+    <div className="relative min-h-screen bg-transparent text-cyber-text font-body selection:bg-cyber-cyan selection:text-cyber-bg overflow-x-hidden">
+      {/* 3D Cyberpunk City Simulation World */}
+      <CyberEnvironment level={12} />
 
       {/* Navigation */}
       <nav className="relative z-20 border-b border-cyber-cyan/25 city-glass sticky top-0 shadow-[0_4px_20px_rgba(0,0,0,0.5)]">
@@ -50,9 +50,9 @@ export default function LandingPage() {
         </div>
       </nav>
 
-      {/* Hero Section — Futuristic City Command Deck */}
-      <section className="relative z-10 max-w-6xl mx-auto px-6 pt-20 pb-16 text-center space-y-8">
-        <div className="inline-flex items-center gap-2 bg-cyber-cyan/10 border border-cyber-cyan/30 text-cyber-cyan font-mono text-xs px-4 py-1.5 rounded-full uppercase tracking-widest font-bold shadow-[0_0_10px_rgba(0,229,255,0.2)]">
+      {/* Hero Section — Transparent HUD floating over the 3D Metropolis */}
+      <section className="relative z-10 max-w-6xl mx-auto px-6 pt-24 pb-16 text-center space-y-8">
+        <div className="inline-flex items-center gap-2 bg-cyber-navy/80 border border-cyber-cyan/40 text-cyber-cyan font-mono text-xs px-4 py-1.5 rounded-full uppercase tracking-widest font-bold shadow-[0_0_15px_rgba(0,229,255,0.25)] backdrop-blur-md">
           <span className="w-2 h-2 rounded-full bg-cyber-green animate-ping" />
           NEURAL LIFE OPERATING SYSTEM // V4.2
         </div>

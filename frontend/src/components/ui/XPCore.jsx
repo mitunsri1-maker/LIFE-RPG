@@ -1,6 +1,7 @@
 import { useRef, useMemo } from 'react';
 import { Canvas, useFrame } from '@react-three/fiber';
 import * as THREE from 'three';
+import XPParticleFlow from '../3d/XPParticleFlow';
 
 function CoreMesh({ xpPercent = 0, justGainedXP = false, accent = '#00E5FF' }) {
   const coreRef = useRef();
@@ -103,6 +104,9 @@ function CoreMesh({ xpPercent = 0, justGainedXP = false, accent = '#00E5FF' }) {
         </bufferGeometry>
         <pointsMaterial color="#00E5FF" size={0.075} sizeAttenuation transparent opacity={0.9} />
       </points>
+
+      {/* Signature XP Particle Spline Flow */}
+      <XPParticleFlow active={justGainedXP} />
 
       {/* Dark Ambient & Vivid Neon Illumination */}
       <ambientLight intensity={0.4} />

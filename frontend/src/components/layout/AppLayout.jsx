@@ -3,7 +3,7 @@ import { Outlet, NavLink, useNavigate, useLocation } from 'react-router-dom';
 import { useAuthStore } from '../../store/authStore';
 import {
   LayoutDashboard, Swords, User, TrendingUp,
-  ShoppingBag, Backpack, Settings, LogOut, Zap, Shield, Sparkles, Monitor
+  ShoppingBag, Backpack, Settings, LogOut, Zap, Shield, Sparkles
 } from 'lucide-react';
 import CyberEnvironment from '../3d/CyberEnvironment';
 import CyberCursor from '../hud/CyberCursor';
@@ -28,7 +28,6 @@ export default function AppLayout() {
   const navigate = useNavigate();
   const location = useLocation();
   const [time, setTime] = useState('');
-  const [enable3D, setEnable3D] = useState(true);
 
   useEffect(() => {
     const updateClock = () => {
@@ -51,9 +50,9 @@ export default function AppLayout() {
   };
 
   return (
-    <div className="relative min-h-screen bg-cyber-bg text-cyber-text font-body selection:bg-cyber-cyan selection:text-cyber-bg overflow-x-hidden">
-      {/* 3D Cyberpunk City Ambient Background */}
-      <CyberEnvironment level={user?.level || 1} enabled={enable3D} />
+    <div className="relative min-h-screen bg-transparent text-cyber-text font-body selection:bg-cyber-cyan selection:text-cyber-bg overflow-x-hidden">
+      {/* 3D Cyberpunk City Simulation World */}
+      <CyberEnvironment level={user?.level || 1} />
 
       {/* Custom Cyber Cursor */}
       <CyberCursor />
@@ -92,20 +91,6 @@ export default function AppLayout() {
             <div className="hidden md:block font-mono text-xs text-cyber-cyan bg-cyber-navy/80 border border-cyber-cyan/30 px-2.5 py-1 rounded-lg shadow-[0_0_10px_rgba(0,229,255,0.15)]">
               UTC {time}
             </div>
-
-            {/* 3D Background Toggle Button */}
-            <button
-              onClick={() => setEnable3D(!enable3D)}
-              title={enable3D ? "Disable 3D Background" : "Enable 3D Background"}
-              className={`hidden sm:inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-xs font-mono border transition-all cursor-pointer ${
-                enable3D
-                  ? 'bg-cyber-cyan/20 text-cyber-cyan border-cyber-cyan shadow-[0_0_12px_rgba(0,229,255,0.3)]'
-                  : 'bg-cyber-navy/80 text-cyber-dim border-cyber-dim/40 hover:border-cyber-cyan/40 hover:text-cyber-text'
-              }`}
-            >
-              <Monitor className="w-3.5 h-3.5" />
-              <span>3D: {enable3D ? 'ON' : 'OFF'}</span>
-            </button>
 
             {/* Cyber Sound FX Toggle */}
             <SoundToggle />

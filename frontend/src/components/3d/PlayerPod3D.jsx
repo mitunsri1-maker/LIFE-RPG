@@ -1,6 +1,7 @@
 import React, { useRef, useMemo } from 'react';
 import { Canvas, useFrame } from '@react-three/fiber';
 import * as THREE from 'three';
+import XPParticleFlow from './XPParticleFlow';
 
 function HologramChamber({ level = 1, username = "HERO", stats = {}, justGainedXP = false, xpPercent = 50 }) {
   const chamberGroupRef = useRef();
@@ -196,6 +197,9 @@ function HologramChamber({ level = 1, username = "HERO", stats = {}, justGainedX
         </bufferGeometry>
         <pointsMaterial size={0.045} color="#00E5FF" transparent opacity={0.65} />
       </points>
+
+      {/* Signature XP Particle Spline Flow on Quest Completion */}
+      <XPParticleFlow active={justGainedXP} />
 
       {/* Atmospheric Pod Lighting */}
       <ambientLight intensity={0.8} />
