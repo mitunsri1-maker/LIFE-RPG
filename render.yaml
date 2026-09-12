@@ -1,0 +1,31 @@
+﻿services:
+  # Backend API Service
+  - type: web
+    name: life-rpg-backend
+    env: node
+    rootDir: backend
+    buildCommand: npm install
+    startCommand: node src/server.js
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: JWT_SECRET
+        generateValue: true
+      - key: PORT
+        value: 10000
+      - key: FRONTEND_URL
+        value: https://life-rpg-frontend.onrender.com
+
+  # Frontend Static Site
+  - type: static
+    name: life-rpg-frontend
+    rootDir: frontend
+    buildCommand: npm install --legacy-peer-deps && npm run build
+    staticPublishPath: dist
+    routes:
+      - type: rewrite
+        source: /*
+        destination: /index.html
+    envVars:
+      - key: VITE_API_URL
+        value: https://life-rpg-backend.onrender.com
