@@ -101,6 +101,16 @@ function WetStreet() {
         <meshBasicMaterial color="#00E5FF" transparent opacity={0.35} />
       </mesh>
 
+      {/* Laser Yellow Digital Ticker Ribbon along sidewalk curb (matching Night City reference) */}
+      <mesh position={[4.98, 0.23, -35]}>
+        <boxGeometry args={[0.08, 0.04, 140]} />
+        <meshStandardMaterial
+          color="#FFCC00"
+          emissive="#FFCC00"
+          emissiveIntensity={2.5}
+        />
+      </mesh>
+
       {/* Center Dashed Lane Markings */}
       {laneDashes.map((z, idx) => (
         <mesh key={idx} position={[0, 0.01, z]} rotation={[-Math.PI / 2, 0, 0]}>
@@ -377,6 +387,55 @@ function StreetBuildings({ level = 1 }) {
             <boxGeometry args={[b.w, b.h, b.d]} />
             <meshStandardMaterial color={b.color} metalness={0.75} roughness={0.3} />
           </mesh>
+
+          {/* ICONIC HOT MAGENTA MOTEL SIGN (Matching Night City reference image) */}
+          {idx === 0 && (
+            <group position={[-b.w / 2 - 0.2, -b.h / 2 + 3.8, 0]}>
+              {/* Neon Outer Rounded Marquee Box */}
+              <mesh position={[0, 0, 0]}>
+                <boxGeometry args={[0.2, 1.2, b.d * 0.75]} />
+                <meshStandardMaterial color="#0A0E18" metalness={0.9} roughness={0.2} />
+              </mesh>
+              {/* Hot Magenta Neon Border Tubes */}
+              <mesh position={[-0.12, 0, 0]}>
+                <boxGeometry args={[0.08, 1.05, b.d * 0.72]} />
+                <meshStandardMaterial
+                  color="#FF0055"
+                  emissive="#FF0055"
+                  emissiveIntensity={3.6}
+                />
+              </mesh>
+              {/* Inner Glowing Cyan Marquee Text Core (NO-TELL MOTEL // NO VACANCY) */}
+              <mesh position={[-0.14, 0, -0.6]}>
+                <boxGeometry args={[0.06, 0.55, b.d * 0.38]} />
+                <meshStandardMaterial
+                  color="#00F3FF"
+                  emissive="#00F3FF"
+                  emissiveIntensity={2.8}
+                />
+              </mesh>
+              {/* Secondary Red-Orange "NO VACANCY" Glow */}
+              <mesh position={[-0.14, 0, 1.2]}>
+                <boxGeometry args={[0.06, 0.45, 1.6]} />
+                <meshStandardMaterial
+                  color="#FF3366"
+                  emissive="#FF3366"
+                  emissiveIntensity={2.4}
+                />
+              </mesh>
+              {/* Industrial Overhanging Balconies */}
+              <mesh position={[-0.6, 2.5, 0]}>
+                <boxGeometry args={[1.6, 0.2, b.d * 0.85]} />
+                <meshStandardMaterial color="#121A2C" metalness={0.85} roughness={0.35} />
+              </mesh>
+              <mesh position={[-0.6, 5.5, 0]}>
+                <boxGeometry args={[1.6, 0.2, b.d * 0.85]} />
+                <meshStandardMaterial color="#121A2C" metalness={0.85} roughness={0.35} />
+              </mesh>
+              {/* Vibrant Hot Magenta Downward Glow onto pavement */}
+              <pointLight position={[-0.8, -1.0, 0]} color="#FF0055" intensity={4.5} distance={10} decay={2} />
+            </group>
+          )}
 
           {b.store && (
             <group position={[-b.w / 2 + 0.2, -b.h / 2 + 1.8, 0]}>

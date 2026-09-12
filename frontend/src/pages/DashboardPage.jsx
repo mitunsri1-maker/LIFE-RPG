@@ -1,13 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { useAuthStore } from '../store/authStore';
 import { useQuestStore } from '../store/questStore';
-import { characterApi, progressApi, shopApi, inventoryApi } from '../api';
+import { characterApi, progressApi, inventoryApi } from '../api';
 import QuestCard from '../components/ui/QuestCard';
 import XPBar from '../components/ui/XPBar';
-import LevelBadge from '../components/ui/LevelBadge';
 import RewardPopup from '../components/ui/RewardPopup';
 import LevelUpAnimation from '../components/ui/LevelUpAnimation';
-import PlayerPod3D from '../components/3d/PlayerPod3D';
 import XPCore from '../components/ui/XPCore';
 import CharacterStats from '../components/ui/CharacterStats';
 import QuestNodeMap3D from '../components/3d/QuestNodeMap3D';
@@ -15,7 +13,7 @@ import HoloButton from '../components/hud/HoloButton';
 import { soundFX } from '../utils/soundFX';
 import {
   Swords, Plus, Sparkles, Activity, Zap, Coins, Flame, Map, LayoutGrid,
-  Shield, Skull, Heart, CheckSquare, Square, ArrowRight, ShoppingBag, Backpack, Cpu
+  Shield, Skull, Heart, CheckSquare, Square, ArrowRight, ShoppingBag, Backpack, Cpu, AlertTriangle
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
@@ -59,8 +57,9 @@ export default function DashboardPage() {
 
   const handleComplete = async (id) => {
     setCompletingId(id);
+    soundFX.playQuestComplete();
     setBossDamaged(true);
-    setTimeout(() => setBossDamaged(false), 800);
+    setTimeout(() => setBossDamaged(false), 900);
 
     const result = await completeQuest(id);
     setCompletingId(null);
@@ -97,178 +96,169 @@ export default function DashboardPage() {
   return (
     <div className="p-4 md:p-8 max-w-7xl mx-auto space-y-8">
       {/* ============================================================ */}
-      {/* 1. HERO PANEL: City Sync & Level Progress (Wireframe Spec)    */}
+      {/* 1. HERO STATUS PANEL: Zero-G Levitation + Luminous Progress  */}
       {/* ============================================================ */}
-      <div className="relative hud-glass rounded-2xl p-6 md:p-8 shadow-2xl overflow-hidden">
+      <div className="glass-card zero-g-float p-6 md:p-8 shadow-2xl overflow-hidden">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-center">
-          {/* Left Telemetry info */}
+          {/* Left: User Title & Glowing Progress Bar */}
           <div className="lg:col-span-8 space-y-4">
             <div className="flex items-center gap-2.5">
               <span className="w-2.5 h-2.5 rounded-full bg-cyber-green animate-ping" />
-              <span className="font-mono text-xs font-bold uppercase tracking-widest text-cyber-green">
-                CITY GRID STATUS: ONLINE (POWER LEVEL {xpPercent}%)
-              </span>
-            </div>
-
-            <div className="space-y-1">
-              <h1 className="font-orbitron font-black text-3xl md:text-5xl text-cyber-text tracking-tight uppercase text-glow-cyan">
-                LEVEL {user?.level || 1}: <span className="text-cyber-cyan">OPERATIVE</span>
-              </h1>
-              <p className="font-mono text-xs text-cyber-textMuted tracking-wider font-semibold">
-                SECTOR ID // {user?.username?.toUpperCase()}・GRID RESONANCE: OPTIMAL
+              <p className="font-mono text-xs uppercase tracking-widest text-cyber-cyan font-bold">
+                WELCOME BACK, OPERATIVE // CITY GRID: FULL POWER ({xpPercent}%)
               </p>
             </div>
 
-            {/* Tactical Energy Progress Bar */}
-            <div className="space-y-2 pt-1">
-              <div className="flex justify-between items-center font-mono text-xs">
-                <span className="text-cyber-cyan font-bold tracking-wider">
-                  {currentInLevel} / {neededForNext} XP ({xpPercent}%)
-                </span>
-                <span className="text-cyber-textMuted font-medium">
-                  {Math.max(0, neededForNext - currentInLevel)} XP TO NEXT TIER
-                </span>
-              </div>
-              <div className="h-4 w-full bg-cyber-navy/90 border border-cyber-cyan/40 rounded-full overflow-hidden p-0.5 shadow-inner relative">
+            <div className="space-y-1">
+              <h1 className="font-orbitron font-black text-3xl md:text-5xl text-white tracking-tight uppercase drop-shadow-[0_0_12px_rgba(255,255,255,0.3)]">
+                LEVEL {user?.level || 1} <span className="text-cyber-cyan">OPERATIVE</span>
+              </h1>
+              <p className="font-mono text-xs text-cyber-textMuted tracking-wider font-semibold">
+                NEURAL LIFE OPERATING SYSTEM // SECTOR ID: {user?.username?.toUpperCase()}
+              </p>
+            </div>
+
+            {/* Glowing Gradient Progress Bar (Cyan to Magenta) */}
+            <div className="space-y-2 pt-1 max-w-xl">
+              <div className="w-full h-3 bg-black/40 border border-cyber-cyan/40 rounded-full overflow-hidden p-0.5 relative">
                 <div
-                  className="h-full bg-gradient-to-r from-cyber-cyan via-cyber-violet to-cyber-magenta rounded-full transition-all duration-700 shadow-[0_0_15px_rgba(0,229,255,0.4)]"
+                  className="h-full rounded-full transition-all duration-700 bg-gradient-to-r from-cyber-cyan to-cyber-magenta shadow-[0_0_12px_#00f3ff]"
                   style={{ width: `${xpPercent}%` }}
                 />
               </div>
+              <div className="flex justify-between items-center font-mono text-xs text-cyber-textMuted">
+                <span className="text-cyber-cyan font-bold">{currentInLevel} / {neededForNext} XP ({xpPercent}%)</span>
+                <span>{Math.max(0, neededForNext - currentInLevel)} XP TO NEXT RANK</span>
+              </div>
             </div>
 
-            {/* Quick Metrics Badges */}
+            {/* Quick Badges */}
             <div className="flex flex-wrap items-center gap-3 pt-2">
-              <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-xl bg-cyber-navy/80 border border-cyber-cyan/30 text-xs font-mono">
+              <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-xl bg-cyber-navy/80 border border-cyber-cyan/35 text-xs font-mono">
                 <Coins className="w-4 h-4 text-cyber-cyan fill-cyber-cyan/20" />
-                <span className="font-bold text-cyber-text">{Number(user?.gold || 0).toLocaleString()}</span>
+                <span className="font-bold text-white">{Number(user?.gold || 0).toLocaleString()}</span>
                 <span className="text-[10px] text-cyber-dim font-normal">CREDITS</span>
               </div>
-              <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-xl bg-cyber-navy/80 border border-cyber-magenta/30 text-xs font-mono">
+              <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-xl bg-cyber-navy/80 border border-cyber-magenta/35 text-xs font-mono">
                 <Flame className="w-4 h-4 text-cyber-magenta fill-cyber-magenta/20" />
-                <span className="font-bold text-cyber-text">{streak.current_streak || 0} DAYS</span>
+                <span className="font-bold text-white">{streak.current_streak || 0} DAYS</span>
                 <span className="text-[10px] text-cyber-dim font-normal">STREAK</span>
               </div>
-              <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-xl bg-cyber-navy/80 border border-cyber-amber/30 text-xs font-mono">
-                <Zap className="w-4 h-4 text-cyber-amber fill-cyber-amber/20" />
-                <span className="font-bold text-cyber-text">{xpPercent}%</span>
-                <span className="text-[10px] text-cyber-dim font-normal">CORE POWER</span>
+              <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-xl bg-cyber-navy/80 border border-cyber-green/35 text-xs font-mono">
+                <Shield className="w-4 h-4 text-cyber-green fill-cyber-green/20" />
+                <span className="font-bold text-white">{completedCount}</span>
+                <span className="text-[10px] text-cyber-dim font-normal">CLEARED</span>
               </div>
             </div>
           </div>
 
-          {/* Right 3D Operative & Energy Core Preview */}
-          <div className="lg:col-span-4 hud-card rounded-2xl p-3 relative flex flex-col items-center justify-center">
-            <XPCore xpPercent={xpPercent} justGainedXP={justGainedXP} accent="#00E5FF" height="190px" />
-            <div className="font-mono text-[10px] text-cyber-cyan tracking-widest text-center mt-1">
-              ENERGY CORE // ONLINE
-            </div>
+          {/* Right: 3D Energy Core & Action Button */}
+          <div className="lg:col-span-4 flex flex-col items-center justify-center gap-3">
+            <XPCore xpPercent={xpPercent} justGainedXP={justGainedXP} accent="#00f3ff" height="190px" />
+            <Link to="/quests">
+              <button className="btn-action w-full text-center cursor-pointer shadow-[0_0_15px_rgba(0,243,255,0.4)]">
+                INITIALIZE DOSSIER →
+              </button>
+            </Link>
           </div>
         </div>
       </div>
 
       {/* ============================================================ */}
-      {/* 2. MAIN 2-COLUMN WIREFRAME GRID: ACTIVE BOUNTIES + BOSS RAID */}
+      {/* 2. TWO-COLUMN WIREFRAME GRID: ACTIVE BOUNTIES + BOSS RAID    */}
       {/* ============================================================ */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
         {/* LEFT COLUMN (7 cols): ACTIVE BOUNTIES (DAILY QUESTS) */}
-        <div className="lg:col-span-7 space-y-4">
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-cyber-cyan/20 pb-3">
+        <div className="lg:col-span-7 glass-card zero-g-float-delayed p-5 md:p-6 space-y-4">
+          <div className="flex items-center justify-between border-b border-cyber-cyan/25 pb-3">
             <div className="flex items-center gap-2.5">
-              <div className="w-8 h-8 rounded-lg bg-cyber-cyan/15 border border-cyber-cyan/40 flex items-center justify-center">
-                <Swords className="w-4 h-4 text-cyber-cyan" />
-              </div>
-              <div>
-                <h2 className="font-orbitron font-bold text-xl text-cyber-text tracking-wide">
-                  ACTIVE BOUNTIES <span className="text-cyber-cyan text-sm font-mono">({activeQuests.length})</span>
-                </h2>
-                <p className="font-mono text-[11px] text-cyber-textMuted">
-                  DAILY TACTICAL RPG MISSIONS
-                </p>
-              </div>
+              <Swords className="w-5 h-5 text-cyber-cyan" />
+              <h2 className="font-orbitron font-bold text-lg text-cyber-cyan tracking-wide">
+                ACTIVE BOUNTIES (DAILY QUESTS)
+              </h2>
             </div>
-
-            <div className="flex items-center gap-2">
-              {/* Grid / 3D Map View Toggle */}
-              <div className="inline-flex hud-card p-0.5 rounded-lg">
-                <button
-                  onClick={() => setViewMode('grid')}
-                  className={`flex items-center gap-1 px-2.5 py-1 rounded text-xs font-mono font-bold cursor-pointer transition-all ${
-                    viewMode === 'grid' ? 'bg-cyber-cyan text-cyber-bg' : 'text-cyber-textMuted hover:text-cyber-text'
-                  }`}
-                >
-                  <LayoutGrid className="w-3 h-3" /> GRID
-                </button>
-                <button
-                  onClick={() => setViewMode('3d-map')}
-                  className={`flex items-center gap-1 px-2.5 py-1 rounded text-xs font-mono font-bold cursor-pointer transition-all ${
-                    viewMode === '3d-map' ? 'bg-cyber-cyan text-cyber-bg' : 'text-cyber-textMuted hover:text-cyber-text'
-                  }`}
-                >
-                  <Map className="w-3 h-3" /> 3D
-                </button>
-              </div>
-
-              <Link to="/quests">
-                <HoloButton variant="cyan" size="sm" icon={Plus}>
-                  NEW BOUNTY
-                </HoloButton>
-              </Link>
-            </div>
+            <span className="font-mono text-xs text-cyber-textMuted font-bold">
+              {activeQuests.length} REMAINING
+            </span>
           </div>
 
-          {/* 3D Map or Checklist View */}
+          {/* View Mode & New Quest Bar */}
+          <div className="flex items-center justify-between gap-3 pt-1">
+            <div className="inline-flex bg-black/40 border border-cyber-cyan/30 rounded-lg p-0.5">
+              <button
+                onClick={() => setViewMode('grid')}
+                className={`flex items-center gap-1 px-3 py-1 rounded text-xs font-mono font-bold cursor-pointer transition-all ${
+                  viewMode === 'grid' ? 'bg-cyber-cyan text-black font-extrabold shadow-[0_0_10px_rgba(0,243,255,0.4)]' : 'text-cyber-textMuted hover:text-white'
+                }`}
+              >
+                <LayoutGrid className="w-3 h-3" /> LIST
+              </button>
+              <button
+                onClick={() => setViewMode('3d-map')}
+                className={`flex items-center gap-1 px-3 py-1 rounded text-xs font-mono font-bold cursor-pointer transition-all ${
+                  viewMode === '3d-map' ? 'bg-cyber-cyan text-black font-extrabold shadow-[0_0_10px_rgba(0,243,255,0.4)]' : 'text-cyber-textMuted hover:text-white'
+                }`}
+              >
+                <Map className="w-3 h-3" /> 3D MAP
+              </button>
+            </div>
+
+            <Link to="/quests">
+              <HoloButton variant="cyan" size="sm" icon={Plus}>
+                NEW BOUNTY
+              </HoloButton>
+            </Link>
+          </div>
+
+          {/* Quest Content */}
           {viewMode === '3d-map' ? (
             <QuestNodeMap3D quests={activeQuests} height="360px" onSelectQuest={(q) => handleComplete(q.id)} />
           ) : activeQuests.length === 0 ? (
-            <div className="hud-glass rounded-2xl p-10 text-center space-y-3">
+            <div className="p-8 text-center space-y-3 bg-black/30 border border-white/10 rounded-xl">
               <div className="text-3xl">🎯</div>
-              <h3 className="font-orbitron font-bold text-lg text-cyber-text">ALL BOUNTIES CLEARED</h3>
+              <h3 className="font-orbitron font-bold text-base text-white">ALL BOUNTIES CLEARED</h3>
               <p className="font-body text-xs text-cyber-textMuted max-w-sm mx-auto">
-                No active directives remaining. Forge a new tactical habit to generate additional city energy.
+                No active directives remaining. Initialize a new bounty to maintain neural resonance.
               </p>
               <Link to="/quests">
                 <HoloButton variant="cyan" size="sm">
-                  INITIALIZE BOUNTY →
+                  CREATE BOUNTY →
                 </HoloButton>
               </Link>
             </div>
           ) : (
-            <div className="space-y-3">
-              {/* Tactical RPG Interactive Checklist */}
+            <div className="space-y-2.5">
               {activeQuests.map((q) => (
                 <div
                   key={q.id}
-                  className="hud-card rounded-xl p-3.5 sm:p-4 flex items-center justify-between gap-3 group transition-all"
+                  className="flex items-center justify-between p-3.5 bg-black/30 hover:bg-black/50 border border-white/10 hover:border-cyber-cyan/60 rounded-lg transition-all group"
                 >
-                  {/* Left: Holographic Checkbox + Title */}
+                  {/* Left Checkbox & Quest Info */}
                   <div className="flex items-center gap-3 min-w-0 flex-1">
-                    <button
-                      onClick={() => handleComplete(q.id)}
+                    <input
+                      type="checkbox"
+                      checked={false}
                       disabled={completingId === q.id}
-                      aria-label="Complete Bounty"
-                      className="w-6 h-6 rounded-md border-2 border-cyber-cyan/50 hover:border-cyber-cyan bg-cyber-navy/80 flex items-center justify-center text-cyber-cyan transition-colors shrink-0 cursor-pointer shadow-[0_0_8px_rgba(0,229,255,0.2)] disabled:opacity-50"
-                    >
-                      {completingId === q.id ? (
-                        <span className="w-3 h-3 rounded-full border-2 border-cyber-cyan border-t-transparent animate-spin" />
-                      ) : (
-                        <CheckSquare className="w-3.5 h-3.5 opacity-0 group-hover:opacity-60 transition-opacity" />
-                      )}
-                    </button>
+                      onChange={() => handleComplete(q.id)}
+                      className="w-5 h-5 accent-cyber-cyan cursor-pointer rounded shrink-0 shadow-[0_0_8px_rgba(0,243,255,0.3)] disabled:opacity-50"
+                    />
 
                     <div className="min-w-0 flex-1">
-                      <p className="font-orbitron font-bold text-sm text-cyber-text group-hover:text-cyber-cyan truncate transition-colors">
+                      <p className="font-rajdhani font-semibold text-base text-white group-hover:text-cyber-cyan truncate transition-colors">
                         {q.title}
                       </p>
-                      <div className="flex items-center gap-2 pt-1 font-mono text-[10px] text-cyber-textMuted">
-                        <span className="uppercase text-cyber-dim">{q.category}</span>
+                      <div className="flex items-center gap-2 font-mono text-[10px] text-cyber-textMuted">
+                        <span className="uppercase text-cyber-cyan font-bold">{q.category}</span>
                         {q.due_date && <span>・ DUE {q.due_date}</span>}
                       </div>
                     </div>
                   </div>
 
-                  {/* Right: Difficulty & Reward Badges + Execute Button */}
-                  <div className="flex items-center gap-2 shrink-0">
+                  {/* Right Rewards & Execute Button */}
+                  <div className="flex items-center gap-2.5 shrink-0">
+                    <span className="font-mono text-xs font-bold text-cyber-magenta">
+                      +{q.xp_reward} XP
+                    </span>
                     <span className={`font-mono text-[9px] px-2 py-0.5 rounded border uppercase font-bold ${
                       q.difficulty === 'hard'
                         ? 'bg-cyber-magenta/10 text-cyber-magenta border-cyber-magenta/30'
@@ -278,17 +268,12 @@ export default function DashboardPage() {
                     }`}>
                       {q.difficulty}
                     </span>
-
-                    <span className="font-mono text-[11px] font-bold text-cyber-green bg-cyber-green/10 border border-cyber-green/30 px-2 py-0.5 rounded">
-                      +{q.xp_reward} XP
-                    </span>
-
                     <button
                       onClick={() => handleComplete(q.id)}
                       disabled={completingId === q.id}
-                      className="hidden sm:inline-flex items-center gap-1 bg-cyber-cyan hover:bg-cyber-cyan/85 text-cyber-bg font-orbitron font-bold text-[10px] uppercase px-2.5 py-1 rounded shadow-[0_0_10px_rgba(0,229,255,0.3)] transition-all cursor-pointer"
+                      className="hidden sm:inline-flex items-center gap-1 bg-cyber-cyan hover:bg-cyber-magenta text-black hover:text-white font-orbitron font-bold text-[10px] uppercase px-2.5 py-1 rounded transition-all cursor-pointer shadow-[0_0_10px_rgba(0,243,255,0.3)]"
                     >
-                      <span>EXECUTE</span>
+                      {completingId === q.id ? 'VERIFYING...' : 'EXECUTE'}
                     </button>
                   </div>
                 </div>
@@ -297,79 +282,83 @@ export default function DashboardPage() {
           )}
         </div>
 
-        {/* RIGHT COLUMN (5 cols): BOSS RAID & LOOT QUICK-VIEW */}
+        {/* RIGHT COLUMN (5 cols): BOSS RAID MODULE + ARSENAL */}
         <div className="lg:col-span-5 space-y-6">
-          {/* BOSS RAID FEATURE CARD (Matching Wireframe: BOSS RAID: EXAM PREP / CYBER TITAN) */}
-          <div className="hud-card rounded-2xl p-5 md:p-6 border border-cyber-magenta/35 space-y-4 relative overflow-hidden">
+          {/* BOSS RAID MODULE (Matching HTML & Wireframe Spec) */}
+          <div className="glass-card zero-g-float-slow p-5 md:p-6 space-y-4 border-cyber-magenta/40 hover:border-cyber-magenta">
             <div className="flex items-center justify-between border-b border-cyber-magenta/20 pb-3">
-              <div className="flex items-center gap-2.5">
-                <Skull className="w-5 h-5 text-cyber-magenta" />
-                <div>
-                  <h3 className="font-orbitron font-black text-base text-cyber-text tracking-wider uppercase">
-                    BOSS RAID: CYBER TITAN
-                  </h3>
-                  <span className="font-mono text-[10px] text-cyber-magenta uppercase font-bold">
-                    ACTIVE SECTOR THREAT
-                  </span>
-                </div>
+              <div className="flex items-center gap-2">
+                <Skull className="w-5 h-5 text-cyber-magenta animate-pulse" />
+                <h3 className="font-orbitron font-bold text-base text-cyber-magenta uppercase tracking-wider">
+                  CURRENT BOSS RAID
+                </h3>
               </div>
-              <span className="font-mono text-xs text-cyber-amber font-bold">
-                HP: {bossHpPercent}%
+              <span className="font-mono text-xs font-bold text-cyber-magenta bg-cyber-magenta/15 border border-cyber-magenta/40 px-2.5 py-0.5 rounded">
+                PHASE 2
               </span>
             </div>
 
+            <div>
+              <h4 className="font-orbitron font-black text-lg text-white">
+                TARGET: SEMESTER EXAM PREP
+              </h4>
+              <p className="font-body text-xs text-cyber-textMuted mt-1">
+                Deal damage by checking off sub-tasks and daily bounties.
+              </p>
+            </div>
+
             {/* Boss HP Bar */}
-            <div className="space-y-1.5">
-              <div className="h-5 w-full bg-cyber-navy/90 border border-cyber-magenta/40 rounded-xl overflow-hidden p-0.5 shadow-inner relative">
+            <div className="space-y-1.5 pt-1">
+              <div className="flex justify-between items-center font-mono text-xs">
+                <span className="text-cyber-magenta font-bold flex items-center gap-1">
+                  <Heart className="w-3.5 h-3.5 fill-cyber-magenta" /> BOSS HP
+                </span>
+                <span className="text-white font-bold">{bossHpPercent}% REMAINING</span>
+              </div>
+              <div className="w-full h-4 bg-black/50 border border-cyber-magenta/60 rounded-md overflow-hidden p-0.5 relative shadow-inner">
                 <div
-                  className={`h-full rounded-lg transition-all duration-700 ${
+                  className={`h-full rounded transition-all duration-700 ${
                     bossDamaged
                       ? 'bg-white shadow-[0_0_20px_#fff]'
-                      : bossHpPercent > 50
-                      ? 'bg-gradient-to-r from-cyber-magenta to-rose-600 shadow-[0_0_12px_rgba(255,45,166,0.6)]'
-                      : 'bg-gradient-to-r from-cyber-amber to-cyber-magenta shadow-[0_0_12px_rgba(255,184,77,0.6)]'
+                      : 'bg-cyber-magenta shadow-[0_0_12px_#ff0055]'
                   }`}
                   style={{ width: `${bossHpPercent}%` }}
                 />
               </div>
-              <div className="flex justify-between text-[10px] font-mono text-cyber-textMuted">
-                <span>{completedCount} STRIKES DEALT</span>
-                <span>{bossHpPercent === 0 ? 'STATUS: NEUTRALIZED' : 'STATUS: VULNERABLE'}</span>
-              </div>
             </div>
 
-            {/* Sub-Tasks Checklist Preview */}
-            <div className="space-y-1.5 pt-1 border-t border-cyber-cyan/10">
-              <span className="font-mono text-[10px] text-cyber-dim uppercase tracking-wider block">
-                PRIMARY OBJECTIVES:
+            {/* Sub-Tasks Preview */}
+            <div className="space-y-2 pt-2 border-t border-white/10 text-xs font-mono">
+              <span className="text-cyber-dim text-[10px] uppercase tracking-wider block font-bold">
+                SUB-DIRECTIVES:
               </span>
               {activeQuests.slice(0, 3).map((q, idx) => (
-                <div key={idx} className="flex items-center gap-2 text-xs font-mono text-cyber-textMuted">
+                <div key={idx} className="flex items-center gap-2 text-cyber-textMuted">
                   <span className="text-cyber-cyan">›</span>
                   <span className="truncate">{q.title}</span>
-                  <span className="text-cyber-green text-[10px] ml-auto shrink-0">PENDING</span>
+                  <span className="text-cyber-green text-[10px] ml-auto shrink-0 font-bold">PENDING</span>
                 </div>
               ))}
               {activeQuests.length === 0 && (
-                <div className="text-xs font-mono text-cyber-green flex items-center gap-1.5">
-                  <CheckSquare className="w-3.5 h-3.5" /> All raid targets neutralized!
+                <div className="text-cyber-green text-xs flex items-center gap-1.5 font-bold">
+                  <CheckSquare className="w-4 h-4" /> Titan Shield Neutralized!
                 </div>
               )}
             </div>
 
             <Link to="/boss-raids" className="block pt-2">
-              <HoloButton variant="magenta" size="sm" className="w-full text-center justify-center">
+              <button className="btn-action w-full text-center justify-center bg-cyber-magenta hover:bg-cyber-cyan text-white hover:text-black">
                 ENTER FULL RAID ARENA →
-              </HoloButton>
+              </button>
             </Link>
           </div>
 
-          {/* LOOT & REWARDS QUICK-VIEW (Matching Wireframe Spec) */}
-          <div className="hud-card rounded-2xl p-5 space-y-3.5 border border-cyber-cyan/30">
+          {/* LOOT & REWARDS QUICK-VIEW */}
+          <div className="glass-card zero-g-float-delayed p-5 space-y-3.5">
             <div className="flex items-center justify-between border-b border-cyber-cyan/20 pb-2.5">
               <div className="flex items-center gap-2">
                 <ShoppingBag className="w-4 h-4 text-cyber-cyan" />
-                <h4 className="font-orbitron font-bold text-xs text-cyber-text uppercase tracking-wider">
+                <h4 className="font-orbitron font-bold text-xs text-cyber-cyan uppercase tracking-wider">
                   LOOT & GEAR ARSENAL
                 </h4>
               </div>
@@ -378,15 +367,14 @@ export default function DashboardPage() {
               </Link>
             </div>
 
-            {/* Equipped Items Mini Preview */}
             <div className="grid grid-cols-2 gap-2 text-xs font-mono">
-              <div className="p-2.5 rounded-lg bg-cyber-navy/80 border border-cyber-cyan/20 space-y-1">
-                <span className="text-[10px] text-cyber-dim block">WALLET BALANCE</span>
+              <div className="p-2.5 rounded-lg bg-black/40 border border-cyber-cyan/20 space-y-1">
+                <span className="text-[10px] text-cyber-dim block">CREDIT WALLET</span>
                 <span className="font-bold text-cyber-amber flex items-center gap-1">
                   <Coins className="w-3.5 h-3.5" /> {Number(user?.gold || 0).toLocaleString()} C
                 </span>
               </div>
-              <div className="p-2.5 rounded-lg bg-cyber-navy/80 border border-cyber-cyan/20 space-y-1">
+              <div className="p-2.5 rounded-lg bg-black/40 border border-cyber-cyan/20 space-y-1">
                 <span className="text-[10px] text-cyber-dim block">EQUIPPED GEAR</span>
                 <span className="font-bold text-cyber-cyan flex items-center gap-1">
                   <Backpack className="w-3.5 h-3.5" /> {inventory.length} ITEMS
@@ -395,12 +383,12 @@ export default function DashboardPage() {
             </div>
           </div>
 
-          {/* ATTRIBUTE MATRIX (Core RPG Stats) */}
-          <div className="hud-card rounded-2xl p-5 space-y-3 border border-cyber-cyan/30">
+          {/* RPG ATTRIBUTE MATRIX */}
+          <div className="glass-card zero-g-float-slow p-5 space-y-3">
             <div className="flex items-center justify-between border-b border-cyber-cyan/20 pb-2">
               <div className="flex items-center gap-2">
                 <Cpu className="w-4 h-4 text-cyber-cyan" />
-                <h4 className="font-orbitron font-bold text-xs text-cyber-text uppercase tracking-wider">
+                <h4 className="font-orbitron font-bold text-xs text-cyber-cyan uppercase tracking-wider">
                   NEURAL ATTRIBUTE MATRIX
                 </h4>
               </div>
