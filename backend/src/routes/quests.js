@@ -1,4 +1,4 @@
-﻿const express = require('express');
+const express = require('express');
 const { body } = require('express-validator');
 const pool = require('../db/pool');
 const db = pool._db;
@@ -179,6 +179,9 @@ router.post('/:id/complete', auth, (req, res) => {
     // 8. Update streak
     const streakResult = updateStreak(req.userId);
 
+    // Re-fetch user to include any streak milestone gold bonus
+    const latestUser = db.prepare('SELECT xp, gold, level FROM users WHERE id = ?').get(req.userId);
+
     // 9. Check achievements
     const completedCount = db.prepare("SELECT COUNT(*) as count FROM tasks WHERE user_id = ? AND status = 'completed'").get(req.userId);
     const hardCount = db.prepare("SELECT COUNT(*) as count FROM tasks WHERE user_id = ? AND status = 'completed' AND difficulty = 'hard'").get(req.userId);
@@ -187,7 +190,7 @@ router.post('/:id/complete', auth, (req, res) => {
       total_completed: completedCount.count,
       level: levelResult.new_level,
       streak: streakResult.current_streak,
-      total_gold: userRow.gold,
+      total_gold: latestUser.gold,
       completed_hard: hardCount.count,
     };
     const newAchievements = checkAndUnlock(req.userId, achievementContext);
@@ -197,8 +200,8 @@ router.post('/:id/complete', auth, (req, res) => {
       level_up: levelResult.leveled_up,
       new_level: levelResult.new_level,
       old_level: levelResult.old_level,
-      total_xp: userRow.xp + xp_earned,
-      total_gold: userRow.gold + gold_earned,
+      total_xp: latestUser.xp,
+      total_gold: latestUser.gold,
       streak: streakResult,
       achievements_unlocked: newAchievements,
     });
